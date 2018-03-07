@@ -69,3 +69,7 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# public/.tmp and public/release
+public/.tmp/*
+public/release/*
