@@ -73,3 +73,6 @@ typings/
 # public/.tmp and public/release
 public/.tmp/*
 public/release/*
+
+# config.yml
+config.yml
