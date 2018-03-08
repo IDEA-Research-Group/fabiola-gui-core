@@ -15,6 +15,8 @@ mongoose.connect(config.db.mongoUri);
 var index = require('./routes/index');
 var users = require('./routes/users');
 var instances = require('./routes/instances');
+var modelDefinitions = require('./routes/modelDefinitions');
+var results = require('./routes/results');
 
 var BASE_API_PATH = "/api/v1";
 
@@ -34,6 +36,8 @@ app.use(express.static(path.join(__dirname, 'public/release')));
 
 // app.use(BASE_API_PATH+'/', index);
 app.use(BASE_API_PATH+'/instances', instances);
+app.use(BASE_API_PATH+'/modelDefinitions', modelDefinitions);
+app.use(BASE_API_PATH+'/results', results);
 //app.use('/users', users);
 
 // catch 404 and forward to error handler
@@ -50,8 +54,9 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // res.status(err.status || 500);
+  // res.render('error');
+    res.sendStatus(err.status || 500);
 });
 
 module.exports = app;
