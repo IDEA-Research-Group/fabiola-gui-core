@@ -58,10 +58,15 @@ app.use(function (err, req, res, next) {
     // render the error page
     // res.status(err.status || 500);
     // res.render('error');
-    //console.log(err);
+    console.log(err);
     if(err.name == 'ValidationError')
-        res.sendStatus(422)
-    else
+        res.status(422).send({error: err.message});
+    if(err.name == 'MongoError'){
+        if(err.code == 66)
+            res.status(400).send({error: 'You are trying to modify an immutable field.'});
+        else
+            res.status(500).send({error: 'An error occurred in the database.'});
+    } else
         res.sendStatus(err.status || 500);
 });
 
