@@ -2,8 +2,7 @@ var mongoose = require("mongoose");
 var mongoosePaginate = require('mongoose-paginate');
 
 var InstanceSchema = new mongoose.Schema({
-    _id: {type: mongoose.Schema.ObjectId},
-    modelDefinition: {type: mongoose.Schema.ObjectId, required: true},
+    modelDefinition: {type: mongoose.Schema.ObjectId, conditions: {}, ref: 'ModelDefinition', required: true},
     datasetUri: {type: String, required: true},
     in: {type: [String], required: true},
     out: {type: [String], required: true},
@@ -21,6 +20,14 @@ InstanceSchema.plugin(mongoosePaginate);
 //InstanceSchema.index({ author: 'text', title: 'text', year: 'text', tutors: 'text', 'tutors.url': 'text', 'tutors.name': 'text', authorName: 'text', idDissertation: 'text' });
 //InstanceSchema.index({ '$**': 'text' });
 
+InstanceSchema.pre('save', function(next) {
+    this.status = "NOT_STARTED";
+    this.creationDate = new Date();
+    this.lastExecutionDate = undefined;
+    this.duration = undefined;
+    this.driverId = undefined;
+    next();
+});
 
 mongoose.model("Instance", InstanceSchema);
 
