@@ -10,7 +10,7 @@ var router = express.Router();
 var Instance = require('../schemas/instance')
 
 /**
- * GET all Instances paginated
+ * RETRIEVE all Instances paginated
  * */
 router.get('/', function (req, res) {
     var query = {}
@@ -30,13 +30,10 @@ router.get('/', function (req, res) {
 });
 
 /**
- * GET an Instance by id
+ * RETRIEVE an Instance by id
  * */
 router.get('/:id', function (req, res) {
     var id = req.params.id;
-    // Considero que este if es innecesario
-    // if (!id)
-    //     res.sendStatus(400);
     Instance.findOne({'_id': id}, function (err, element) {
         if (!element)
             res.sendStatus(404);
@@ -46,7 +43,7 @@ router.get('/:id', function (req, res) {
 });
 
 /**
- * CREATE an Instance by id
+ * CREATE an Instance
  * */
 router.post('/', function (req, res, next) {
     var body = req.body;
