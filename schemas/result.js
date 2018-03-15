@@ -7,8 +7,7 @@ var ResultSchema = new mongoose.Schema({
     in: { type: [{}], required: true },
     out: { type: [{}], required: true },
     ot: { type: [{}], required: true },
-    metrics: { type: [{}], required: true },
-
+    metrics: { type: [{}], required: true }
 }, {collection: "results"});
 
 ResultSchema.plugin(mongoosePaginate);

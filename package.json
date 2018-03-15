@@ -1,6 +1,6 @@
 {
   "name": "fabiola-gui-core",
-  "version": "0.0.0.1-SNAPSHOT",
+  "version": "0.1.0-2-dev",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"

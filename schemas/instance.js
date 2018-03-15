@@ -13,7 +13,10 @@ var InstanceSchema = new mongoose.Schema({
     creationDate: {type: Date, required: true},
     lastExecutionDate: {type: Date, required: false},
     duration: {type: Number, required: false},
-    driverId: {type: String, required: false}
+    driverId: {type: String, required: false},
+    dsSchema: {type: String, required: false}, // TODO Need review. It may be a JS Object, and also required
+    errorMsg: {type: String, required: false},
+    frameworkId: {type: String, required: false}
 }, {collection: "instances"});
 
 InstanceSchema.plugin(mongoosePaginate);
@@ -26,6 +29,9 @@ InstanceSchema.pre('save', function(next) {
     this.lastExecutionDate = undefined;
     this.duration = undefined;
     this.driverId = undefined;
+    // this.dsSchema = undefined;
+    this.errorMsg = undefined;
+    this.frameworkId = undefined;
     next();
 });
 

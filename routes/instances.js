@@ -62,12 +62,14 @@ router.put('/:id', function (req, res, next) {
     if (!body || !id)
         res.sendStatus(400);
 
-    // The status, creationDate, lastExecutionDate, duration and driverId cannot be modified here
+    // The status, creationDate, lastExecutionDate, duration, driverId, errorMsg and frameworkId cannot be modified here
     delete body.status;
     delete body.creationDate;
     delete body.lastExecutionDate;
     delete body.duration;
     delete body.driverId;
+    delete body.errorMsg;
+    delete body.frameworkId;
 
     Instance.findOneAndUpdate(
         {'_id': id, 'status': {'$nin': ['FINISHED', 'RUNNING']}},
@@ -118,7 +120,7 @@ router.post('/run/:id', function (req, res, next) {
         else {
             var bodyReq = {
                 action: "CreateSubmissionRequest",
-                appArgs: [config.fabiola.metastore.mongo.uri, config.fabiola.metastore.mongo.database, id],
+                appArgs: [config.fabiola.metastore.mongo.uri, config.fabiola.metastore.mongo.database, "id"],
                 appResource: config.fabiola.metastore.hdfs.webUri + config.fabiola.appResourcePath,
                 mainClass: config.fabiola.copJobClasspath,
                 clientSparkVersion: "2.2.1",
@@ -146,10 +148,23 @@ router.post('/run/:id', function (req, res, next) {
                 // If an error has occurred, action field will be ErrorResponse or it won't exist.
                 if (bodyJson.success && bodyJson.submissionId) {
                     //TODO consultar el frameworkId y actualizar ese campo en la instancia
+
                     // Update the status and set the driverId
                     instance.status = "RUNNING";
                     instance.driverId = bodyJson.submissionId;
                     Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
+                        // Una vez actualizado el estado, pasamos a hacer una petición a la API de mesos para
+                        // obtener el frameworkId. Lo hacemos ahora y no antes para evitar:
+                        // 1. Condiciones de carrera si hacemos ambas operaciones de forma asíncrona
+                        // 2. Que si hacemos todas las actualizaciones (estado + frameworkId) como callback a la
+                        // llamada a la API de Mesos, evitar que, si esta falla, la instancia no actualice su estado.
+                        // Es más crítico que se actualice el estado que el frameworkId.
+                        request.get(config.fabiola.spark.mesosFrameworksApiUri, function (error, response, body) {
+                            if (!error) {
+                                // TODO todo el procesamiento
+                            }
+                        });
+
                         res.send(result);
                     }).catch(next);
                 } else
@@ -169,7 +184,7 @@ router.get('/status/:id', function (req, res, next) {
     // First, find this instanceId. Only can query the driver status of an Instance whose status is RUNNING
     Instance.findOne({'_id': id, 'status': {'$in': ['RUNNING']}}).then(function (instance) {
         if (!instance)
-            res.status(400).send({error: "The instance with id " + id + " does not exist or its status is RUNNING."});
+            res.status(400).send({error: "The instance with id " + id + " does not exist or its status is not RUNNING."});
         else {
             request.get(config.fabiola.spark.submissionsUri + '/status/' + instance.driverId, function (error, response, body) {
                 if (!error) {
