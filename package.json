@@ -17,6 +17,7 @@
     "mongoose-paginate": "^5.0.3",
     "mongoose-ref-validator": "^1.0.21",
     "morgan": "~1.9.0",
+    "query-to-mongo": "^0.8.1",
     "request": "^2.83.0",
     "serve-favicon": "~2.4.5"
   },

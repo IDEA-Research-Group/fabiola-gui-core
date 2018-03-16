@@ -1,54 +1,69 @@
 var express = require('express');
+var q2m = require('query-to-mongo');
+
 var router = express.Router();
 
 var Result = require('../schemas/result')
+var Instance = require('../schemas/instance')
 
 /**
  * RETRIEVE all results by instance id paginated
  * */
-/*
-* TODO: Pensar si merece la pena hacer una comprobación previa sobre si existe el instanceId pasado como parámetro
-* y los atributos a filtrar.
-* */
 router.get('/:instanceId', function (req, res, next) {
     var instanceId = req.params.instanceId;
-
-    var page = req.query.page;
-    var limit = req.query.limit;
-
-    delete req.query.page;
-    delete req.query.limit;
-    delete req.query.instanceId;
-
     var query = req.query;
-    var toIndex = {};
 
-    console.log(req.query)
+    // Pagination information
+    var pagination = {page: parseInt(query.page) || 1, limit: parseInt(query.limit) || 10};
 
-    Object.keys(query).forEach(function (key) {
-        toIndex[key] = 1;
-    });
+    // Let's delete the fields that wee won't use for filtering
+    delete query.page;
+    delete query.limit;
+    delete query.instanceId;
 
-    console.log(toIndex)
+    // Parse de query to MongoDB format
+    query = q2m(query);
 
-    Result.collection.createIndex(toIndex, {partialFilterExpression: {instanceId: instanceId}}, function (err, result) {
-        console.log(err);
-        console.log(result);
-    });
+    // Get the fields to index
+    var fieldsToIndex = Object.keys(Object.assign(query.criteria, query.options.sort));
 
-    // https://www.npmjs.com/package/mongoose-api-query
-    // https://www.npmjs.com/package/mongoose-query --> esta esta actualizada
-    console.log(Object.assign({'instanceId': instanceId}, query))
+    // Let's check whether the instance exists and if the fields to query also exist
+    Instance.findById(instanceId).then(function (instance) {
+        if (instance) {
+            // Generate a list with all the mapped field of this instance. We need to concat the in., out., or ot.
+            var instanceMappedFields = [];
+            if (instance.in) instanceMappedFields = instanceMappedFields.concat(instance.in.map(s => 'in.' + s));
+            if (instance.out) instanceMappedFields = instanceMappedFields.concat(instance.out.map(s => 'out.' + s));
+            if (instance.ot) instanceMappedFields = instanceMappedFields.concat(instance.ot.map(s => 'ot.' + s));
+            var instanceMappedFieldsSet = new Set(instanceMappedFields);
 
-    if (!page)
-        page = 1;
-    if (!limit)
-        limit = 10;
-    Result.paginate(Object.assign({'instanceId': instanceId}, query), {
-        page: parseInt(page),
-        limit: parseInt(limit)
-    }).then(function (elements) {
-        res.send(elements);
+            // Check if the queried fields (fieldsToIndex) are contained in the instance mapped fields
+            var notIncluded = fieldsToIndex.filter(f => !instanceMappedFieldsSet.has(f));
+            var isSubset = notIncluded.length === 0;
+
+            if(isSubset){
+                var toIndex = {};
+                Object.keys(Object.assign(query.criteria, query.options.sort)).forEach(function (key) {
+                    toIndex[key] = 1;
+                });
+
+                // It will create the indexes only if they don't exist.
+                Result.collection.createIndex(toIndex, {partialFilterExpression: {instanceId: instanceId}}).then(function (result) {
+                    // Finally execute the query
+                    Result.paginate(
+                        // Query: it includes the instanceId, the criteria and the sort options.
+                        Object.assign({'instanceId': instanceId}, query.criteria, query.options.sort),
+                        pagination
+                    ).then(function (elements) {
+                        res.send(elements);
+                    }).catch(next);
+                }).catch(next);
+            } else
+                res.status(400).send({error: "You have query some fields that are not declared in your instance as in, out or ot",
+                    fields: notIncluded});
+        } else
+            res.status(404).send({error: "The instance with _id " + instanceId + " does not exist."});
+
     }).catch(next);
 });
 
