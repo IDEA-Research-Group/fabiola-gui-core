@@ -47,8 +47,9 @@ router.get('/:id', function (req, res) {
  * */
 router.post('/', function (req, res, next) {
     var body = req.body;
+    delete body._id;
     Instance.create(body).then(function (instance) {
-        res.send(instance);
+        res.status(201).send(instance);
     }).catch(next);
 });
 
@@ -120,7 +121,7 @@ router.post('/run/:id', function (req, res, next) {
         else {
             var bodyReq = {
                 action: "CreateSubmissionRequest",
-                appArgs: [config.fabiola.metastore.mongo.uri, config.fabiola.metastore.mongo.database, "id"],
+                appArgs: [config.fabiola.metastore.mongo.uri, config.fabiola.metastore.mongo.database, id],
                 appResource: config.fabiola.metastore.hdfs.webUri + config.fabiola.appResourcePath,
                 mainClass: config.fabiola.copJobClasspath,
                 clientSparkVersion: "2.2.1",
@@ -147,8 +148,6 @@ router.post('/run/:id', function (req, res, next) {
                 //console.log(util.inspect(body, false, null))
                 // If an error has occurred, action field will be ErrorResponse or it won't exist.
                 if (bodyJson.success && bodyJson.submissionId) {
-                    //TODO consultar el frameworkId y actualizar ese campo en la instancia
-
                     // Update the status and set the driverId
                     instance.status = "RUNNING";
                     instance.driverId = bodyJson.submissionId;
@@ -160,12 +159,34 @@ router.post('/run/:id', function (req, res, next) {
                         // llamada a la API de Mesos, evitar que, si esta falla, la instancia no actualice su estado.
                         // Es más crítico que se actualice el estado que el frameworkId.
                         request.get(config.fabiola.spark.mesosFrameworksApiUri, function (error, response, body) {
+                            var bodyJson = body;
+                            if (typeof bodyJson == 'string')
+                                bodyJson = JSON.parse(body);
                             if (!error) {
-                                // TODO todo el procesamiento
+                                var frameworkIdRes = bodyJson.frameworks
+                                    .filter(elem =>
+                                        elem.active === true &&
+                                        elem.connected === true &&
+                                        elem.name === config.fabiola.spark.mesosFrameworkName)
+                                    .map( elem => elem.id);
+
+                                if(frameworkIdRes){
+                                    if(frameworkIdRes.length > 0){
+                                        var frameworkId = frameworkIdRes[0];
+                                        var toUpdate = {frameworkId: frameworkId};
+                                        Instance.findByIdAndUpdate(instance._id, toUpdate, {new: true}).then(function (result) {
+                                            res.send(result);
+                                        }).catch(next);
+                                    } else {
+                                        res.status(207).send(result);
+                                    }
+                                } else {
+                                    res.status(207).send(result);
+                                }
+                            } else {
+                                res.sendStatus(207);
                             }
                         });
-
-                        res.send(result);
                     }).catch(next);
                 } else
                     res.status(500).send({error: "Failed to execute the instance with id " + id + "."});

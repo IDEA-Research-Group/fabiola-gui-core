@@ -10,7 +10,7 @@ var InstanceSchema = new mongoose.Schema({
     metrics: {type: Boolean, required: true},
     timeout: {type: Number, required: true},
     status: {type: String, required: false},
-    creationDate: {type: Date, required: true},
+    creationDate: {type: Date, required: false},
     lastExecutionDate: {type: Date, required: false},
     duration: {type: Number, required: false},
     driverId: {type: String, required: false},

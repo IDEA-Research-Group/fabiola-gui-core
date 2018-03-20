@@ -2,7 +2,6 @@ var mongoose = require("mongoose");
 var mongoosePaginate = require('mongoose-paginate');
 
 var ModelDefinitionSchema = new mongoose.Schema({
-    _id: {type: mongoose.Schema.ObjectId, required: false},
     name: {type: String, required: true},
     domainData: {type: String, required: true},
     variables: {type: String, required: true},

@@ -44,8 +44,10 @@ router.get('/:id', function (req, res) {
  * */
 router.post('/', function (req, res, next) {
     var body = req.body;
+    if(!body) res.sendStatus(400);
+    delete body._id;
     ModelDefinition.create(body).then(function (instance) {
-        res.send(instance);
+        res.status(201).send(instance);
     }).catch(next);
 });
 
