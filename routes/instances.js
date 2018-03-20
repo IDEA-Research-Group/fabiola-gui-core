@@ -1,6 +1,7 @@
 var express = require('express');
 var request = require('request')
 var config = require("config-yml");
+var moment = require('moment');
 const util = require('util')
 
 // Initialize this router
@@ -8,6 +9,7 @@ var router = express.Router();
 
 // Load schema(s)
 var Instance = require('../schemas/instance')
+var Result = require('../schemas/result')
 
 /**
  * RETRIEVE all Instances paginated
@@ -100,8 +102,13 @@ router.delete('/:id', function (req, res, next) {
             else {
                 status = instance.status;
                 // TODO si borra una instancia cuyo estado es FINISHED, borrar los resultados asociados a esta isntancia
-                // if(status == 'FINISHED')
-                res.sendStatus(204);
+                // if(status == 'FINISHED') //
+                Result.remove({'instanceId': id},function(err, removed){
+                    if(err)
+                        res.sendStatus(207)
+                    else
+                        res.sendStatus(204);
+                });
             }
         })
         .catch(next);
@@ -151,6 +158,7 @@ router.post('/run/:id', function (req, res, next) {
                     // Update the status and set the driverId
                     instance.status = "RUNNING";
                     instance.driverId = bodyJson.submissionId;
+                    instance.lastExecutionDate = new Date();
                     Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
                         // Una vez actualizado el estado, pasamos a hacer una petición a la API de mesos para
                         // obtener el frameworkId. Lo hacemos ahora y no antes para evitar:
@@ -228,17 +236,42 @@ router.get('/status/:id', function (req, res, next) {
                                 if (state == 'TASK_FINISHED') {
                                     // The job has finished. Update the status in the instance document.
                                     // TODO añadir la duración
-                                    instance.status = "FINISHED";
+
+                                    request.get(config.fabiola.spark.historyApiUri
+                                        + '/applications/'
+                                        + instance.frameworkId + '-'+instance.driverId, function(error, response, body) {
+
+                                        if(!error){
+                                            try {
+                                                var bodyJson = body;
+                                                if (typeof bodyJson == 'string')
+                                                    bodyJson = JSON.parse(body);
+                                                var duration = bodyJson.attempts[0].duration / 1000.0;
+
+                                                instance.status = "FINISHED";
+                                                instance.duration = duration;
+                                                console.log(duration);
+                                                // Let's update this document in the database
+                                                Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
+                                                    res.send(result);
+                                                }).catch(next);
+                                            } catch (e) {
+                                                res.status(500).send({error: "Spark History Server response not understood."});
+                                            }
+                                        } else{
+                                            res.status(500).send({error: "Couldn't get date from Spark History Server"});
+                                        }
+                                    });
                                 } else {
                                     // TODO differentiate the TASK_FAILED and TASK_KILLED statuses
                                     // TODO it may be used in the future in order to include the error message in the Instance document
                                     // var stateMessage = message.split("state: ").pop().split('\\n').shift();
                                     instance.status = "ERROR";
+                                    // Let's update this document in the database
+                                    Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
+                                        res.send(result);
+                                    }).catch(next);
                                 }
-                                // Let's update this document in the database
-                                Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
-                                    res.send(result);
-                                }).catch(next);
                             }
                         } else {
                             // TODO it may mean that the driverId does not exist. It could be because the Spark dispatcher was restarted
