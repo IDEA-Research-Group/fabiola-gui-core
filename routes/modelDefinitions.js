@@ -124,7 +124,7 @@ router.delete('/:id', function (req, res, next) {
             res.status(400).send({error: "The ModelDefinition with _id "+ id +" does not exist or it is associated with an Instance and cannot be deleted."});
         else{
             // If there are results (max 1 result), it means that the ModelDefinition exist and we can also delete it. Let's do it
-            ModelDefinition.findByIdAndDelete(id).then(function (result) {
+            ModelDefinition.findByIdAndRemove(id).then(function (result) {
                 res.send(204);
             }).catch(next);
         }

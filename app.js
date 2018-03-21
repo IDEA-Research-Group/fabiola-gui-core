@@ -61,7 +61,7 @@ app.use(function (err, req, res, next) {
     console.log(err);
     if(err.name == 'ValidationError')
         res.status(422).send({error: err.message});
-    if(err.name == 'MongoError'){
+    else if (err.name == 'MongoError'){
         if(err.code == 66)
             res.status(400).send({error: 'You are trying to modify an immutable field.'});
         else

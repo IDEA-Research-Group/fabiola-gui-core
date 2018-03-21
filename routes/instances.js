@@ -250,7 +250,7 @@ router.get('/status/:id', function (req, res, next) {
 
                                                 instance.status = "FINISHED";
                                                 instance.duration = duration;
-                                                console.log(duration);
+                                                //console.log(duration);
                                                 // Let's update this document in the database
                                                 Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
                                                     res.send(result);
@@ -263,10 +263,15 @@ router.get('/status/:id', function (req, res, next) {
                                         }
                                     });
                                 } else {
-                                    // TODO differentiate the TASK_FAILED and TASK_KILLED statuses
-                                    // TODO it may be used in the future in order to include the error message in the Instance document
+                                    // differentiate the TASK_FAILED and TASK_KILLED statuses
+                                    if(state === 'TASK_KILLED')
+                                        instance.status = "KILLED";
+                                    else
+                                        instance.status = "ERROR";
+                                    var errorMsg = message.split("message: ").pop().split('\n').shift();
+                                    instance.errorMsg = errorMsg;
+
                                     // var stateMessage = message.split("state: ").pop().split('\\n').shift();
-                                    instance.status = "ERROR";
                                     // Let's update this document in the database
                                     Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
                                         res.send(result);

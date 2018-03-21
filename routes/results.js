@@ -47,9 +47,7 @@ router.get('/:instanceId', function (req, res, next) {
                     toIndex[key] = 1;
                 });
 
-                // It will create the indexes only if they don't exist.
-                Result.collection.createIndex(toIndex, {partialFilterExpression: {instanceId: instanceId}}).then(function (result) {
-                    // Finally execute the query
+                var findPaginate = function () {
                     Result.paginate(
                         // Query: it includes the instanceId, the criteria and the sort options.
                         Object.assign({'instanceId': instanceId}, query.criteria, query.options.sort),
@@ -57,7 +55,17 @@ router.get('/:instanceId', function (req, res, next) {
                     ).then(function (elements) {
                         res.send(elements);
                     }).catch(next);
-                }).catch(next);
+                }
+
+                if (Object.keys(toIndex).length === 0) {
+                    // Finally execute the query
+                    findPaginate();
+                } else {
+                    // It will create the indexes only if they don't exist.
+                    Result.collection.createIndex(toIndex, {partialFilterExpression: {instanceId: instanceId}}).then(function (result) {
+                        findPaginate();
+                    }).catch(next);
+                }
             } else
                 res.status(400).send({
                     error: "You have queried some fields that are not declared in your instance as in, out or ot",
@@ -78,63 +86,67 @@ router.get('/aggregate/:instanceId', function (req, res, next) {
     var instanceId = req.params.instanceId;
     var query = req.query;
 
-    // Pagination information
-    var pagination = {page: parseInt(query.page) || 1, limit: parseInt(query.limit) || 10};
+    // Pagination information (No pagination for this endpoint)
+    //var pagination = {page: parseInt(query.page) || 1, limit: parseInt(query.limit) || 10};
 
     // Let's delete the fields that wee won't use for filtering
-    delete query.page;
-    delete query.limit;
+    // delete query.page;
+    // delete query.limit;
 
-    if (!query.groupField || !query.op || !query.opField)
-        res.status(404).send({'error': 'You must specify the following information: groupField, op and opField.'});
+    if (!query.groupField || !query.op || !query.opField) {
+        res.send(400, {'error': 'You must specify the following information: groupField, op and opField.'});
+    } else {
 
-    var fieldsToIndex = [query.groupField];
+        var queriedFields = [query.groupField, query.opField];
 
-    // Let's check whether the instance exists and if the fields to query also exist
-    Instance.findById(instanceId).then(function (instance) {
-        if (instance) {
-            // Generate a list with all the mapped field of this instance. We need to concat the in., out., or ot.
-            var instanceMappedFields = [];
-            if (instance.in) instanceMappedFields = instanceMappedFields.concat(instance.in.map(s => 'in.' + s));
-            if (instance.out) instanceMappedFields = instanceMappedFields.concat(instance.out.map(s => 'out.' + s));
-            if (instance.ot) instanceMappedFields = instanceMappedFields.concat(instance.ot.map(s => 'ot.' + s));
-            var instanceMappedFieldsSet = new Set(instanceMappedFields);
+        // Let's check whether the instance exists and if the fields to query also exist
+        Instance.findById(instanceId).then(function (instance) {
+            console.log("*****************************************")
+            if (instance) {
+                // Generate a list with all the mapped field of this instance. We need to concat the in., out., or ot.
+                var instanceMappedFields = [];
+                if (instance.in) instanceMappedFields = instanceMappedFields.concat(instance.in.map(s => 'in.' + s));
+                if (instance.out) instanceMappedFields = instanceMappedFields.concat(instance.out.map(s => 'out.' + s));
+                if (instance.ot) instanceMappedFields = instanceMappedFields.concat(instance.ot.map(s => 'ot.' + s));
+                var instanceMappedFieldsSet = new Set(instanceMappedFields);
 
-            // Check if the queried fields (fieldsToIndex) are contained in the instance mapped fields
-            var notIncluded = fieldsToIndex.filter(f => !instanceMappedFieldsSet.has(f));
-            var isSubset = notIncluded.length === 0;
+                // Check if the queried fields (queriedFields) are contained in the instance mapped fields
+                var notIncluded = queriedFields.filter(f => !instanceMappedFieldsSet.has(f));
+                var isSubset = notIncluded.length === 0;
 
-            if (isSubset) {
-                var toIndex = {};
-                fieldsToIndex.forEach(function (key) {
-                    toIndex[key] = 1;
-                });
+                if (isSubset) {
+                    var toIndex = {};
+                    // Let's create the index JSON. First of all we need to delete the opField since we won't index this
+                    // field
+                    queriedFields.filter(x => x != query.opField).forEach(function (key) {
+                        toIndex[key] = 1;
+                    });
 
-                // It will create the indexes only if they don't exist.
-                Result.collection.createIndex(toIndex, {partialFilterExpression: {instanceId: instanceId}}).then(function (result) {
-                    // Finally execute the query
-                    Result.aggregate([
-                            {$match: {instanceId: new mongoose.Types.ObjectId(instanceId)}},
-                            {
-                                $group: {
-                                    _id: '$' + query.groupField,
-                                    result: JSON.parse("{\"$"+query.op+"\": \"$"+ query.opField+"\"}")
+                    // It will create the indexes only if they don't exist.
+                    Result.collection.createIndex(toIndex, {partialFilterExpression: {instanceId: instanceId}}).then(function (result) {
+                        // Finally execute the query
+                        Result.aggregate([
+                                {$match: {instanceId: new mongoose.Types.ObjectId(instanceId)}},
+                                {
+                                    $group: {
+                                        _id: '$' + query.groupField,
+                                        result: JSON.parse("{\"$" + query.op + "\": \"$" + query.opField + "\"}")
+                                    }
                                 }
-                            }
-                        ]
-                    ).then(function (elements) {
-                        res.send(elements);
+                            ]
+                        ).then(function (elements) {
+                            res.send(elements);
+                        }).catch(next);
                     }).catch(next);
-                }).catch(next);
+                } else
+                    res.status(400).send({
+                        error: "You have queried some fields that are not declared in your instance as in, out or ot",
+                        fields: notIncluded
+                    });
             } else
-                res.status(400).send({
-                    error: "You have queried some fields that are not declared in your instance as in, out or ot",
-                    fields: notIncluded
-                });
-        } else
-            res.status(404).send({error: "The instance with _id " + instanceId + " does not exist."});
-    }).catch(next);
-
+                res.status(404).send({error: "The instance with _id " + instanceId + " does not exist."});
+        }).catch(next);
+    }
 });
 
 /**
@@ -142,9 +154,6 @@ router.get('/aggregate/:instanceId', function (req, res, next) {
  * */
 router.delete('/:instanceId', function (req, res, next) {
     var instanceId = req.params.instanceId;
-    if (!instanceId)
-        res.sendStatus(400);
-
     Result.deleteMany({'instanceId': instanceId})
         .then(function (instance) {
             res.sendStatus(204);
