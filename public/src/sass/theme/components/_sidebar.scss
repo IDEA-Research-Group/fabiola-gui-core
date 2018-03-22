@@ -230,7 +230,8 @@ a.al-sidebar-list-link {
 @mixin sidebar-overlap() {
   .al-sidebar {
     width: $sidebar-width;
-    @include bg-translucent-dark(0.75);
+    // @include bg-translucent-dark(0.75);
+    background-color: rgba($sidebar-scrolled, 0.9);
     transition: width 0.5s ease;
 
     .fa-angle-down, .fa-angle-up {
