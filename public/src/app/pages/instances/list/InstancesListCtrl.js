@@ -12,6 +12,11 @@
     function InstancesListCtrl($http) {
         var vm = this;
 
+        vm.show = function(instance) {
+            vm.showInstance = true;
+            vm.instance = instance;
+        }
+
         vm.callServer = function callServer(tableState) {
 
             vm.isLoading = true;
@@ -21,7 +26,6 @@
             var limit = pagination.number || 10;  // Number of entries showed per page.
 
             var pages = (offset / limit) + 1;
-            console.log(pages);
 
             $http
                 .get('/api/v1/instances?limit=' + limit + '&page=' + pages)

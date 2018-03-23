@@ -23,14 +23,27 @@
             })
             .state('instances.list', {
                 url: '/list',
-                templateUrl: 'app/pages/instances/list/list.html',
-                controller: 'InstancesListCtrl',
-                controllerAs: 'vm',
-                title: 'Instances',
+                title: 'List instances',
+                resolve: {
+                    instance: function($stateParams){
+                        return $stateParams.instance;
+                    }
+                },
+                /*params: {
+                    instance: null
+                },*/
+                views: {
+                    'list': {
+                        templateUrl: 'app/pages/instances/list/list.html',
+                        controller: 'InstancesListCtrl',
+                        controllerAs: 'vm'
+                    }
+                },
                 sidebarMeta: {
                     order: 0,
                 },
             });
+
     }
 
 })();
