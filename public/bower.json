@@ -54,7 +54,9 @@
     "textAngular": "~1.4.6",
     "angular-xeditable": "~0.5.0",
     "ng-js-tree": "~0.0.7",
-    "angular-ui-select": "^0.19.6"
+    "angular-ui-select": "^0.19.6",
+    "angular-ui-codemirror": "^0.3.0",
+    "angular-ui-ace": "^0.2.3"
   },
   "resolutions": {
     "angular": "~1.5.9",

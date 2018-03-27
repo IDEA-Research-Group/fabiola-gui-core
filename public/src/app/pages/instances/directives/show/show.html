@@ -1,0 +1,59 @@
+<div class="row" ng-show="instance">
+    <div class="col-md-12 col-lg-12">
+        <div ba-panel ba-panel-title="Instance {{instance._id}}"
+             ba-panel-class="medium-panel with-scroll light-text">
+            <div class="row">
+                <div class="col-md-12 col-lg-6">
+                    <h5>Model Definition</h5>
+                    <p>{{instance.modelDefinition}}</p>
+                    <h5>Creation date</h5>
+                    <p>{{instance.creationDate | date : 'medium'}}</p>
+                    <h5>Dataset</h5>
+                    <p>{{instance.datasetUri}}</p>
+                    <h5>Status</h5>
+                    <div ng-switch="instance.status">
+                        <p ng-switch-when="ERROR"><i class="ion-record large" style="color: #FF0000"></i> Error</p>
+                        <p ng-switch-when="KILLED"><i class="ion-record" style="color: #FF0000"></i> Killed</p>
+                        <p ng-switch-when="RUNNING"><i class="ion-record" style="color: #FFFF00"></i> Running</p>
+                        <p ng-switch-when="FINISHED"><i class="ion-record" style="color: #327E04"></i> Finished</p>
+                        <p ng-switch-default><i class="ion-record" style="color: #C2C2A3"></i> Not started</p>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                    <h5>Last execution date</h5>
+                    <p>{{instance.lastExecutionDate | date : 'medium'}}</p>
+                    <h5>Duration</h5>
+                    <p>{{instance.duration}}</p>
+                    <h5>IN</h5>
+                    <p>{{instance.in.join(', ')}}</p>
+                    <h5>OUT</h5>
+                    <p>{{instance.out.join(', ')}}</p>
+                    <h5>OTHER</h5>
+                    <p>{{instance.ot.join(', ')}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-lg-4">
+                    <ul class="btn-list clearfix">
+                        <li>
+                            <button type="button" class="btn btn-primary btn-with-icon"><i class="ion-ios-gear"></i>Run
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-info btn-with-icon"><i class="ion-stats-bars"></i>Results
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-warning btn-with-icon"><i class="ion-edit"></i>Edit
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-danger btn-with-icon"><i class="ion-trash-b"></i>Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

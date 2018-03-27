@@ -33,6 +33,7 @@
   <link rel="stylesheet" href="../bower_components/angular-xeditable/dist/css/xeditable.css" />
   <link rel="stylesheet" href="../bower_components/jstree/dist/themes/default/style.css" />
   <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css" />
+  <link rel="stylesheet" href="../bower_components/codemirror/lib/codemirror.css" />
   <!-- endbower -->
   <!-- endbuild -->
 
@@ -135,9 +136,13 @@
 <script src="../bower_components/jstree/dist/jstree.js"></script>
 <script src="../bower_components/ng-js-tree/dist/ngJsTree.js"></script>
 <script src="../bower_components/angular-ui-select/dist/select.js"></script>
+<script src="../bower_components/codemirror/lib/codemirror.js"></script>
+<script src="../bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
+<script src="../bower_components/angular-ui-ace/ui-ace.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="https://rawgithub.com/ajaxorg/ace-builds/v1.1.1/src-min-noconflict/ace.js"></script>
 
 <!-- build:js({.tmp/serve,.tmp/partials,src}) scripts/app.js -->
 <!-- inject:js -->
@@ -147,10 +152,11 @@
 <script src="app/pages/components/components.module.js"></script>
 <script src="app/pages/dashboard/dashboard.module.js"></script>
 <script src="app/pages/form/form.module.js"></script>
+<script src="app/pages/instances/instances.module.js"></script>
 <script src="app/pages/maps/maps.module.js"></script>
 <script src="app/pages/profile/profile.module.js"></script>
-<script src="app/pages/ui/ui.module.js"></script>
 <script src="app/pages/tables/tables.module.js"></script>
+<script src="app/pages/ui/ui.module.js"></script>
 <script src="app/theme/components/components.module.js"></script>
 <script src="app/theme/inputs/inputs.module.js"></script>
 <script src="app/pages/charts/amCharts/amCharts.module.js"></script>
@@ -162,12 +168,12 @@
 <script src="app/pages/components/tree/tree.module.js"></script>
 <script src="app/pages/ui/alerts/alerts.module.js"></script>
 <script src="app/pages/ui/buttons/buttons.module.js"></script>
-<script src="app/pages/ui/icons/icons.module.js"></script>
 <script src="app/pages/ui/grid/grid.module.js"></script>
+<script src="app/pages/ui/icons/icons.module.js"></script>
 <script src="app/pages/ui/modals/modals.module.js"></script>
 <script src="app/pages/ui/notifications/notifications.module.js"></script>
-<script src="app/pages/ui/panels/panels.module.js"></script>
 <script src="app/pages/ui/progressBars/progressBars.module.js"></script>
+<script src="app/pages/ui/panels/panels.module.js"></script>
 <script src="app/pages/ui/slider/slider.module.js"></script>
 <script src="app/pages/ui/tabs/tabs.module.js"></script>
 <script src="app/pages/ui/typography/typography.module.js"></script>
@@ -213,20 +219,22 @@
 <script src="app/pages/dashboard/dashboardLineChart/dashboardLineChart.directive.js"></script>
 <script src="app/pages/dashboard/dashboardMap/DashboardMapCtrl.js"></script>
 <script src="app/pages/dashboard/dashboardMap/dashboardMap.directive.js"></script>
-<script src="app/pages/dashboard/dashboardPieChart/DashboardPieChartCtrl.js"></script>
-<script src="app/pages/dashboard/dashboardPieChart/dashboardPieChart.directive.js"></script>
 <script src="app/pages/dashboard/dashboardTodo/DashboardTodoCtrl.js"></script>
 <script src="app/pages/dashboard/dashboardTodo/dashboardTodo.directive.js"></script>
-<script src="app/pages/dashboard/pieCharts/dashboardPieChart.js"></script>
+<script src="app/pages/dashboard/dashboardPieChart/DashboardPieChartCtrl.js"></script>
+<script src="app/pages/dashboard/dashboardPieChart/dashboardPieChart.directive.js"></script>
 <script src="app/pages/dashboard/popularApp/popularApp.directive.js"></script>
-<script src="app/pages/dashboard/trafficChart/TrafficChartCtrl.js"></script>
-<script src="app/pages/dashboard/trafficChart/trafficChart.directive.js"></script>
+<script src="app/pages/dashboard/pieCharts/dashboardPieChart.js"></script>
 <script src="app/pages/dashboard/weather/WeatherCtrl.js"></script>
 <script src="app/pages/dashboard/weather/weather.directive.js"></script>
+<script src="app/pages/dashboard/trafficChart/TrafficChartCtrl.js"></script>
+<script src="app/pages/dashboard/trafficChart/trafficChart.directive.js"></script>
 <script src="app/pages/form/wizard/wizrdCtrl.js"></script>
+<script src="app/pages/instances/create/CreateInstanceCtrl.js"></script>
+<script src="app/pages/instances/list/InstancesListCtrl.js"></script>
 <script src="app/pages/maps/google-maps/GmapPageCtrl.js"></script>
-<script src="app/pages/maps/leaflet/LeafletPageCtrl.js"></script>
 <script src="app/pages/maps/map-bubbles/MapBubblePageCtrl.js"></script>
+<script src="app/pages/maps/leaflet/LeafletPageCtrl.js"></script>
 <script src="app/pages/maps/map-lines/MapLinesPageCtrl.js"></script>
 <script src="app/pages/ui/buttons/ButtonPageCtrl.js"></script>
 <script src="app/pages/ui/icons/IconsPageCtrl.js"></script>
@@ -267,6 +275,7 @@
 <script src="app/pages/components/mail/composeBox/composeModal.js"></script>
 <script src="app/pages/components/mail/detail/MailDetailCtrl.js"></script>
 <script src="app/pages/components/mail/list/MailListCtrl.js"></script>
+<script src="app/pages/instances/directives/show/showInstanceDirective.js"></script>
 <script src="app/pages/ui/modals/notifications/NotificationsCtrl.js"></script>
 <script src="app/pages/ui/modals/progressModal/ProgressModalCtrl.js"></script>
 <script src="app/theme/components/backTop/lib/jquery.backTop.min.js"></script>
