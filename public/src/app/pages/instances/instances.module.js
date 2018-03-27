@@ -24,14 +24,6 @@
             .state('instances.list', {
                 url: '/list',
                 title: 'List instances',
-                resolve: {
-                    instance: function($stateParams){
-                        return $stateParams.instance;
-                    }
-                },
-                /*params: {
-                    instance: null
-                },*/
                 views: {
                     'list': {
                         templateUrl: 'app/pages/instances/list/list.html',
@@ -39,9 +31,31 @@
                         controllerAs: 'vm'
                     }
                 },
+                resolve: {
+                    instance: function($stateParams){
+                        return $stateParams.instance;
+                    }
+                },
+                params: {
+                    instance: undefined
+                },
                 sidebarMeta: {
                     order: 0,
                 },
+            })
+            .state('instances.create', {
+                url: '/create',
+                title: 'Create instance',
+                views: {
+                    'create': {
+                        templateUrl: 'app/pages/instances/create/create.html',
+                        controller: 'CreateInstanceCtrl',
+                        controllerAs: 'vm'
+                    }
+                },
+                sidebarMeta: {
+                    order: 100,
+                }
             });
 
     }

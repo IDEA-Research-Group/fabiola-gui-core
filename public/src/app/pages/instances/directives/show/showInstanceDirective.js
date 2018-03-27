@@ -16,9 +16,7 @@
                 instance: '='
             },
             templateUrl: 'app/pages/instances/directives/show/show.html',
-            //template: '<div>{{instance}}</div>',
             link: function(scope, elem, attr) {
-                console.log(scope.instance)
             }
         }
     }

@@ -9,11 +9,13 @@
         .controller('InstancesListCtrl', InstancesListCtrl);
 
     /** @ngInject */
-    function InstancesListCtrl($http) {
+    function InstancesListCtrl($http, $stateParams) {
         var vm = this;
 
+        vm.instance = $stateParams.instance;
+
         vm.show = function(instance) {
-            vm.showInstance = true;
+            //vm.showInstance = true;
             vm.instance = instance;
         }
 
