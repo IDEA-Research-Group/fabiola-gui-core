@@ -68,8 +68,26 @@
                         controllerAs: 'vm'
                     }
                 }
-            });
-
+            })
+            .state('instances.list.delete', {
+                url: '/delete/{instanceId}',
+                onEnter: ['$stateParams', '$state', '$uibModal', function ($stateParams, $state, $uibModal) {
+                    $uibModal.open({
+                        templateUrl: 'app/pages/instances/delete/delete.html',
+                        controller: 'DeleteInstanceCtrl',
+                        controllerAs: 'vm',
+                        resolve: {
+                            instanceId: function () {
+                                return $stateParams.instanceId
+                            }
+                        }
+                    }).result.then(function () {
+                        $state.go('instances.list', null, {reload: 'instances.list'});
+                    }, function () {
+                        $state.go('instances.list');
+                    });
+                }]
+            })
     }
 
 })();

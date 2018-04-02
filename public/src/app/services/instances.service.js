@@ -16,7 +16,8 @@
         return $resource(resourceUrl, {}, {
             'create': {method: 'POST'},
             'get': {method: 'GET'},
-            'update': {method: 'PUT'}
+            'update': {method: 'PUT'},
+            'delete': {method: 'DELETE'}
         });
     };
 })();
