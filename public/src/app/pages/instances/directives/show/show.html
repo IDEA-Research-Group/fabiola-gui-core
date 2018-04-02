@@ -44,11 +44,11 @@
                             </button>
                         </li>
                         <li>
-                            <button type="button" class="btn btn-warning btn-with-icon"><i class="ion-edit"></i>Edit
+                            <button type="button" class="btn btn-warning btn-with-icon" ui-sref="instances.edit({instanceId: instance._id})"><i class="ion-edit"></i>Edit
                             </button>
                         </li>
                         <li>
-                            <button type="button" class="btn btn-danger btn-with-icon"><i class="ion-trash-b"></i>Delete
+                            <button type="button" class="btn btn-danger btn-with-icon" ui-sref="instances.list.delete({instanceId: instance._id})"><i class="ion-trash-b"></i>Delete
                             </button>
                         </li>
                     </ul>

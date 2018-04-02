@@ -9,7 +9,8 @@
         .config(routeConfig);
 
     /** @ngInject */
-    function routeConfig($stateProvider) {
+    function routeConfig($stateProvider, $httpProvider) {
+
         $stateProvider
             .state('instances', {
                 url: '/instances',
@@ -32,7 +33,7 @@
                     }
                 },
                 resolve: {
-                    instance: function($stateParams){
+                    instance: function ($stateParams) {
                         return $stateParams.instance;
                     }
                 },
@@ -48,16 +49,45 @@
                 title: 'Create instance',
                 views: {
                     'create': {
-                        templateUrl: 'app/pages/instances/create/create.html',
-                        controller: 'CreateInstanceCtrl',
+                        templateUrl: 'app/pages/instances/edit/edit.html',
+                        controller: 'EditInstanceCtrl',
                         controllerAs: 'vm'
                     }
                 },
                 sidebarMeta: {
                     order: 100,
                 }
-            });
-
+            })
+            .state('instances.edit', {
+                url: '/edit/{instanceId}',
+                title: 'Edit instance',
+                views: {
+                    'edit': {
+                        templateUrl: 'app/pages/instances/edit/edit.html',
+                        controller: 'EditInstanceCtrl',
+                        controllerAs: 'vm'
+                    }
+                }
+            })
+            .state('instances.list.delete', {
+                url: '/delete/{instanceId}',
+                onEnter: ['$stateParams', '$state', '$uibModal', function ($stateParams, $state, $uibModal) {
+                    $uibModal.open({
+                        templateUrl: 'app/pages/instances/delete/delete.html',
+                        controller: 'DeleteInstanceCtrl',
+                        controllerAs: 'vm',
+                        resolve: {
+                            instanceId: function () {
+                                return $stateParams.instanceId
+                            }
+                        }
+                    }).result.then(function () {
+                        $state.go('instances.list', null, {reload: 'instances.list'});
+                    }, function () {
+                        $state.go('instances.list');
+                    });
+                }]
+            })
     }
 
 })();
