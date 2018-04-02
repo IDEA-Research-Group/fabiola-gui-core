@@ -21,8 +21,10 @@
       .config(routeConfig);
 
   /** @ngInject */
-  function routeConfig($urlRouterProvider, baSidebarServiceProvider) {
+  function routeConfig($urlRouterProvider, $httpProvider, baSidebarServiceProvider) {
     $urlRouterProvider.otherwise('/dashboard');
+
+    $httpProvider.interceptors.push('httpRequestInterceptor');
 
     baSidebarServiceProvider.addStaticItem({
       title: 'Pages',
