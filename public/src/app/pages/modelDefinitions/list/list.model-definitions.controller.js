@@ -19,7 +19,6 @@
         }
 
         vm.callServer = function callServer(tableState) {
-            console.log("fdfd")
             vm.isLoading = true;
 
             var pagination = tableState.pagination;
@@ -31,7 +30,6 @@
             $http
                 .get('/api/v1/modelDefinitions?limit=' + limit + '&page=' + pages)
                 .then(function (response) {
-                    console.log(response)
                     var displayed = response.data.docs;
                     var pages = response.data.pages;
                     var limit = response.data.limit;

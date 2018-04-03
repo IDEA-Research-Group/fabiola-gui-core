@@ -67,6 +67,24 @@
                     controllerAs: 'vm'
                 }
             }
+        }).state('modelDefinitions.list.delete', {
+            url: '/delete/{modelDefinitionId}',
+            onEnter: ['$stateParams', '$state', '$uibModal', function ($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/pages/modelDefinitions/delete/delete.html',
+                    controller: 'DeleteModelDefinitionCtrl',
+                    controllerAs: 'vm',
+                    resolve: {
+                        modelDefinitionId: function () {
+                            return $stateParams.modelDefinitionId;
+                        }
+                    }
+                }).result.then(function () {
+                    $state.go('modelDefinitions.list', null, {reload: 'modelDefinitions.list'});
+                }, function () {
+                    $state.go('modelDefinitions.list');
+                });
+            }]
         });
     }
 
