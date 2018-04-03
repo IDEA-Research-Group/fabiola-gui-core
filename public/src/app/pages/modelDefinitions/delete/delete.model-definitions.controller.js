@@ -20,7 +20,7 @@
         vm.delete = function () {
             console.log(modelDefinition)
             ModelDefinitions.delete({id: modelDefinition._id}).$promise.then(function(success){
-                toastr.success('The instance has been successfully deleted', 'Success!', {
+                toastr.success('The Model Definition has been successfully deleted', 'Success!', {
                     "positionClass": "toast-top-right",
                     "type": "success",
                     "timeOut": "5000"
