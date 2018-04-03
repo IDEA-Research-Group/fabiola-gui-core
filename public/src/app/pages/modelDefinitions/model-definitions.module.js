@@ -48,7 +48,7 @@
                 url: '/create',
                 title: 'New Model Definition',
                 views: {
-                    'create': {
+                    'edit': {
                         templateUrl: 'app/pages/modelDefinitions/edit/edit.html',
                         controller: 'EditModelDefinitionCtrl',
                         controllerAs: 'vm'
@@ -60,6 +60,16 @@
             }).state('modelDefinitions.edit', {
             url: '/edit/{modelDefinitionId}',
             title: 'Edit Model Definition',
+            views: {
+                'edit': {
+                    templateUrl: 'app/pages/modelDefinitions/edit/edit.html',
+                    controller: 'EditModelDefinitionCtrl',
+                    controllerAs: 'vm'
+                }
+            }
+        }).state('modelDefinitions.clone', {
+            url: '/clone/{modelDefinitionId}',
+            title: 'Clone Model Definition',
             views: {
                 'edit': {
                     templateUrl: 'app/pages/modelDefinitions/edit/edit.html',
