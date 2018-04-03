@@ -1,0 +1,95 @@
+<div class="row" ng-show="modelDefinition">
+    <div class="col-md-12 col-lg-12">
+        <div ba-panel ba-panel-title="Model Definition {{modelDefinition._id}}"
+             ba-panel-class="large-panel with-scroll light-text">
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <h5>Name</h5>
+                    <p>{{modelDefinition.name}}</p>
+                    <!-- TODO For some reason, ui-ace cannot read editorOpts from the scope. Try to fix it -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Domain Data</h4>
+                            <div ui-ace="{
+                                            useWrapMode: true,
+                                            showGutter: true,
+                                            theme: 'dawn',
+                                            mode: 'scala',
+                                            firstLineNumber: 1,
+                                            rendererOptions: {fontSize: 16}
+                                        }" readonly ng-model="modelDefinition.domainData"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Variables</h4>
+                            <div ui-ace="{
+                                            useWrapMode: true,
+                                            showGutter: true,
+                                            theme: 'dawn',
+                                            mode: 'scala',
+                                            firstLineNumber: 1,
+                                            rendererOptions: {fontSize: 16}
+                                        }" readonly ng-model="modelDefinition.variables"></div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Constraints</h4>
+                            <div ui-ace="{
+                                            useWrapMode: true,
+                                            showGutter: true,
+                                            theme: 'dawn',
+                                            mode: 'scala',
+                                            firstLineNumber: 1,
+                                            rendererOptions: {fontSize: 16}
+                                        }" readonly ng-model="modelDefinition.constraints"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Objective</h4>
+                            <div ui-ace="{
+                                            useWrapMode: true,
+                                            showGutter: true,
+                                            theme: 'dawn',
+                                            mode: 'scala',
+                                            firstLineNumber: 1,
+                                            rendererOptions: {fontSize: 16}
+                                        }" readonly ng-model="modelDefinition.objective"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Solution</h4>
+                            <div ui-ace="{
+                                            useWrapMode: true,
+                                            showGutter: true,
+                                            theme: 'dawn',
+                                            mode: 'scala',
+                                            firstLineNumber: 1,
+                                            rendererOptions: {fontSize: 16}
+                                        }" readonly ng-model="modelDefinition.solution"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-lg-4">
+                    <ul class="btn-list clearfix">
+                        <li>
+                            <button type="button" class="btn btn-warning btn-with-icon" <!--ui-sref="instances.edit({instanceId: instance._id})"--><i class="ion-edit"></i>Edit
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-danger btn-with-icon" <!--ui-sref="instances.list.delete({instanceId: instance._id})"--><i class="ion-trash-b"></i>Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
