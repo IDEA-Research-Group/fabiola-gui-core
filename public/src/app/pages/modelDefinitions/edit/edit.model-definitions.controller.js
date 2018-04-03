@@ -13,7 +13,7 @@
         var vm = this;
 
         // This function contains the form logic
-        var form = function (modelDefinition, isEdit) {
+        var form = function (modelDefinition, action) {
             vm.modelDefinition = modelDefinition;
 
             // Ace editor options
@@ -38,7 +38,7 @@
                 return $q(function (resolve, reject) {
                     function onSuccess(success) {
                         resolve();
-                        var createdOrEdited = isEdit ? 'edited' : 'created';
+                        var createdOrEdited = (action === 'edit') ? 'edited' : 'created';
                         // toast showing the results
                         toastr.success('The Model Definition has been successfully ' + createdOrEdited + '.', 'Success!', {
                             "positionClass": "toast-top-right",
@@ -52,23 +52,26 @@
                         reject();
                     }
 
-                    if (isEdit) {
+                    if (action === 'edit') {
                         ModelDefinitions.update({id: vm.modelDefinition._id}, vm.modelDefinition).$promise.then(onSuccess, onError);
                     } else {
+                        if(action === 'clone') delete vm.modelDefinition._id;
                         ModelDefinitions.create(vm.modelDefinition).$promise.then(onSuccess, onError);
                     }
-
                 });
             };
         };
 
         // When entering to the controller, these statement are first executed
-        if ($stateParams.modelDefinitionId) {
+        var currentState = $state.$current.self.name;
+        var action = (currentState === 'modelDefinitions.clone') ? 'clone' : ((currentState === 'modelDefinitions.edit') ? 'edit' : 'create');
+
+        if (currentState === 'modelDefinitions.edit' || currentState === 'modelDefinitions.clone') {
             ModelDefinitions.get({id: $stateParams.modelDefinitionId}).$promise.then(function (modelDefinition) {
-                form(modelDefinition, true)
+                form(modelDefinition, action);
             });
         } else {
-            form({}, false);
+            form({}, action);
         }
         ;
     };
