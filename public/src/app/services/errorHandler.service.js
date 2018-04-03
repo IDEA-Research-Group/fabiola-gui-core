@@ -3,7 +3,7 @@
  * created on 28.03.2018
  */
 
-(function() {
+(function () {
     'use strict';
     angular
         .module('BlurAdmin.services')
@@ -22,9 +22,9 @@
             // If error is due to unprocessable entity then show the validation errors
             if (error.status === 422) {
                 message = "There are errors on your form: \n";
-            } else if(error.status === 400) {
+            } else if (error.status === 400) {
                 message = "Bad request. \n";
-            } else if(error.status === 404) {
+            } else if (error.status === 404) {
                 message = "Not found. \n";
             }
 
@@ -36,15 +36,18 @@
                 "type": "error",
                 "timeOut": "10000"
             });
-            console.log(error)
+
             // If the error message is not 422 or 400, redirect to the list state
-            if(![422, 400].includes(error.status)) {
+            if (![422, 400].includes(error.status)) {
+                var currentStateName = $state.$current.self.name;
                 var parentStateName = $state.$current.parent.self.name;
 
                 // If the parent state is included in the list, redirect to the 'list' state. Otherwise, redirect
                 // to the dashboard state.
-                if(['instances'].includes(parentStateName)) {
-                    $state.go(parentStateName+'.list');
+                if (['instances', 'instances.list', 'modelDefinitions', 'modelDefinitions.list'].includes(parentStateName) &&
+                    currentStateName != parentStateName + '.list') {
+                    var toState = parentStateName.split('.').includes('list') ? parentStateName : parentStateName + '.list';
+                    $state.go(toState);
                 } else {
                     $state.go('dashboard');
                 }

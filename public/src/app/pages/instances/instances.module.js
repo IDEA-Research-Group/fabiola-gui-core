@@ -24,11 +24,11 @@
             })
             .state('instances.list', {
                 url: '/list',
-                title: 'List instances',
+                title: 'List Instances',
                 views: {
                     'list': {
                         templateUrl: 'app/pages/instances/list/list.html',
-                        controller: 'InstancesListCtrl',
+                        controller: 'ListInstancesCtrl',
                         controllerAs: 'vm'
                     }
                 },
@@ -46,7 +46,7 @@
             })
             .state('instances.create', {
                 url: '/create',
-                title: 'Create instance',
+                title: 'New Instance',
                 views: {
                     'create': {
                         templateUrl: 'app/pages/instances/edit/edit.html',
@@ -60,7 +60,7 @@
             })
             .state('instances.edit', {
                 url: '/edit/{instanceId}',
-                title: 'Edit instance',
+                title: 'Edit Instance',
                 views: {
                     'edit': {
                         templateUrl: 'app/pages/instances/edit/edit.html',

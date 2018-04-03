@@ -28,7 +28,7 @@
                 views: {
                     'list': {
                         templateUrl: 'app/pages/modelDefinitions/list/list.html',
-                        controller: 'ModelDefinitionsListCtrl',
+                        controller: 'ListModelDefinitionsCtrl',
                         controllerAs: 'vm'
                     }
                 },

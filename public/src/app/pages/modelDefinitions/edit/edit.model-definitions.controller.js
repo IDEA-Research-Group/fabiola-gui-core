@@ -67,7 +67,7 @@
         var action = (currentState === 'modelDefinitions.clone') ? 'clone' : ((currentState === 'modelDefinitions.edit') ? 'edit' : 'create');
 
         if (currentState === 'modelDefinitions.edit' || currentState === 'modelDefinitions.clone') {
-            ModelDefinitions.get({id: $stateParams.modelDefinitionId}).$promise.then(function (modelDefinition) {
+            ModelDefinitions.get({id: '$stateParams.modelDefinitionId'}).$promise.then(function (modelDefinition) {
                 form(modelDefinition, action);
             });
         } else {

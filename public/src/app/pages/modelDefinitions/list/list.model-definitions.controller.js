@@ -6,10 +6,10 @@
     'use strict';
 
     angular.module('BlurAdmin.pages.instances')
-        .controller('ModelDefinitionsListCtrl', ModelDefinitionsListCtrl);
+        .controller('ListModelDefinitionsCtrl', ListModelDefinitionsCtrl);
 
     /** @ngInject */
-    function ModelDefinitionsListCtrl($http, $stateParams) {
+    function ListModelDefinitionsCtrl($http, $stateParams) {
         var vm = this;
 
         vm.modelDefinition = $stateParams.modelDefinition;
@@ -42,7 +42,6 @@
                     vm.isLoading = false;
 
                 }, function (error) {
-                    console.log(error);
                 });
         };
     }

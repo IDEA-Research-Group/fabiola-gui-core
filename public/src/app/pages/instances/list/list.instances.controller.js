@@ -6,10 +6,10 @@
     'use strict';
 
     angular.module('BlurAdmin.pages.instances')
-        .controller('InstancesListCtrl', InstancesListCtrl);
+        .controller('ListInstancesCtrl', ListInstancesCtrl);
 
     /** @ngInject */
-    function InstancesListCtrl($http, $stateParams) {
+    function ListInstancesCtrl($http, $stateParams) {
         var vm = this;
 
         vm.instance = $stateParams.instance;
@@ -44,7 +44,6 @@
                     vm.isLoading = false;
 
                 }, function (error) {
-                    console.log(error);
                 });
         };
     }
