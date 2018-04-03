@@ -43,7 +43,31 @@
                 sidebarMeta: {
                     order: 0,
                 },
-            });
+            })
+            .state('modelDefinitions.create', {
+                url: '/create',
+                title: 'New Model Definition',
+                views: {
+                    'create': {
+                        templateUrl: 'app/pages/modelDefinitions/edit/edit.html',
+                        controller: 'EditModelDefinitionCtrl',
+                        controllerAs: 'vm'
+                    }
+                },
+                sidebarMeta: {
+                    order: 100,
+                }
+            }).state('modelDefinitions.edit', {
+            url: '/edit/{modelDefinitionId}',
+            title: 'Edit Model Definition',
+            views: {
+                'edit': {
+                    templateUrl: 'app/pages/modelDefinitions/edit/edit.html',
+                    controller: 'EditModelDefinitionCtrl',
+                    controllerAs: 'vm'
+                }
+            }
+        });
     }
 
 })();

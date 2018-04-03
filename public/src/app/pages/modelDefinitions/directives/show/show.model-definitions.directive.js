@@ -18,6 +18,7 @@
             templateUrl: 'app/pages/modelDefinitions/directives/show/show.html',
             link: function(scope, elem, attr) {
                 // Ace editor options
+                /*
                 scope.editorOpts = {
                     useWrapMode: true,
                     showGutter: true,
@@ -26,6 +27,7 @@
                     firstLineNumber: 1,
                     rendererOptions: {fontSize: 16}
                 };
+                */
             }
         }
     }
