@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 col-lg-4">
+                <div class="col-md-12 col-lg-6">
                     <ul class="btn-list clearfix">
                         <li>
                             <button type="button" class="btn btn-primary btn-with-icon" ng-click="runInstance(instance)"><i class="ion-ios-gear"></i>Run
@@ -45,6 +45,10 @@
                         </li>
                         <li>
                             <button type="button" class="btn btn-warning btn-with-icon" ui-sref="instances.edit({instanceId: instance._id})"><i class="ion-edit"></i>Edit
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-default btn-with-icon" ui-sref="instances.clone({instanceId: instance._id})"><i class="ion-ios-copy"></i>Clone
                             </button>
                         </li>
                         <li>
