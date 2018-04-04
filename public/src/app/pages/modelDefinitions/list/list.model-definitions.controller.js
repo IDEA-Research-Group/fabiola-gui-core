@@ -12,10 +12,8 @@
     function ListModelDefinitionsCtrl($http, $stateParams) {
         var vm = this;
 
-        vm.modelDefinition = $stateParams.modelDefinition;
-
-        vm.show = function(instance) {
-            vm.modelDefinition = instance;
+        vm.show = function(modelDefinitionId) {
+            vm.modelDefinitionId = modelDefinitionId;
         }
 
         vm.callServer = function callServer(tableState) {

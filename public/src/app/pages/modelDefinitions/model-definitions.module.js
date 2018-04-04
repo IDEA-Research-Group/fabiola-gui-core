@@ -32,14 +32,6 @@
                         controllerAs: 'vm'
                     }
                 },
-                resolve: {
-                    modelDefinition: function ($stateParams) {
-                        return $stateParams.modelDefinition;
-                    }
-                },
-                params: {
-                    modelDefinition: undefined
-                },
                 sidebarMeta: {
                     order: 0,
                 },

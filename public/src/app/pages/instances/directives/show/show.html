@@ -1,4 +1,4 @@
-<div class="row" ng-show="instance">
+<div class="row" ng-show="instanceId">
     <div class="col-md-12 col-lg-12">
         <div ba-panel ba-panel-title="Instance {{instance._id}}"
              ba-panel-class="medium-panel with-scroll light-text">
@@ -36,7 +36,7 @@
                 <div class="col-md-12 col-lg-4">
                     <ul class="btn-list clearfix">
                         <li>
-                            <button type="button" class="btn btn-primary btn-with-icon"><i class="ion-ios-gear"></i>Run
+                            <button type="button" class="btn btn-primary btn-with-icon" ng-click="runInstance(instance)"><i class="ion-ios-gear"></i>Run
                             </button>
                         </li>
                         <li>

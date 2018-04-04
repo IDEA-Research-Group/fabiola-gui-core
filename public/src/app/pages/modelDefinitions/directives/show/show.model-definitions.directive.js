@@ -9,14 +9,22 @@
         .directive('showModelDefinition', ShowModelDefinitionDirective);
 
     /** @ngInject */
-    function ShowModelDefinitionDirective() {
+    function ShowModelDefinitionDirective(ModelDefinitions) {
         return {
             restrict: 'E',
             scope: {
-                modelDefinition: '='
+                modelDefinitionId: '='
             },
             templateUrl: 'app/pages/modelDefinitions/directives/show/show.html',
             link: function(scope, elem, attr) {
+                scope.$watch('modelDefinitionId', function (newValue, attrs) {
+                    if (newValue) {
+                        scope.modelDefinition = ModelDefinitions.get({'id': newValue});
+                    }
+                }, true);
+                var modelDefinitionId = scope.modelDefinitionId;
+                scope.modelDefinition = ModelDefinitions.get({id: modelDefinitionId});
+                console.log(modelDefinitionId)
                 // Ace editor options
                 /*
                 scope.editorOpts = {

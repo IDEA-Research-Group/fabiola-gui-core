@@ -16,7 +16,7 @@
         <tbody 	ng-show="!vm.isLoading">
         <tr ng-repeat="item in vm.displayed">
             <td>{{item.name}}</td>
-            <td><button ng-click="vm.show(item)" class="btn btn-primary btn-xs">Show</button></td>
+            <td><button ng-click="vm.show(item._id)" class="btn btn-primary btn-xs">Show</button></td>
         </tr>
         </tbody>
         <tbody ng-show="vm.isLoading">
@@ -27,7 +27,7 @@
         <tfoot>
         <tr>
             <td colspan="6" class="text-center">
-                <div st-pagination="" st-items-by-page="vm.limit" st-template="/app/theme/misc/smartTablePagination.html"></div>
+                <div st-pagination="" st-items-by-page="vm.limit" st-template="app/theme/misc/smartTablePagination.html"></div>
             </td>
         </tr>
         </tfoot>

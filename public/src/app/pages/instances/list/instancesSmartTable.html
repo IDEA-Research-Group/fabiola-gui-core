@@ -19,7 +19,7 @@
         <tbody 	ng-show="!vm.isLoading">
         <tr ng-repeat="item in vm.displayed">
             <td>{{item.modelDefinition}}</td>
-            <td>{{item.creationDate}}</td>
+            <td>{{item.creationDate | date : 'medium'}}</td>
             <td>{{item.datasetUri}}</td>
             <td ng-switch="item.status">
                 <i ng-switch-when="ERROR" class="ion-record large" style="color: #FF0000; font-size: 1.8em"></i>
@@ -28,7 +28,7 @@
                 <i ng-switch-when="FINISHED" class="ion-record" style="color: #327E04; font-size: 1.8em"></i>
                 <i ng-switch-default class="ion-record" style="color: #C2C2A3; font-size: 1.8em"></i>
             </td>
-            <td><button ng-click="vm.show(item)" class="btn btn-primary btn-xs">Show</button></td>
+            <td><button ng-click="vm.show(item._id)" class="btn btn-primary btn-xs">Show</button></td>
         </tr>
         </tbody>
         <tbody ng-show="vm.isLoading">
@@ -39,7 +39,7 @@
         <tfoot>
         <tr>
             <td colspan="6" class="text-center">
-                <div st-pagination="" st-items-by-page="vm.limit" st-template="/app/theme/misc/smartTablePagination.html"></div>
+                <div st-pagination="" st-items-by-page="vm.limit" st-template="app/theme/misc/smartTablePagination.html"></div>
             </td>
         </tr>
         </tfoot>

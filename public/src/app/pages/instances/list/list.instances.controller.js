@@ -9,14 +9,14 @@
         .controller('ListInstancesCtrl', ListInstancesCtrl);
 
     /** @ngInject */
-    function ListInstancesCtrl($http, $stateParams) {
+    function ListInstancesCtrl($http) {
         var vm = this;
 
-        vm.instance = $stateParams.instance;
+        //var instanceId = $stateParams.instanceId;
+        //vm.instanceId = instanceId;
 
-        vm.show = function(instance) {
-            //vm.showInstance = true;
-            vm.instance = instance;
+        vm.show = function(instanceId) {
+            vm.instanceId = instanceId;
         }
 
         vm.callServer = function callServer(tableState) {
