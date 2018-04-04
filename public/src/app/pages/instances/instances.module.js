@@ -40,7 +40,7 @@
                 url: '/create',
                 title: 'New Instance',
                 views: {
-                    'create': {
+                    'edit': {
                         templateUrl: 'app/pages/instances/edit/edit.html',
                         controller: 'EditInstanceCtrl',
                         controllerAs: 'vm'
@@ -61,6 +61,19 @@
                     }
                 }
             })
+
+            .state('instances.clone', {
+                url: '/clone/{instanceId}',
+                title: 'Clone Instance',
+                views: {
+                    'edit': {
+                        templateUrl: 'app/pages/instances/edit/edit.html',
+                        controller: 'EditInstanceCtrl',
+                        controllerAs: 'vm'
+                    }
+                }
+            })
+
             .state('instances.list.delete', {
                 url: '/delete/{instanceId}',
                 onEnter: ['$stateParams', '$state', '$uibModal', function ($stateParams, $state, $uibModal) {

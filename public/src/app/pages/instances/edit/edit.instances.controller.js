@@ -13,7 +13,7 @@
         var vm = this;
 
         // This function contains the form logic
-        var form = function (instance, isEdit) {
+        var form = function (instance, action) {
             //vm.instance = {};
             vm.instance = instance;
 
@@ -65,9 +65,9 @@
                 return $q(function (resolve, reject) {
                     function onSuccess(success){
                         resolve();
-                        var createdOrEdited = isEdit ? 'edited' : 'created';
+                        var actionMsg = action === 'create' ? 'created' : (action ==='edit' ? 'edited' : 'cloned');
                         // toast showing the results
-                        toastr.success('The instance has been successfully '+createdOrEdited+'.', 'Success!', {
+                        toastr.success('The instance has been successfully '+actionMsg+'.', 'Success!', {
                             "positionClass": "toast-top-right",
                             "type": "success",
                             "timeOut": "5000"
@@ -79,9 +79,18 @@
                         reject();
                     }
 
-                    if(isEdit){
+                    if(action === 'edit'){
                         Instances.update({id: vm.instance._id}, vm.instance).$promise.then(onSuccess, onError);
                     } else {
+                        if(action === 'clone'){
+                            delete vm.instance._id;
+                            delete vm.instance.status;
+                            delete vm.instance.creationDate;
+                            delete vm.instance.lastExecutionDate;
+                            delete vm.instance.driverId;
+                            delete vm.instance.errorMsg;
+                            delete vm.instance.frameworkId;
+                        }
                         Instances.create(vm.instance).$promise.then(onSuccess, onError);
                     }
 
@@ -92,7 +101,7 @@
             vm.loadMdPage();
 
             // If is edit, we must look for the model definition
-            if(isEdit) {
+            if(['edit', 'clone'].includes(action)) {
                 $http
                     .get('/api/v1/modelDefinitions/'+vm.instance.modelDefinition)
                     .then(function (response) {
@@ -103,11 +112,14 @@
             }
         };
 
+        var currentState = $state.$current.self.name;
+        var action = (currentState === 'instances.clone') ? 'clone' : ((currentState === 'instances.edit') ? 'edit' : 'create');
+
         // When entering to the controller, these statement are first executed
-        if ($stateParams.instanceId) {
-            Instances.get({id: $stateParams.instanceId}).$promise.then(function(instance){form(instance, true)});
+        if (['edit', 'clone'].includes(action)) {
+            Instances.get({id: $stateParams.instanceId}).$promise.then(function(instance){form(instance, action)});
         } else {
-            form({}, false);
+            form({}, action);
         };
     };
 })();
