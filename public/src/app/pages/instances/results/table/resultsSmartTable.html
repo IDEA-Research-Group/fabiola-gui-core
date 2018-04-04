@@ -1,0 +1,48 @@
+<div class="horizontal-scroll">
+    <div class="form-group select-page-size-wrap ">
+        <label>Rows on page
+            <select class="form-control selectpicker show-tick" title="Rows on page" selectpicker
+                    ng-model="vm.limit" ng-options="i for i in [5,10,15,20,25]">
+            </select>
+        </label>
+    </div>
+    <table class="table" st-pipe="vm.callServer" st-table="vm.displayed">
+        <thead>
+        <tr class="sortable">
+            <th ng-repeat="inField in vm.inFields">{{inField}}</th>
+            <th ng-repeat="outField in vm.outFields">{{outField}}</th>
+            <th ng-repeat="otField in vm.otFields">{{otField}}</th>
+        </tr>
+        <tr>
+            <th ng-repeat="inField in vm.inFields"><input st-search="inField" placeholder="Search {{inField}}" class="input-sm form-control search-input"
+                type="search"/></th>
+            <th ng-repeat="outField in vm.outFields"><input st-search="outField" placeholder="Search {{outField}}" class="input-sm form-control search-input"
+                type="search"/></th>
+            <th ng-repeat="otField in vm.otFields"><input st-search="otField" placeholder="Search {{otField}}" class="input-sm form-control search-input"
+                type="search"/></th>
+        </tr>
+        </thead>
+        <tbody 	ng-show="!vm.isLoading">
+        <tr ng-repeat="item in vm.displayed">
+
+            <td ng-repeat="inField in vm.inFields">{{item.in[0][inField]}}</td>
+            <td ng-repeat="outField in vm.outFields">{{item.out[0][outField]}}</td>
+            <td ng-repeat="otField in vm.otFields">{{item.ot[0][otField]}}</td>
+
+        </tr>
+        </tbody>
+        <tbody ng-show="vm.isLoading">
+        <tr>
+            <td colspan="4" class="text-center">Loading ... </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="6" class="text-center">
+                <div st-pagination="" st-items-by-page="vm.limit" st-template="app/theme/misc/smartTablePagination.html"></div>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+
