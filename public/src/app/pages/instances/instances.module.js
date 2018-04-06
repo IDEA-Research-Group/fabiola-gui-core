@@ -108,6 +108,16 @@
                         controllerAs: 'vm'
                     }
                 }
+            }).state('instances.results.aggregate', {
+                url: '/aggregate/{instanceId}',
+                title: 'Instance Results: Aggregate View',
+                views: {
+                    'content': {
+                        templateUrl: 'app/pages/instances/results/aggregate/aggregate.html',
+                        controller: 'ResultsAggregateCtrl',
+                        controllerAs: 'vm'
+                    }
+                }
             });
     }
 
