@@ -65,9 +65,18 @@ router.get('/:instanceId', function (req, res, next) {
                     // Finally execute the query
                     findPaginate();
                 } else {
+                    //Let's sort the toIndex keys array
+                    var toIndexKeysArr = Object.keys(toIndex).sort();
+
                     // It will create the indexes only if they don't exist.
-                    Result.collection.createIndex(toIndex, {partialFilterExpression: {instanceId: instanceId}}).then(function (result) {
-                        findPaginate();
+                    Result.collection.createIndex(
+                            toIndex
+                            //{
+                            //    partialFilterExpression: {instanceId: instanceId},
+                            //    name: 'partFilt_instanceId: '+instanceId+'_' + Object.keys(toIndex).join('_')
+                            //}
+                        ).then(function (result) {
+                            findPaginate();
                     }).catch(next);
                 }
             } else
@@ -127,7 +136,7 @@ router.get('/aggregate/:instanceId', function (req, res, next) {
                     });
 
                     // It will create the indexes only if they don't exist.
-                    Result.collection.createIndex(toIndex, {partialFilterExpression: {instanceId: instanceId}}).then(function (result) {
+                    Result.collection.createIndex(toIndex/*, {partialFilterExpression: {instanceId: instanceId}}*/).then(function (result) {
                         // Finally execute the query
                         Result.aggregate([
                                 {$match: {instanceId: new mongoose.Types.ObjectId(instanceId)}},

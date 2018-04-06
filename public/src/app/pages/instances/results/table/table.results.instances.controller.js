@@ -9,7 +9,7 @@
         .controller('ResultsTableCtrl', ResultsTableCtrl);
 
     /** @ngInject */
-    function ResultsTableCtrl(Instances, $stateParams, $http) {
+    function ResultsTableCtrl(Instances, $stateParams, $http, searchEngine) {
         var vm = this;
 
         var instanceId = $stateParams.instanceId;
@@ -30,7 +30,7 @@
                 var index = vm.inFields.indexOf(field);
                 if(index!== -1) vm.inFields.splice(index, 1);
             }
-        }
+        };
 
         vm.updateOutList = function(field) {
             if(!vm.outFields.includes(field)){
@@ -39,7 +39,7 @@
                 var index = vm.outFields.indexOf(field);
                 if(index!== -1) vm.outFields.splice(index, 1);
             }
-        }
+        };
 
         vm.updateOtList = function(field) {
             if(!vm.otFields.includes(field)){
@@ -48,35 +48,37 @@
                 var index = vm.otFields.indexOf(field);
                 if(index!== -1) vm.otFields.splice(index, 1);
             }
-        }
+        };
 
         vm.callServer = function callServer(tableState) {
 
             vm.isLoading = true;
+            console.log(tableState)
+            if(!tableState)
+                tableState = vm.tableState;
 
             var pagination = tableState.pagination;
             var offset = pagination.start || 0;    // This is NOT the page number, but the index of item in the list that you want to use to display the table.
             var limit = pagination.number || 10;  // Number of entries showed per page.
 
-            var pages = (offset / limit) + 1;
+            var pages = (offset / limit) + 1; // current page
 
-            $http
-                .get('/api/v1/results/'+instanceId+'?limit=' + limit + '&page=' + pages)
-                .then(function (response) {
-                    var displayed = response.data.docs;
-                    var pages = response.data.pages;
-                    var limit = response.data.limit;
-                    vm.displayed = displayed;
-                    vm.pages = pages;
-                    vm.limit = limit;
+            var sortCriteria = tableState.sort;
 
-                    tableState.pagination.numberOfPages = pages;
+            searchEngine.execute(instanceId, {limit: limit, page: pages}, sortCriteria, function(response) {
+                var displayed = response.data.docs;
+                var pages = response.data.pages;
+                var limit = response.data.limit;
+                vm.displayed = displayed;
+                vm.pages = pages;
+                vm.limit = limit;
 
-                    vm.isLoading = false;
+                tableState.pagination.numberOfPages = pages;
 
-                }, function (error) {
-                });
+                vm.tableState = tableState;
+                vm.isLoading = false;
+            }, function(error){
+            });
         };
-
     }
 })();
