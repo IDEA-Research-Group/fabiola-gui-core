@@ -9,7 +9,7 @@
         .controller('ResultsAggregateCtrl', ResultsAggregateCtrl);
 
     /** @ngInject */
-    function ResultsAggregateCtrl(Instances, $stateParams, $http, baConfig, layoutPaths) {
+    function ResultsAggregateCtrl(Instances, $stateParams, $http, baConfig, layoutPaths, $timeout) {
         var vm = this;
 
         var instanceId = $stateParams.instanceId;
@@ -61,16 +61,14 @@
                 '&op=' + operation.value)
                 .then(function (response) {
                     var results = response.data;
-
-                    console.log(results);
-
+                    
                     vm.display = graphType.value;
                     vm.displayName = graphType.label;
 
-                    if(graphType.value === 'map')
+                    if (graphType.value === 'pie')
                         vm.displayPieChart(results);
                     else
-                        displayMap(results);
+                        vm.displayMap(results);
 
                 }, function (error) {
                 });
@@ -78,18 +76,16 @@
             console.log(vm.aggregateConfig)
         };
 
-        vm.displayPieChart = function(results) {
-
+        vm.displayPieChart = function (results) {
             var layoutColors = baConfig.colors;
 
             var labels = [];
             var data = [];
 
-            results.forEach(function(element) {
+            results.forEach(function (element) {
                 labels.push(element['_id']);
                 data.push(element['result']);
             });
-
 
             vm.labels = labels;
             vm.data = data;
@@ -107,88 +103,51 @@
                     }
                 }
             };
-
         };
 
+        vm.displayMap = function (results) {
+            var idTitles = AmCharts.maps.spainProvincesLow.svg.g.path.filter(x => x.title && x.id);
 
-
-        displayMap(null, baConfig.colors, layoutPaths)
-    }
-
-
-    function displayMap(result, layoutColors, layoutPaths){
-        console.log("aqui dentro")
-/*
-        AmCharts.makeChart( "chartdiv", {
-            "type": "map",
-            "theme": "light",
-            "colorSteps": 10,
-
-            "dataProvider": {
-                "map": "spainProvincesLow",
-                "areas": [ {
-                    "id": "ES-AL",
-                    "value": 4447100
-                }, {
-                    "id": "ES-SE",
-                    "value": 626932
-                }, {
-                    "id": "ES-M",
-                    "value": 5130632
-                }]
-            },
-
-            "areasSettings": {
-                "autoZoom": true
-            },
-
-            "valueLegend": {
-                "right": 10,
-                "minValue": "little",
-                "maxValue": "a lot!"
-            },
-
-            "export": {
-                "enabled": true
+            function locationNameToId(meta, locationName) {
+                return meta
+                        .map(y => [y.id, similarity(locationName, y.title)])
+                        .reduce((prev, current) => (prev[1] > current[1]) ? prev : current)[0];
             }
 
-        } );*/
+            var data = results
+                .map(x => { return {
+                    id: locationNameToId(idTitles, x._id), value: x.result
+                }});
 
-        AmCharts.makeChart('chartid', {
-            type: 'map',
-            theme: 'light',
-            zoomControl: { zoomControlEnabled: false, panControlEnabled: false },
+            var layoutColors = baConfig.colors;
 
-            dataProvider: {
-                "map": "spainProvincesLow",
-                "areas": [ {
-                    "id": "ES-AL",
-                    "value": 4447100
-                }, {
-                    "id": "ES-SE",
-                    "value": 626932
-                }, {
-                    "id": "ES-M",
-                    "value": 5130632
-                }]
-            },
+            var map;
+            AmCharts.theme = AmCharts.themes.blur;
+            map = new AmCharts.AmMap();
 
-            areasSettings: {
+            map.areasSettings = {
+                autoZoom: true,
                 rollOverOutlineColor: layoutColors.border,
                 rollOverColor: layoutColors.primaryDark,
                 alpha: 0.8,
                 unlistedAreasAlpha: 0.2,
                 unlistedAreasColor: layoutColors.defaultText,
-                balloonText: '[[title]]: [[customData]] sales'
-            },
-            export: {
-                enabled: true
-            },
-            creditsPosition: 'bottom-right',
-            pathToImages: layoutPaths.images.amChart
-        });
+                balloonText: '[[title]]: [[value]]'
+            };
 
+            map.pathToImages = layoutPaths.images.amMap;
 
-    };
+            var dataProvider = {
+                mapVar: AmCharts.maps.spainProvincesLow,
+                type: 'map',
+                areas: data
+            };
 
+            map.dataProvider = dataProvider;
+
+            $timeout(function () {
+                map.write('map-bubbles');
+            }, 100);
+        };
+    }
 })();

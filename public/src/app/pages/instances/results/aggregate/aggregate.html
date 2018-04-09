@@ -101,9 +101,6 @@
 
                     </div>
                 </div>
-
-
-
             </form>
         </div>
     </div>
@@ -127,21 +124,10 @@
     </div>
 </div>
 
-
-<div class="row">
-    <div class="col-xs-12 col-lg-12">
-        <div
-                ba-panel
-                ba-panel-title="Monthly sales predictions by State"
-                ba-panel-class="medium-panel">
+<div class="row" ng-show="vm.display === 'map'">
+    <div class="col-md-12 col-lg-12">
+        <div ba-panel ba-panel-title="{{vm.displayName}}" class="viewport100">
+            <div id="map-bubbles" style="width: 100%; height: 500px;"></div>
         </div>
     </div>
-</div>
-
-
-<div id="chartid" style="width: 100%;height: 500px;"></div>
-
-
-<div ba-panel ba-panel-title="Map with Bubbles" class="viewport100">
-
 </div>
