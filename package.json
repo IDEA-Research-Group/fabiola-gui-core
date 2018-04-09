@@ -1,6 +1,6 @@
 {
   "name": "fabiola-ui-core",
-  "version": "0.1.0-5a-dev",
+  "version": "0.1.0-BETA",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
