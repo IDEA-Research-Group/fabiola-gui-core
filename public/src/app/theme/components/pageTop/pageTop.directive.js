@@ -9,10 +9,18 @@
       .directive('pageTop', pageTop);
 
   /** @ngInject */
-  function pageTop() {
+  function pageTop($http, $rootScope) {
     return {
       restrict: 'E',
-      templateUrl: 'app/theme/components/pageTop/pageTop.html'
+      templateUrl: 'app/theme/components/pageTop/pageTop.html',
+      link: function (scope, element, attrs) {
+        if(!$rootScope.version){
+          $http.get('/api/v1/getVersion').then(function(response){
+            console.log(response.data)
+            $rootScope.version = response.data;
+          }, function(error){});
+        }
+      }
     };
   }
 

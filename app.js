@@ -21,6 +21,9 @@ var results = require('./routes/results');
 
 var BASE_API_PATH = "/api/v1";
 
+// Directory base path
+global.__base = __dirname + '/';
+
 var app = express();
 
 // view engine setup
@@ -40,6 +43,21 @@ app.use(BASE_API_PATH + '/instances', instances);
 app.use(BASE_API_PATH + '/modelDefinitions', modelDefinitions);
 app.use(BASE_API_PATH + '/results', results);
 //app.use('/users', users);
+
+
+// send web application version
+app.get(BASE_API_PATH + '/getVersion', function(req, res) {
+    var fs = require('fs');
+    var path = require('path');
+    var obj;
+    var pathToFile = path.resolve(__base, 'package.json');
+
+    fs.readFile(pathToFile, 'utf8', function(err, data) {
+        if (err) throw err;
+        obj = JSON.parse(data);
+        res.send(obj.version);
+    });
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
