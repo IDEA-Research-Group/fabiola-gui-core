@@ -24,7 +24,6 @@
                 }, true);
                 var modelDefinitionId = scope.modelDefinitionId;
                 scope.modelDefinition = ModelDefinitions.get({id: modelDefinitionId});
-                console.log(modelDefinitionId)
                 // Ace editor options
                 /*
                 scope.editorOpts = {

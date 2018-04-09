@@ -26,7 +26,7 @@
                 url: '/list',
                 title: 'List Instances',
                 views: {
-                    'list': {
+                    'content': {
                         templateUrl: 'app/pages/instances/list/list.html',
                         controller: 'ListInstancesCtrl',
                         controllerAs: 'vm'
@@ -40,7 +40,7 @@
                 url: '/create',
                 title: 'New Instance',
                 views: {
-                    'edit': {
+                    'content': {
                         templateUrl: 'app/pages/instances/edit/edit.html',
                         controller: 'EditInstanceCtrl',
                         controllerAs: 'vm'
@@ -54,7 +54,7 @@
                 url: '/edit/{instanceId}',
                 title: 'Edit Instance',
                 views: {
-                    'edit': {
+                    'content': {
                         templateUrl: 'app/pages/instances/edit/edit.html',
                         controller: 'EditInstanceCtrl',
                         controllerAs: 'vm'
@@ -66,15 +66,13 @@
                 url: '/clone/{instanceId}',
                 title: 'Clone Instance',
                 views: {
-                    'edit': {
+                    'content': {
                         templateUrl: 'app/pages/instances/edit/edit.html',
                         controller: 'EditInstanceCtrl',
                         controllerAs: 'vm'
                     }
                 }
-            })
-
-            .state('instances.list.delete', {
+            }).state('instances.list.delete', {
                 url: '/delete/{instanceId}',
                 onEnter: ['$stateParams', '$state', '$uibModal', function ($stateParams, $state, $uibModal) {
                     $uibModal.open({
@@ -93,6 +91,34 @@
                     });
                 }]
             })
+            .state('instances.results', {
+                url: '/results',
+                title: 'Instance Results',
+                templateUrl: 'app/pages/instances/results/results.html',
+                parent: 'instances',
+                abstract: true
+            })
+            .state('instances.results.table', {
+                url: '/table/{instanceId}',
+                title: 'Instance Results: Table View',
+                views: {
+                    'content': {
+                        templateUrl: 'app/pages/instances/results/table/table.html',
+                        controller: 'ResultsTableCtrl',
+                        controllerAs: 'vm'
+                    }
+                }
+            }).state('instances.results.aggregate', {
+                url: '/aggregate/{instanceId}',
+                title: 'Instance Results: Aggregate View',
+                views: {
+                    'content': {
+                        templateUrl: 'app/pages/instances/results/aggregate/aggregate.html',
+                        controller: 'ResultsAggregateCtrl',
+                        controllerAs: 'vm'
+                    }
+                }
+            });
     }
 
 })();

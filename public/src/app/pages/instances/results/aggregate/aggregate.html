@@ -1,0 +1,133 @@
+<show-instance instance-id="vm.instanceId"></show-instance>
+
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div ba-panel ba-panel-title="Aggregate configuration"
+             ba-panel-class="panel with-scroll light-text">
+            <form name="vm.aggregateForm" novalidate>
+                <div class="row">
+                    <div class="col-md-12 col-lg-3">
+                        <h5>Field to group by</h5>
+                        <div class="form-group">
+                            <ui-select ng-model="vm.aggregateConfig.groupField"
+                                       class="btn-group bootstrap-select form-control"
+                                       ng-disabled="false"
+                                       append-to-body="true"
+                                       search-enabled="true"
+                                       required>
+                                <ui-select-match placeholder="Select field to group by">
+                                    {{$select.selected.label}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="groupedItems in vm.groupedItems | groupSelectpickerOptions: {label: $select.search}"
+                                        group-by="'group'">
+                                    <span ng-bind-html="groupedItems.label | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-lg-3">
+                        <h5>Field to operate</h5>
+                        <div class="form-group">
+                            <ui-select ng-model="vm.aggregateConfig.operationField"
+                                       class="btn-group bootstrap-select form-control"
+                                       ng-disabled="false"
+                                       append-to-body="true"
+                                       search-enabled="true"
+                                       required>
+                                <ui-select-match placeholder="Select field to operate">
+                                    {{$select.selected.label}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="groupedItems in vm.groupedItems | groupSelectpickerOptions: {label: $select.search}"
+                                        group-by="'group'">
+                                    <span ng-bind-html="groupedItems.label | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-lg-3">
+                        <h5>Operation</h5>
+                        <div class="form-group">
+                            <ui-select ng-model="vm.aggregateConfig.operation"
+                                       class="btn-group bootstrap-select form-control"
+                                       ng-disabled="false"
+                                       append-to-body="true"
+                                       search-enabled="true"
+                                       required>
+                                <ui-select-match placeholder="Select operation">
+                                    {{$select.selected.label}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="groupedItems in vm.operations | groupSelectpickerOptions: {label: $select.search}"
+                                        group-by="'group'">
+                                    <span ng-bind-html="groupedItems.label | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-lg-3">
+                        <h5>Graph type</h5>
+                        <div class="form-group">
+                            <ui-select ng-model="vm.aggregateConfig.graphType"
+                                       class="btn-group bootstrap-select form-control"
+                                       ng-disabled="false"
+                                       append-to-body="true"
+                                       search-enabled="true"
+                                       required>
+                                <ui-select-match placeholder="Select graph type">
+                                    {{$select.selected.label}}
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="groupedItems in vm.graphTypes | groupSelectpickerOptions: {label: $select.search}"
+                                        group-by="'group'">
+                                    <span ng-bind-html="groupedItems.label | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <button type="button" ng-disabled="vm.aggregateForm.$invalid"
+                                class="btn btn-primary btn-with-icon" ng-click="vm.loadAggResults()"><i
+                                class="ion-search"></i>Execute query
+                        </button>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="row" ng-show="vm.display === 'pie'">
+    <div class="col-md-12 col-lg-12">
+        <div ba-panel ba-panel-title="{{vm.displayName}}"
+             ba-panel-class="panel with-scroll light-text">
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="chartjs-canvas-holder-first-row">
+                        <canvas id="doughnut" chart-options="vm.options" class="chart chart-doughnut"
+                                chart-data="vm.data" chart-labels="vm.labels">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-show="vm.display === 'map'">
+    <div class="col-md-12 col-lg-12">
+        <div ba-panel ba-panel-title="{{vm.displayName}}" class="viewport100">
+            <div id="map-bubbles" style="width: 100%; height: 500px;"></div>
+        </div>
+    </div>
+</div>

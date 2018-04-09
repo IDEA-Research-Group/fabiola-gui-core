@@ -1,0 +1,50 @@
+<div class="horizontal-scroll">
+    <div class="form-group select-page-size-wrap ">
+        <label>Rows on page
+            <select class="form-control selectpicker show-tick" title="Rows on page" selectpicker
+                    ng-model="vm.limit" ng-options="i for i in [5,10,15,20,25]">
+            </select>
+        </label>
+        <button type="button" class="btn btn-primary btn-with-icon" ng-click="vm.callServer()"><i class="ion-search"></i>Execute query</button>
+    </div>
+    <table class="table" st-pipe="vm.callServer" st-table="vm.displayed">
+        <thead>
+            <tr class="sortable ">
+                <th class="text-center" ng-repeat="inField in vm.inFields" st-sort>{{inField}}</th>
+                <th class="text-center" ng-repeat="outField in vm.outFields" st-sort="out.{{outField}}" >{{outField}}</th>
+                <th class="text-center" ng-repeat="otField in vm.otFields" st-sort>{{otField}}</th>
+            </tr>
+            <tr>
+                <th ng-repeat="inField in vm.inFields">
+                    <filter-results instance-id="{{vm.instanceId}}" field="in.{{inField}}" placeholder="Search {{inField}}"></filter-results>
+                </th>
+                <th ng-repeat="outField in vm.outFields">
+                    <filter-results instance-id="{{vm.instanceId}}" field="out.{{outField}}" placeholder="Search {{outField}}"></filter-results>
+                </th>
+                <th ng-repeat="otField in vm.otFields">
+                    <filter-results instance-id="{{vm.instanceId}}" field="ot.{{otField}}" placeholder="Search {{otField}}"></filter-results>
+                </th>
+            </tr>
+        </thead>
+        <tbody 	ng-show="!vm.isLoading">
+            <tr ng-repeat="item in vm.displayed">
+                <td class="text-center" ng-repeat="inField in vm.inFields">{{item.in[0][inField]}}</td>
+                <td class="text-center" ng-repeat="outField in vm.outFields">{{item.out[0][outField]}}</td>
+                <td class="text-center" ng-repeat="otField in vm.otFields">{{item.ot[0][otField]}}</td>
+            </tr>
+        </tbody>
+        <tbody ng-show="vm.isLoading">
+            <tr>
+                <td colspan="4" class="text-center">Loading ... </td>
+            </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="6" class="text-center">
+                <div st-pagination="" st-items-by-page="vm.limit" st-template="app/theme/misc/smartTablePagination.html"></div>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+
