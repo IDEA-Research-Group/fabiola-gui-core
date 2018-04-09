@@ -35,13 +35,12 @@
             <div class="row">
                 <div class="col-md-12 col-lg-6">
                     <ul class="btn-list clearfix">
-                        <li>
+                        <li ng-show="['NOT_STARTED', 'ERROR', 'KILLED'].includes(instance.status)">
                             <button type="button" class="btn btn-primary btn-with-icon" ng-click="runInstance(instance)"><i class="ion-ios-gear"></i>Run
                             </button>
                         </li>
-                        <li>
-                            <!-- <button type="button" class="btn btn-info btn-with-icon"><i class="ion-stats-bars"></i>Results
-                            </button> -->
+
+                        <li ng-show="['FINISHED'].includes(instance.status)">
                             <div class="btn-group" uib-dropdown dropdown-append-to-body>
                                 <button type="button" class="btn btn-info"><i class="ion-stats-bars"></i> Results</button>
                                 <button type="button" class="btn btn-info " uib-dropdown-toggle>
@@ -53,10 +52,8 @@
                                     <li><a ui-sref="instances.results.aggregate({instanceId: instance._id})">Aggregations</a></li>
                                 </ul>
                             </div>
-
-
                         </li>
-                        <li>
+                        <li ng-show="['NOT_STARTED', 'ERROR', 'KILLED'].includes(instance.status)">
                             <button type="button" class="btn btn-warning btn-with-icon" ui-sref="instances.edit({instanceId: instance._id})"><i class="ion-edit"></i>Edit
                             </button>
                         </li>
@@ -64,7 +61,7 @@
                             <button type="button" class="btn btn-default btn-with-icon" ui-sref="instances.clone({instanceId: instance._id})"><i class="ion-ios-copy"></i>Clone
                             </button>
                         </li>
-                        <li>
+                        <li ng-show="['NOT_STARTED', 'ERROR', 'KILLED', 'FINISHED'].includes(instance.status)">
                             <button type="button" class="btn btn-danger btn-with-icon" ui-sref="instances.list.delete({instanceId: instance._id})"><i class="ion-trash-b"></i>Delete
                             </button>
                         </li>

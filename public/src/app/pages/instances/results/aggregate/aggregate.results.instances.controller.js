@@ -61,7 +61,7 @@
                 '&op=' + operation.value)
                 .then(function (response) {
                     var results = response.data;
-                    
+
                     vm.display = graphType.value;
                     vm.displayName = graphType.label;
 
@@ -73,7 +73,6 @@
                 }, function (error) {
                 });
 
-            console.log(vm.aggregateConfig)
         };
 
         vm.displayPieChart = function (results) {
@@ -110,14 +109,16 @@
 
             function locationNameToId(meta, locationName) {
                 return meta
-                        .map(y => [y.id, similarity(locationName, y.title)])
-                        .reduce((prev, current) => (prev[1] > current[1]) ? prev : current)[0];
+                    .map(y => [y.id, similarity(locationName, y.title)])
+                    .reduce((prev, current) => (prev[1] > current[1]) ? prev : current)[0];
             }
 
             var data = results
-                .map(x => { return {
-                    id: locationNameToId(idTitles, x._id), value: x.result
-                }});
+                .map(x => {
+                    return {
+                        id: locationNameToId(idTitles, x._id), value: x.result
+                    }
+                });
 
             var layoutColors = baConfig.colors;
 
