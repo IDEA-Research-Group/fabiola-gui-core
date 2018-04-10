@@ -156,61 +156,64 @@ router.post('/run/:id', function (req, res, next) {
                 json: bodyReq,
                 headers: {'Authorization': 'token=eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoiYXZhbGVuY2lhcGFycmFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTUyMzc4MDQwNSwiaWF0IjoxNTIzMzQ4NDA1LCJpc3MiOiJodHRwczovL2Rjb3MuYXV0aDAuY29tLyIsInN1YiI6ImdpdGh1YnwxMDI4MDg2MiIsInVpZCI6ImF2YWxlbmNpYXBhcnJhQGdtYWlsLmNvbSJ9.k6oFjVoWHomd4w6-etkhZ0jUC4kGeDhgQZ76WoXh9y0'}
             }, function (error, response, body) {
-                console.log(body);
-                // We use the body parameter in order to check if there was an error.
-                try {
-                    var bodyJson = body;
-                    if (typeof bodyJson == 'string')
-                        bodyJson = JSON.parse(body);
-                    //console.log('\nbody\n')
-                    //console.log(util.inspect(body, false, null))
-                    // If an error has occurred, action field will be ErrorResponse or it won't exist.
-                    if (bodyJson.success && bodyJson.submissionId) {
-                        // Update the status and set the driverId
-                        instance.status = "RUNNING";
-                        instance.driverId = bodyJson.submissionId;
-                        instance.lastExecutionDate = new Date();
-                        Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
-                            // Una vez actualizado el estado, pasamos a hacer una petición a la API de mesos para
-                            // obtener el frameworkId. Lo hacemos ahora y no antes para evitar:
-                            // 1. Condiciones de carrera si hacemos ambas operaciones de forma asíncrona
-                            // 2. Que si hacemos todas las actualizaciones (estado + frameworkId) como callback a la
-                            // llamada a la API de Mesos, evitar que, si esta falla, la instancia no actualice su estado.
-                            // Es más crítico que se actualice el estado que el frameworkId.
-                            request.get(config.fabiola.spark.mesosFrameworksApiUri, function (error, response, body) {
-                                var bodyJson = body;
-                                if (typeof bodyJson == 'string')
-                                    bodyJson = JSON.parse(body);
-                                if (!error) {
-                                    var frameworkIdRes = bodyJson.frameworks
-                                        .filter(elem =>
-                                            elem.active === true &&
-                                            elem.connected === true &&
-                                            elem.name === config.fabiola.spark.mesosFrameworkName)
-                                        .map(elem => elem.id);
+                if(body.includes('Unauthorized')){
+                    res.status(401).send({error: "Unauthorized to access to the Spark cluster. Please renew the auth token."});
+                } else {
+                    // We use the body parameter in order to check if there was an error.
+                    try {
+                        var bodyJson = body;
+                        if (typeof bodyJson == 'string')
+                            bodyJson = JSON.parse(body);
+                        //console.log('\nbody\n')
+                        //console.log(util.inspect(body, false, null))
+                        // If an error has occurred, action field will be ErrorResponse or it won't exist.
+                        if (bodyJson.success && bodyJson.submissionId) {
+                            // Update the status and set the driverId
+                            instance.status = "RUNNING";
+                            instance.driverId = bodyJson.submissionId;
+                            instance.lastExecutionDate = new Date();
+                            Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
+                                // Una vez actualizado el estado, pasamos a hacer una petición a la API de mesos para
+                                // obtener el frameworkId. Lo hacemos ahora y no antes para evitar:
+                                // 1. Condiciones de carrera si hacemos ambas operaciones de forma asíncrona
+                                // 2. Que si hacemos todas las actualizaciones (estado + frameworkId) como callback a la
+                                // llamada a la API de Mesos, evitar que, si esta falla, la instancia no actualice su estado.
+                                // Es más crítico que se actualice el estado que el frameworkId.
+                                request.get(config.fabiola.spark.mesosFrameworksApiUri, function (error, response, body) {
+                                    var bodyJson = body;
+                                    if (typeof bodyJson == 'string')
+                                        bodyJson = JSON.parse(body);
+                                    if (!error) {
+                                        var frameworkIdRes = bodyJson.frameworks
+                                            .filter(elem =>
+                                                elem.active === true &&
+                                                elem.connected === true &&
+                                                elem.name === config.fabiola.spark.mesosFrameworkName)
+                                            .map(elem => elem.id);
 
-                                    if (frameworkIdRes) {
-                                        if (frameworkIdRes.length > 0) {
-                                            var frameworkId = frameworkIdRes[0];
-                                            var toUpdate = {frameworkId: frameworkId};
-                                            Instance.findByIdAndUpdate(instance._id, toUpdate, {new: true}).then(function (result) {
-                                                res.send(result);
-                                            }).catch(next);
+                                        if (frameworkIdRes) {
+                                            if (frameworkIdRes.length > 0) {
+                                                var frameworkId = frameworkIdRes[0];
+                                                var toUpdate = {frameworkId: frameworkId};
+                                                Instance.findByIdAndUpdate(instance._id, toUpdate, {new: true}).then(function (result) {
+                                                    res.send(result);
+                                                }).catch(next);
+                                            } else {
+                                                res.status(207).send(result);
+                                            }
                                         } else {
                                             res.status(207).send(result);
                                         }
                                     } else {
-                                        res.status(207).send(result);
+                                        res.sendStatus(207);
                                     }
-                                } else {
-                                    res.sendStatus(207);
-                                }
-                            });
-                        }).catch(next);
-                    } else
-                        res.status(500).send({error: "Failed to execute the instance with id " + id + "."});
-                } catch (e) {
-                    res.status(500).send({error: "Spark dispatcher response not understood."});
+                                });
+                            }).catch(next);
+                        } else
+                            res.status(500).send({error: "Failed to execute the instance with id " + id + "."});
+                    } catch (e) {
+                        res.status(500).send({error: "Spark dispatcher response not understood."});
+                    }
                 }
             });
         }
@@ -229,76 +232,85 @@ router.get('/status/:id', function (req, res, next) {
         if (!instance)
             res.status(400).send({error: "The instance with id " + id + " does not exist or its status is not RUNNING."});
         else {
-            request.get(config.fabiola.spark.submissionsUri + '/status/' + instance.driverId, function (error, response, body) {
+            request.get(
+                {
+                    url: config.fabiola.spark.submissionsUri + '/status/' + instance.driverId,
+                    headers: {'Authorization': 'token=eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoiYXZhbGVuY2lhcGFycmFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTUyMzc4MDQwNSwiaWF0IjoxNTIzMzQ4NDA1LCJpc3MiOiJodHRwczovL2Rjb3MuYXV0aDAuY29tLyIsInN1YiI6ImdpdGh1YnwxMDI4MDg2MiIsInVpZCI6ImF2YWxlbmNpYXBhcnJhQGdtYWlsLmNvbSJ9.k6oFjVoWHomd4w6-etkhZ0jUC4kGeDhgQZ76WoXh9y0'}
+                }, function (error, response, body) {
                 if (!error) {
-                    try {
-                        // Convert JSON string to JSON object
-                        var bodyJson = body;
-                        if (typeof bodyJson == 'string')
-                            bodyJson = JSON.parse(body);
 
-                        // If the petition was successful and the driver was found, the success field is true.
-                        // Otherwise, it may be false or undefined
-                        if (bodyJson.success) {
-                            // Check the wiki to check the different statuses and their interpretation
-                            if (bodyJson.driverState == 'RUNNING')
-                                res.status(200).send(instance); // If the driver state is RUNNING it means that the instance status has not changed
-                            // If the driverState is not RUNNING, it means either the task has finished successfully or there was an error
-                            else {
-                                var message = bodyJson.message;
-                                var state = message.split("state: ").pop().split('\n').shift();
-                                if (state == 'TASK_FINISHED') {
-                                    // The job has finished. Update the status in the instance document.
-                                    // TODO añadir la duración
+                    if(body.includes('Unauthorized')){
+                        res.status(401).send({error: "Unauthorized to access to the Spark cluster. Please renew the auth token."});
+                    } else {
+                        try {
+                            // Convert JSON string to JSON object
+                            var bodyJson = body;
+                            if (typeof bodyJson == 'string')
+                                bodyJson = JSON.parse(body);
 
-                                    request.get(config.fabiola.spark.historyApiUri
-                                        + '/applications/'
-                                        + instance.frameworkId + '-' + instance.driverId, function (error, response, body) {
+                            // If the petition was successful and the driver was found, the success field is true.
+                            // Otherwise, it may be false or undefined
+                            if (bodyJson.success) {
+                                // Check the wiki to check the different statuses and their interpretation
+                                if (bodyJson.driverState == 'RUNNING')
+                                    res.status(200).send(instance); // If the driver state is RUNNING it means that the instance status has not changed
+                                // If the driverState is not RUNNING, it means either the task has finished successfully or there was an error
+                                else {
+                                    var message = bodyJson.message;
+                                    var state = message.split("state: ").pop().split('\n').shift();
+                                    if (state == 'TASK_FINISHED') {
+                                        // The job has finished. Update the status in the instance document.
+                                        // TODO añadir la duración
 
-                                        if (!error) {
-                                            try {
-                                                var bodyJson = body;
-                                                if (typeof bodyJson == 'string')
-                                                    bodyJson = JSON.parse(body);
-                                                var duration = bodyJson.attempts[0].duration / 1000.0;
+                                        request.get(config.fabiola.spark.historyApiUri
+                                            + '/applications/'
+                                            + instance.frameworkId + '-' + instance.driverId, function (error, response, body) {
 
-                                                instance.status = "FINISHED";
-                                                instance.duration = duration;
-                                                //console.log(duration);
-                                                // Let's update this document in the database
-                                                Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
-                                                    res.send(result);
-                                                }).catch(next);
-                                            } catch (e) {
-                                                res.status(500).send({error: "Spark History Server response not understood."});
+                                            if (!error) {
+                                                try {
+                                                    var bodyJson = body;
+                                                    if (typeof bodyJson == 'string')
+                                                        bodyJson = JSON.parse(body);
+                                                    var duration = bodyJson.attempts[0].duration / 1000.0;
+
+                                                    instance.status = "FINISHED";
+                                                    instance.duration = duration;
+                                                    //console.log(duration);
+                                                    // Let's update this document in the database
+                                                    Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
+                                                        res.send(result);
+                                                    }).catch(next);
+                                                } catch (e) {
+                                                    res.status(500).send({error: "Spark History Server response not understood."});
+                                                }
+                                            } else {
+                                                res.status(500).send({error: "Couldn't get date from Spark History Server"});
                                             }
-                                        } else {
-                                            res.status(500).send({error: "Couldn't get date from Spark History Server"});
-                                        }
-                                    });
-                                } else {
-                                    // differentiate the TASK_FAILED and TASK_KILLED statuses
-                                    if (state === 'TASK_KILLED')
-                                        instance.status = "KILLED";
-                                    else
-                                        instance.status = "ERROR";
-                                    var errorMsg = message.split("message: ").pop().split('\n').shift();
-                                    instance.errorMsg = errorMsg;
+                                        });
+                                    } else {
+                                        // differentiate the TASK_FAILED and TASK_KILLED statuses
+                                        if (state === 'TASK_KILLED')
+                                            instance.status = "KILLED";
+                                        else
+                                            instance.status = "ERROR";
+                                        var errorMsg = message.split("message: ").pop().split('\n').shift();
+                                        instance.errorMsg = errorMsg;
 
-                                    // var stateMessage = message.split("state: ").pop().split('\\n').shift();
-                                    // Let's update this document in the database
-                                    Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
-                                        res.send(result);
-                                    }).catch(next);
+                                        // var stateMessage = message.split("state: ").pop().split('\\n').shift();
+                                        // Let's update this document in the database
+                                        Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
+                                            res.send(result);
+                                        }).catch(next);
+                                    }
                                 }
+                            } else {
+                                // TODO it may mean that the driverId does not exist. It could be because the Spark dispatcher was restarted
+                                // TODO in this case, it would be necessary to query the Spark history server
+                                res.status(500).send({error: "Failed to get the status of the instance with id " + id + "."});
                             }
-                        } else {
-                            // TODO it may mean that the driverId does not exist. It could be because the Spark dispatcher was restarted
-                            // TODO in this case, it would be necessary to query the Spark history server
-                            res.status(500).send({error: "Failed to get the status of the instance with id " + id + "."});
+                        } catch (e) {
+                            res.status(500).send({error: "Spark dispatcher response not understood."});
                         }
-                    } catch (e) {
-                        res.status(500).send({error: "Spark dispatcher response not understood."});
                     }
                 } else {
                     res.status(500).send({error: "The Spark dispatcher is not available."});
