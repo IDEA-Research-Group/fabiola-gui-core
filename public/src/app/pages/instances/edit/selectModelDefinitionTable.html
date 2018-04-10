@@ -1,0 +1,25 @@
+<div class="horizontal-scroll">
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in vm.modelDefinitions">
+            <td>{{item.name}}</td>
+            <span class="center-block">
+                <td ng-if="item._id == vm.selectedMd._id"><button type="button" class="btn btn-xs btn-success btn-with-icon"><i class="ion-android-checkmark-circle"></i>Selected</button></td>
+            </span>
+            <span class="center-block">
+                <td ng-if="item._id != vm.selectedMd._id"><button class="status-button btn btn-xs btn-primary" ng-click="vm.selectMd(item)">Select</button></td>
+            </span>
+        </tr>
+        </tbody>
+    </table>
+    <ul uib-pagination boundary-links="true" items-per-page="vm.mdPagination.limit" total-items="vm.mdPagination.total"
+        ng-model="vm.mdPagination.page" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;"
+        first-text="&laquo;" last-text="&raquo;" ng-change="vm.loadMdPage()">
+    </ul>
+</div>

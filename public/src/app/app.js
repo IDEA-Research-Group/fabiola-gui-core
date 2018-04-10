@@ -5,6 +5,8 @@ angular.module('BlurAdmin', [
   'ui.bootstrap',
   'ui.sortable',
   'ui.router',
+  'ui.select',
+  'ngResource',
   'ngTouch',
   'toastr',
   'smart-table',
@@ -12,7 +14,9 @@ angular.module('BlurAdmin', [
   'ui.slimscroll',
   'ngJsTree',
   'angular-progress-button-styles',
-
+  'ui.codemirror',
+  'ui.ace',
   'BlurAdmin.theme',
-  'BlurAdmin.pages'
+  'BlurAdmin.pages',
+  'BlurAdmin.services'
 ]);

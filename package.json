@@ -1,6 +1,6 @@
 {
-  "name": "fabiola-gui-core",
-  "version": "0.1.0-4a-dev",
+  "name": "fabiola-ui-core",
+  "version": "0.1.0-BETA",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -14,13 +14,13 @@
     "express": "~4.15.5",
     "helmet": "^3.9.0",
     "jade": "~1.11.0",
-    "moment": "^2.21.0",
-    "mongoose": "^5.0.9",
+    "moment": "^2.22.0",
+    "mongoose": "^5.0.13",
     "mongoose-paginate": "^5.0.3",
     "mongoose-ref-validator": "^1.0.21",
     "morgan": "~1.9.0",
     "query-to-mongo": "^0.8.1",
-    "request": "^2.83.0",
+    "request": "^2.85.0",
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
@@ -48,7 +48,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-replace": "~0.5.4",
     "gulp-rev": "~7.1.2",
-    "gulp-rev-replace": "~0.4.2",
+    "gulp-rev-replace": "^0.4.4",
     "gulp-sass": "~2.3.2",
     "gulp-shell": "^0.5.2",
     "gulp-size": "~2.1.0",
@@ -58,7 +58,7 @@
     "gulp-util": "~3.0.6",
     "gulp-zip": "^3.0.2",
     "http-proxy-middleware": "~0.17.2",
-    "lodash": "~4.17.2",
+    "lodash": "^4.17.5",
     "main-bower-files": "~2.13.1",
     "uglify-save-license": "~0.4.1",
     "wiredep": "~4.0.0",

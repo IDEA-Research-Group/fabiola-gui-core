@@ -20,12 +20,16 @@ router.get('/:instanceId', function (req, res, next) {
     // Let's delete the fields that wee won't use for filtering
     delete query.page;
     delete query.limit;
+    // Let's delete instanceId in case the user has added this field to query for it
+    delete query.instanceId;
 
     // Parse de query to MongoDB format
     query = q2m(query);
 
     // Get the fields to index
-    var fieldsToIndex = Object.keys(Object.assign(query.criteria, query.options.sort));
+    var merged = {};
+    Object.assign(merged, query.criteria, query.options.sort);
+    var fieldsToIndex = Object.keys(merged);
 
     // Let's check whether the instance exists and if the fields to query also exist
     Instance.findById(instanceId).then(function (instance) {
@@ -43,27 +47,36 @@ router.get('/:instanceId', function (req, res, next) {
 
             if (isSubset) {
                 var toIndex = {};
-                Object.keys(Object.assign(query.criteria, query.options.sort)).forEach(function (key) {
+                Object.keys(merged).forEach(function (key) {
                     toIndex[key] = 1;
                 });
 
                 var findPaginate = function () {
                     Result.paginate(
                         // Query: it includes the instanceId, the criteria and the sort options.
-                        Object.assign({'instanceId': instanceId}, query.criteria, query.options.sort),
-                        pagination
+                        Object.assign({'instanceId': instanceId}, query.criteria),
+                        Object.assign(pagination, {sort: query.options.sort})
                     ).then(function (elements) {
                         res.send(elements);
                     }).catch(next);
-                }
+                };
 
                 if (Object.keys(toIndex).length === 0) {
                     // Finally execute the query
                     findPaginate();
                 } else {
+                    //Let's sort the toIndex keys array
+                    var toIndexKeysArr = Object.keys(toIndex).sort();
+
                     // It will create the indexes only if they don't exist.
-                    Result.collection.createIndex(toIndex, {partialFilterExpression: {instanceId: instanceId}}).then(function (result) {
-                        findPaginate();
+                    Result.collection.createIndex(
+                            toIndex
+                            //{
+                            //    partialFilterExpression: {instanceId: instanceId},
+                            //    name: 'partFilt_instanceId: '+instanceId+'_' + Object.keys(toIndex).join('_')
+                            //}
+                        ).then(function (result) {
+                            findPaginate();
                     }).catch(next);
                 }
             } else
@@ -123,7 +136,7 @@ router.get('/aggregate/:instanceId', function (req, res, next) {
                     });
 
                     // It will create the indexes only if they don't exist.
-                    Result.collection.createIndex(toIndex, {partialFilterExpression: {instanceId: instanceId}}).then(function (result) {
+                    Result.collection.createIndex(toIndex/*, {partialFilterExpression: {instanceId: instanceId}}*/).then(function (result) {
                         // Finally execute the query
                         Result.aggregate([
                                 {$match: {instanceId: new mongoose.Types.ObjectId(instanceId)}},

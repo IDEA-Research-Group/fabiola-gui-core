@@ -23,7 +23,7 @@
     "Ionicons": "ionicons#~2.0.1",
     "amcharts": "~3.15.2",
     "amcharts-stock": "*",
-    "ammap": "~3.14.5",
+    "ammap": "^3.18.3",
     "angular": "~1.5.8",
     "angular-route": "~1.5.8",
     "angular-slimscroll": "~1.1.5",
@@ -54,7 +54,10 @@
     "textAngular": "~1.4.6",
     "angular-xeditable": "~0.5.0",
     "ng-js-tree": "~0.0.7",
-    "angular-ui-select": "^0.19.6"
+    "angular-ui-select": "^0.19.6",
+    "angular-ui-codemirror": "^0.3.0",
+    "angular-ui-ace": "^0.2.3",
+    "angular-resource": "~1.5.8"
   },
   "resolutions": {
     "angular": "~1.5.9",
@@ -77,7 +80,9 @@
     "ammap": {
       "main": [
         "./dist/ammap/ammap.js",
-        "./dist/ammap/maps/js/worldLow.js"
+        "./dist/ammap/maps/js/worldLow.js",
+        "./dist/ammap/maps/js/usaLow.js",
+        "./dist/ammap/maps/js/spainProvincesLow.js"
       ]
     },
     "bootstrap": {

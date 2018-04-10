@@ -1,0 +1,73 @@
+<div class="row" ng-show="instanceId">
+    <div class="col-md-12 col-lg-12">
+        <div ba-panel ba-panel-title="Instance {{instance._id}}"
+             ba-panel-class="medium-panel with-scroll light-text">
+            <div class="row">
+                <div class="col-md-12 col-lg-6">
+                    <h5>Model Definition</h5>
+                    <p>{{instance.modelDefinition}}</p>
+                    <h5>Creation date</h5>
+                    <p>{{instance.creationDate | date : 'medium'}}</p>
+                    <h5>Dataset</h5>
+                    <p>{{instance.datasetUri}}</p>
+                    <h5>Status</h5>
+                    <div ng-switch="instance.status">
+                        <p ng-switch-when="ERROR"><i class="ion-record large" style="color: #FF0000"></i> Error</p>
+                        <p ng-switch-when="KILLED"><i class="ion-record" style="color: #FF0000"></i> Killed</p>
+                        <p ng-switch-when="RUNNING"><i class="ion-record" style="color: #FFFF00"></i> Running</p>
+                        <p ng-switch-when="FINISHED"><i class="ion-record" style="color: #327E04"></i> Finished</p>
+                        <p ng-switch-default><i class="ion-record" style="color: #C2C2A3"></i> Not started</p>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-6">
+                    <h5>Last execution date</h5>
+                    <p>{{instance.lastExecutionDate | date : 'medium'}}</p>
+                    <h5>Duration</h5>
+                    <p>{{instance.duration}}</p>
+                    <h5>IN</h5>
+                    <p>{{instance.in.join(', ')}}</p>
+                    <h5>OUT</h5>
+                    <p>{{instance.out.join(', ')}}</p>
+                    <h5>OTHER</h5>
+                    <p>{{instance.ot.join(', ')}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-lg-6">
+                    <ul class="btn-list clearfix">
+                        <li ng-show="['NOT_STARTED', 'ERROR', 'KILLED'].includes(instance.status)">
+                            <button type="button" class="btn btn-primary btn-with-icon" ng-click="runInstance(instance)"><i class="ion-ios-gear"></i>Run
+                            </button>
+                        </li>
+
+                        <li ng-show="['FINISHED'].includes(instance.status)">
+                            <div class="btn-group" uib-dropdown dropdown-append-to-body>
+                                <button type="button" class="btn btn-info"><i class="ion-stats-bars"></i> Results</button>
+                                <button type="button" class="btn btn-info " uib-dropdown-toggle>
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul uib-dropdown-menu>
+                                    <li><a ui-sref="instances.results.table({instanceId: instance._id})">Table</a></li>
+                                    <li><a ui-sref="instances.results.aggregate({instanceId: instance._id})">Aggregations</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li ng-show="['NOT_STARTED', 'ERROR', 'KILLED'].includes(instance.status)">
+                            <button type="button" class="btn btn-warning btn-with-icon" ui-sref="instances.edit({instanceId: instance._id})"><i class="ion-edit"></i>Edit
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn-default btn-with-icon" ui-sref="instances.clone({instanceId: instance._id})"><i class="ion-ios-copy"></i>Clone
+                            </button>
+                        </li>
+                        <li ng-show="['NOT_STARTED', 'ERROR', 'KILLED', 'FINISHED'].includes(instance.status)">
+                            <button type="button" class="btn btn-danger btn-with-icon" ui-sref="instances.list.delete({instanceId: instance._id})"><i class="ion-trash-b"></i>Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+<show-instance instance-id="vm.instanceId"></show-instance>
+
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div ba-panel ba-panel-title="Table configuration"
+             ba-panel-class="with-scroll light-text">
+            <div class="row">
+                <div class="col-md-12 col-lg-4" >
+                    <strong>Input fields</strong>
+                    <span ng-repeat="field in vm.instance.in">
+                        <label class="checkbox custom-checkbox nowrap" for="in.{{field}}">
+                            <input type="checkbox" value="{{field}}" ng-checked="vm.inFields.includes(field)" ng-click="vm.updateInList(field)" name="group" id="in.{{field}}">
+                            <span>{{field}}</span>
+                        </label>
+                    </span>
+                </div>
+                <div class="col-md-12 col-lg-4" >
+                    <strong>Output fields</strong>
+                    <span ng-repeat="field in vm.instance.out">
+                        <label class="checkbox custom-checkbox" for="out.{{field}}">
+                            <input type="checkbox" value="{{field}}" ng-checked="vm.outFields.includes(field)" ng-click="vm.updateOutList(field)" name="group" id="out.{{field}}">
+                            <span>{{field}}</span>
+                        </label>
+                    </span>
+                </div>
+                <div class="col-md-12 col-lg-4" >
+                    <strong>Other fields</strong>
+                    <span ng-repeat="field in vm.instance.ot">
+                        <label class="checkbox custom-checkbox nowrap" for="ot.{{field}}">
+                            <input type="checkbox" value="{{field}}" ng-checked="vm.otFields.includes(field)" ng-click="vm.updateOtList(field)" name="group" id="ot.{{field}}">
+                            <span>{{field}}</span>
+                        </label>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="widgets">
+    <div class="row">
+        <div class="col-md-12">
+            <div ba-panel ba-panel-title="Results Table"
+                 ba-panel-class="with-scroll">
+                <div include-with-scope="app/pages/instances/results/table/resultsSmartTable.html"></div>
+            </div>
+        </div>
+    </div>
+</div>

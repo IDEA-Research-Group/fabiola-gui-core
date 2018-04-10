@@ -1,0 +1,149 @@
+<div class="widgets">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div ba-panel ba-panel-title="New instance" ba-panel-class="with-scroll">
+                <ba-wizard>
+                    <!-- Step 1: ModelDefinition -->
+                    <ba-wizard-step title="Model Definition" form="vm.selectMdForm">
+                        <form name="vm.selectMdForm" novalidate>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!-- List of model definitions -->
+                                    <div include-with-scope="app/pages/instances/edit/selectModelDefinitionTable.html"></div>
+                                    <!-- Hidden field for Model Definition and feedback message -->
+                                    <div class="form-group has-feedback"
+                                         ng-class="{'has-error': vm.selectMdForm.modelDefinition.$invalid && (vm.selectMdForm.modelDefinition.$dirty || vm.selectMdForm.$submitted)}">
+                                        <input type="hidden" ng-model="vm.instance.modelDefinition" id="modelDefinition"
+                                               name="modelDefinition" required/>
+                                        <span class="help-block error-block basic-block">You must select a Model Definition</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-show="vm.selectedMd">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h3>Previewing Model Definition {{vm.selectedMd.name}}</h3>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>Domain Data</h4>
+                                        <div ui-ace="vm.editorOpts" readonly ng-model="vm.selectedMd.domainData"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>Variables</h4>
+                                        <div ui-ace="vm.editorOpts" readonly ng-model="vm.selectedMd.variables"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>Constraints</h4>
+                                        <div ui-ace="vm.editorOpts" readonly ng-model="vm.selectedMd.constraints"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>Objective</h4>
+                                        <div ui-ace="vm.editorOpts" readonly ng-model="vm.selectedMd.objective"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>Solution</h4>
+                                        <div ui-ace="vm.editorOpts" readonly ng-model="vm.selectedMd.solution"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </ba-wizard-step>
+
+                    <!-- Step 2: Dataset -->
+                    <ba-wizard-step title="Dataset" form="vm.datasetForm">
+                        <form name="vm.datasetForm" novalidate>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group has-feedback"
+                                         ng-class="{'has-error': vm.datasetForm.datasetUri.$invalid && (vm.datasetForm.datasetUri.$dirty || vm.datasetForm.$submitted)}">
+                                        <label for="datasetUri">Dataset URI</label>
+                                        <input type="text" class="form-control" id="datasetUri" name="datasetUri"
+                                               placeholder="Dataset URI" ng-model="vm.instance.datasetUri"
+                                               required>
+                                        <span class="help-block error-block basic-block">Required</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </ba-wizard-step>
+
+                    <!-- Step 3: Data Mapping -->
+                    <ba-wizard-step title="Data Mapping" form="vm.dataMappingForm">
+                        <form name="vm.dataMappingForm" novalidate>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group has-feedback"
+                                         ng-class="{'has-error': vm.dataMappingForm.IN.$invalid && (vm.dataMappingForm.IN.$dirty || vm.dataMappingForm.$submitted)}">
+                                        <label for="IN">IN fields</label>
+                                        <input type="text" class="form-control" id="IN" name="IN"
+                                               placeholder="Input fields" ng-model="vm.instance.in" required>
+                                        <span class="help-block error-block basic-block">Required</span>
+                                    </div>
+                                    <div class="form-group has-feedback"
+                                         ng-class="{'has-error': vm.dataMappingForm.OUT.$invalid && (vm.dataMappingForm.OUT.$dirty || vm.dataMappingForm.$submitted)}">
+                                        <label for="OUT">OUT fields</label>
+                                        <input type="text" class="form-control" id="OUT" name="OUT"
+                                               placeholder="Output fields" ng-model="vm.instance.out" required>
+                                        <span class="help-block error-block basic-block">Required</span>
+                                    </div>
+                                    <div class="form-group has-feedback"
+                                         ng-class="{'has-error': vm.dataMappingForm.OT.$invalid && (vm.dataMappingForm.OT.$dirty || vm.dataMappingForm.$submitted)}">
+                                        <label for="OT">OTHER fields</label>
+                                        <input type="text" class="form-control" id="OT" name="OT"
+                                               placeholder="Other fields" ng-model="vm.instance.ot" required>
+                                        <span class="help-block error-block basic-block">Required</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </ba-wizard-step>
+
+                    <!-- Step 4: Final steps -->
+                    <ba-wizard-step title="Final Steps">
+                        <form class="form-horizontal" name="vm.finalStepsForm" novalidate>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group has-feedback"
+                                         ng-class="{'has-error': vm.finalStepsForm.timeout.$invalid && (vm.finalStepsForm.timeout.$dirty || vm.finalStepsForm.$submitted)}">
+                                        <label for="timeout">Timeout</label>
+                                        <input type="number" class="form-control" id="timeout"
+                                               name="timeout"
+                                               placeholder="Timeout" ng-model="vm.instance.timeout"
+                                               size="10"
+                                               required>
+                                        <span class="help-block error-block basic-block">Required</span>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label class="custom-checkbox">
+                                            <input type="checkbox" ng-model="vm.instance.metrics" ng-true-value="true" ng-false-value="false">
+                                            <span>Save metrics information</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <button ng-disabled="vm.finalStepsForm.$invalid"
+                                            progress-button="vm.progressFunction()" class="btn btn-primary">Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </ba-wizard-step>
+                </ba-wizard>
+            </div>
+        </div>
+    </div>
+
+</div>
