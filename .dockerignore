@@ -1,0 +1,6 @@
+node_modules
+npm-debug.log
+public/.tmp
+public/bower_components
+public/dist
+public/release

@@ -105,16 +105,18 @@
         };
 
         vm.displayMap = function (results) {
-            var idTitles = AmCharts.maps.spainProvincesLow.svg.g.path.filter(x => x.title && x.id);
+            var idTitles = AmCharts.maps.spainProvincesLow.svg.g.path.filter(function(x) {
+                return x.title && x.id
+            });
 
             function locationNameToId(meta, locationName) {
                 return meta
-                    .map(y => [y.id, similarity(locationName, y.title)])
-                    .reduce((prev, current) => (prev[1] > current[1]) ? prev : current)[0];
+                    .map(function(y){return [y.id, similarity(locationName, y.title)]})
+                    .reduce(function(prev, current) {return (prev[1] > current[1]) ? prev : current})[0];
             }
 
             var data = results
-                .map(x => {
+                .map(function(x) {
                     return {
                         id: locationNameToId(idTitles, x._id), value: x.result
                     }
@@ -151,4 +153,54 @@
             }, 100);
         };
     }
+
+    function stripAccents(str) {
+        var reAccents = /[àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ]/g;
+        var replacements = 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY';
+        return str.replace(reAccents, function (match) {
+            return replacements[reAccents.source.indexOf(match)];
+        });
+    };
+
+    function editDistance(s1, s2) {
+        s1 = stripAccents(s1.toLowerCase());
+        s2 = stripAccents(s2.toLowerCase());
+
+        var costs = new Array();
+        for (var i = 0; i <= s1.length; i++) {
+            var lastValue = i;
+            for (var j = 0; j <= s2.length; j++) {
+                if (i == 0)
+                    costs[j] = j;
+                else {
+                    if (j > 0) {
+                        var newValue = costs[j - 1];
+                        if (s1.charAt(i - 1) != s2.charAt(j - 1))
+                            newValue = Math.min(Math.min(newValue, lastValue),
+                                costs[j]) + 1;
+                        costs[j - 1] = lastValue;
+                        lastValue = newValue;
+                    }
+                }
+            }
+            if (i > 0)
+                costs[s2.length] = lastValue;
+        }
+        return costs[s2.length];
+    }
+
+    function similarity(s1, s2) {
+        var longer = s1;
+        var shorter = s2;
+        if (s1.length < s2.length) {
+            longer = s2;
+            shorter = s1;
+        }
+        var longerLength = longer.length;
+        if (longerLength == 0) {
+            return 1.0;
+        }
+        return (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+    }
+
 })();
