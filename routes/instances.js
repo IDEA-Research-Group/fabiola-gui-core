@@ -269,9 +269,12 @@ router.get('/status/:id', function (req, res, next) {
                                         // The job has finished. Update the status in the instance document.
                                         // TODO añadir la duración
 
-                                        request.get(config.fabiola.spark.historyApiUri
-                                            + '/applications/'
-                                            + instance.frameworkId + '-' + instance.driverId, function (error, response, body) {
+                                        request.get(
+                                            {url:config.fabiola.spark.historyApiUri
+                                                + '/applications/'
+                                                + instance.frameworkId + '-' + instance.driverId,
+                                             headers: {'Authorization': 'token=eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoiYXZhbGVuY2lhcGFycmFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTUyMzc4MDQwNSwiaWF0IjoxNTIzMzQ4NDA1LCJpc3MiOiJodHRwczovL2Rjb3MuYXV0aDAuY29tLyIsInN1YiI6ImdpdGh1YnwxMDI4MDg2MiIsInVpZCI6ImF2YWxlbmNpYXBhcnJhQGdtYWlsLmNvbSJ9.k6oFjVoWHomd4w6-etkhZ0jUC4kGeDhgQZ76WoXh9y0'}
+                                            }, function (error, response, body) {
 
                                             if (!error) {
                                                 try {
