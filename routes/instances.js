@@ -140,12 +140,12 @@ router.post('/run/:id', function (req, res, next) {
                     'spark.submit.deployMode': "cluster",
                     'spark.app.name': "FABIOLA",
                     // ONLY FOR PRODUCTION ENVIRONMNET
-                    "spark.eventLog.enabled": "true",
-                    "spark.eventLog.dir": "hdfs://hdfs:8020/history",
-                    "spark.mesos.executor.docker.forcePullImage": "true",
-                    "spark.mesos.executor.docker.image": "mesosphere/spark:2.1.0-2.2.1-1-hadoop-2.6",
-                    "spark.mesos.uris": config.fabiola.spark.mesosUris,
-                    "spark.mesos.driver.labels": config.fabiola.spark.mesosDriverLabels,
+                    //"spark.eventLog.enabled": "true",
+                    //"spark.eventLog.dir": "hdfs://hdfs:8020/history",
+                    //"spark.mesos.executor.docker.forcePullImage": "true",
+                    //"spark.mesos.executor.docker.image": "mesosphere/spark:2.1.0-2.2.1-1-hadoop-2.6",
+                    //"spark.mesos.uris": config.fabiola.spark.mesosUris,
+                    //"spark.mesos.driver.labels": config.fabiola.spark.mesosDriverLabels,
                     // END ONLY FOR PRODUCTION ENVIRONMENT
                     'spark.master': config.fabiola.spark.master
                 }
