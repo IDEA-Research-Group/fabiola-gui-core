@@ -154,7 +154,7 @@ router.post('/run/:id', function (req, res, next) {
             request.post({
                 url: config.fabiola.spark.submissionsUri + '/create',
                 json: bodyReq,
-                headers: {'Authorization': 'token=eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoiYXZhbGVuY2lhcGFycmFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTUyMDQyMDk5MiwiaWF0IjoxNTE5OTg4OTkyLCJpc3MiOiJodHRwczovL2Rjb3MuYXV0aDAuY29tLyIsInN1YiI6ImdpdGh1YnwxMDI4MDg2MiIsInVpZCI6ImF2YWxlbmNpYXBhcnJhQGdtYWlsLmNvbSJ9.vJ4pApJNnmpv-f6QCJrqzs4tvSWailqwQ4EliSesuYw'}
+                headers: {'Authorization': 'token=eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoiYXZhbGVuY2lhcGFycmFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTUyMzc4MDQwNSwiaWF0IjoxNTIzMzQ4NDA1LCJpc3MiOiJodHRwczovL2Rjb3MuYXV0aDAuY29tLyIsInN1YiI6ImdpdGh1YnwxMDI4MDg2MiIsInVpZCI6ImF2YWxlbmNpYXBhcnJhQGdtYWlsLmNvbSJ9.k6oFjVoWHomd4w6-etkhZ0jUC4kGeDhgQZ76WoXh9y0'}
             }, function (error, response, body) {
                 console.log(body);
                 // We use the body parameter in order to check if there was an error.
