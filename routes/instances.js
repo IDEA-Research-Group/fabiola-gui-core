@@ -103,8 +103,8 @@ router.delete('/:id', function (req, res, next) {
                 status = instance.status;
                 // TODO si borra una instancia cuyo estado es FINISHED, borrar los resultados asociados a esta isntancia
                 // if(status == 'FINISHED') //
-                Result.remove({'instanceId': id},function(err, removed){
-                    if(err)
+                Result.remove({'instanceId': id}, function (err, removed) {
+                    if (err)
                         res.sendStatus(207)
                     else
                         res.sendStatus(204);
@@ -155,57 +155,62 @@ router.post('/run/:id', function (req, res, next) {
                 url: config.fabiola.spark.submissionsUri + '/create',
                 json: bodyReq
             }, function (error, response, body) {
+                console.log(body);
                 // We use the body parameter in order to check if there was an error.
-                var bodyJson = body;
-                if (typeof bodyJson == 'string')
-                    bodyJson = JSON.parse(body);
-                //console.log('\nbody\n')
-                //console.log(util.inspect(body, false, null))
-                // If an error has occurred, action field will be ErrorResponse or it won't exist.
-                if (bodyJson.success && bodyJson.submissionId) {
-                    // Update the status and set the driverId
-                    instance.status = "RUNNING";
-                    instance.driverId = bodyJson.submissionId;
-                    instance.lastExecutionDate = new Date();
-                    Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
-                        // Una vez actualizado el estado, pasamos a hacer una petición a la API de mesos para
-                        // obtener el frameworkId. Lo hacemos ahora y no antes para evitar:
-                        // 1. Condiciones de carrera si hacemos ambas operaciones de forma asíncrona
-                        // 2. Que si hacemos todas las actualizaciones (estado + frameworkId) como callback a la
-                        // llamada a la API de Mesos, evitar que, si esta falla, la instancia no actualice su estado.
-                        // Es más crítico que se actualice el estado que el frameworkId.
-                        request.get(config.fabiola.spark.mesosFrameworksApiUri, function (error, response, body) {
-                            var bodyJson = body;
-                            if (typeof bodyJson == 'string')
-                                bodyJson = JSON.parse(body);
-                            if (!error) {
-                                var frameworkIdRes = bodyJson.frameworks
-                                    .filter(elem =>
-                                        elem.active === true &&
-                                        elem.connected === true &&
-                                        elem.name === config.fabiola.spark.mesosFrameworkName)
-                                    .map( elem => elem.id);
+                try {
+                    var bodyJson = body;
+                    if (typeof bodyJson == 'string')
+                        bodyJson = JSON.parse(body);
+                    //console.log('\nbody\n')
+                    //console.log(util.inspect(body, false, null))
+                    // If an error has occurred, action field will be ErrorResponse or it won't exist.
+                    if (bodyJson.success && bodyJson.submissionId) {
+                        // Update the status and set the driverId
+                        instance.status = "RUNNING";
+                        instance.driverId = bodyJson.submissionId;
+                        instance.lastExecutionDate = new Date();
+                        Instance.findByIdAndUpdate(instance._id, instance, {new: true}).then(function (result) {
+                            // Una vez actualizado el estado, pasamos a hacer una petición a la API de mesos para
+                            // obtener el frameworkId. Lo hacemos ahora y no antes para evitar:
+                            // 1. Condiciones de carrera si hacemos ambas operaciones de forma asíncrona
+                            // 2. Que si hacemos todas las actualizaciones (estado + frameworkId) como callback a la
+                            // llamada a la API de Mesos, evitar que, si esta falla, la instancia no actualice su estado.
+                            // Es más crítico que se actualice el estado que el frameworkId.
+                            request.get(config.fabiola.spark.mesosFrameworksApiUri, function (error, response, body) {
+                                var bodyJson = body;
+                                if (typeof bodyJson == 'string')
+                                    bodyJson = JSON.parse(body);
+                                if (!error) {
+                                    var frameworkIdRes = bodyJson.frameworks
+                                        .filter(elem =>
+                                            elem.active === true &&
+                                            elem.connected === true &&
+                                            elem.name === config.fabiola.spark.mesosFrameworkName)
+                                        .map(elem => elem.id);
 
-                                if(frameworkIdRes){
-                                    if(frameworkIdRes.length > 0){
-                                        var frameworkId = frameworkIdRes[0];
-                                        var toUpdate = {frameworkId: frameworkId};
-                                        Instance.findByIdAndUpdate(instance._id, toUpdate, {new: true}).then(function (result) {
-                                            res.send(result);
-                                        }).catch(next);
+                                    if (frameworkIdRes) {
+                                        if (frameworkIdRes.length > 0) {
+                                            var frameworkId = frameworkIdRes[0];
+                                            var toUpdate = {frameworkId: frameworkId};
+                                            Instance.findByIdAndUpdate(instance._id, toUpdate, {new: true}).then(function (result) {
+                                                res.send(result);
+                                            }).catch(next);
+                                        } else {
+                                            res.status(207).send(result);
+                                        }
                                     } else {
                                         res.status(207).send(result);
                                     }
                                 } else {
-                                    res.status(207).send(result);
+                                    res.sendStatus(207);
                                 }
-                            } else {
-                                res.sendStatus(207);
-                            }
-                        });
-                    }).catch(next);
-                } else
-                    res.status(500).send({error: "Failed to execute the instance with id " + id + "."});
+                            });
+                        }).catch(next);
+                    } else
+                        res.status(500).send({error: "Failed to execute the instance with id " + id + "."});
+                } catch (e) {
+                    res.status(500).send({error: "Spark dispatcher response not understood."});
+                }
             });
         }
     }).catch(next);
@@ -247,9 +252,9 @@ router.get('/status/:id', function (req, res, next) {
 
                                     request.get(config.fabiola.spark.historyApiUri
                                         + '/applications/'
-                                        + instance.frameworkId + '-'+instance.driverId, function(error, response, body) {
+                                        + instance.frameworkId + '-' + instance.driverId, function (error, response, body) {
 
-                                        if(!error){
+                                        if (!error) {
                                             try {
                                                 var bodyJson = body;
                                                 if (typeof bodyJson == 'string')
@@ -266,13 +271,13 @@ router.get('/status/:id', function (req, res, next) {
                                             } catch (e) {
                                                 res.status(500).send({error: "Spark History Server response not understood."});
                                             }
-                                        } else{
+                                        } else {
                                             res.status(500).send({error: "Couldn't get date from Spark History Server"});
                                         }
                                     });
                                 } else {
                                     // differentiate the TASK_FAILED and TASK_KILLED statuses
-                                    if(state === 'TASK_KILLED')
+                                    if (state === 'TASK_KILLED')
                                         instance.status = "KILLED";
                                     else
                                         instance.status = "ERROR";
