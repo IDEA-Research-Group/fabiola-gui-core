@@ -6,10 +6,11 @@ var DatasetSchema = new mongoose.Schema({
     hostname: {type: String, required: true},
     port: {type: String, required: true},
     path: {type: String, required: true},
+    datasource: {type: String, required: true},
+    format: {type: String, required: false},
     dsSchema: {type: String, required: false},
-    datasource: {type: String, required: false},
     credentials: {
-        type: new Schema(
+        type: new mongoose.Schema(
             {
                 user: {type: String, required: true},
                 password: {type: String, required: true}
@@ -31,7 +32,7 @@ DatasetSchema.pre('save', function(next) {
     next();
 });
 
-// TODO validate datasource
+// TODO validate datasource. Format is required if datasource is hdfs
 
 mongoose.model("Dataset", DatasetSchema);
 
