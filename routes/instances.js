@@ -1,6 +1,6 @@
 var express = require('express');
 var request = require('request')
-var config = require("config-yml");
+var config = require("./../config").config;
 var moment = require('moment');
 const util = require('util')
 
