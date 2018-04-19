@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 // database
 var mongoose = require('mongoose');
-var config = require("config-yml");
+var config = require("./config").config;
 
 mongoose.connect(config.application.db.mongoUri);
 mongoose.plugin(require('mongoose-ref-validator'));
