@@ -32,7 +32,21 @@ DatasetSchema.pre('save', function(next) {
     next();
 });
 
-// TODO validate datasource. Format is required if datasource is hdfs
+DatasetSchema.pre('validate', function(next) {
+    if(!['hdfs', 'mongo'].includes(this.datasource)) {
+        var error = new mongoose.Error.ValidationError(this);
+        error.message = 'Datasource must be either hdfs or mongo.';
+        return next(error);
+    } else {
+        if(this.datasource === 'hdfs' && !['csv', 'json'].includes(this.format)) {
+            var error = new mongoose.Error.ValidationError(this);
+            error.message = 'Format field must be either csv or json if the datasource is hdfs.';
+            return next(error);
+        }
+    }
+    next()
+});
+
 
 mongoose.model("Dataset", DatasetSchema);
 

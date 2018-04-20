@@ -29,7 +29,7 @@ router.get('/', function (req, res) {
 });
 
 /**
- * RETRIEVE an Document by id
+ * RETRIEVE a Dataset by id
  * */
 router.get('/:id', function (req, res) {
     var id = req.params.id;
@@ -40,5 +40,18 @@ router.get('/:id', function (req, res) {
             res.send(element);
     });
 });
+
+/**
+ * CREATE a Dataset
+ * */
+router.post('/', function (req, res, next) {
+    var body = req.body;
+    delete body._id;
+    Dataset.create(body).then(function (instance) {
+        res.status(201).send(instance);
+    }).catch(next);
+});
+
+
 
 module.exports = router;
