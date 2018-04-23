@@ -3,7 +3,7 @@ var mongoose = require("mongoose");
 
 var router = express.Router();
 
-var ModelDefinition = require('../schemas/modelDefinition')
+var ModelDefinition = require('../schemas/copModel')
 
 /**
  * RETRIEVE all Instances paginated
