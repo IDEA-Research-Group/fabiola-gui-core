@@ -18,6 +18,7 @@ var users = require('./routes/users');
 var instances = require('./routes/instances');
 var modelDefinitions = require('./routes/modelDefinitions');
 var results = require('./routes/results');
+var datasets = require('./routes/datasets');
 
 var BASE_API_PATH = "/api/v1";
 
@@ -42,6 +43,7 @@ app.use(express.static(path.join(__dirname, 'public/release')));
 app.use(BASE_API_PATH + '/instances', instances);
 app.use(BASE_API_PATH + '/modelDefinitions', modelDefinitions);
 app.use(BASE_API_PATH + '/results', results);
+app.use(BASE_API_PATH + '/datasets', datasets);
 //app.use('/users', users);
 
 
