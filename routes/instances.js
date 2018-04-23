@@ -94,14 +94,13 @@ router.delete('/:id', function (req, res, next) {
     if (!id)
         res.sendStatus(400);
 
-    Instance.findOneAndRemove({'_id': id, 'status': {'$nin': ['RUNNING']}})
+    Instance.findOneAndRemove({'_id': id, 'status': {'$nin': ['WAITING', 'RUNNING']}})
         .then(function (instance) {
             if (!instance)
                 res.status(400).send({error: "Cannot delete this instance because it does not exist or its status is RUNNING."});
             else {
                 status = instance.status;
-                // TODO si borra una instancia cuyo estado es FINISHED, borrar los resultados asociados a esta isntancia
-                // if(status == 'FINISHED') //
+                // Borrar los resultados asociados a esta isntancia
                 Result.remove({'instanceId': id}, function (err, removed) {
                     if (err)
                         res.sendStatus(207)
