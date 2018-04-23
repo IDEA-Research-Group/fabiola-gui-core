@@ -3,10 +3,10 @@ var mongoose = require("mongoose");
 
 var router = express.Router();
 
-var ModelDefinition = require('../schemas/copModel')
+var COPModel = require('../schemas/copModel')
 
 /**
- * RETRIEVE all Instances paginated
+ * RETRIEVE all COPModels paginated
  * */
 router.get('/', function (req, res) {
     var query = {}
@@ -17,7 +17,7 @@ router.get('/', function (req, res) {
     if (!limit)
         limit = 10;
 
-    ModelDefinition.paginate({}, {page: parseInt(page), limit: parseInt(limit)}, function (err, elements) {
+    COPModel.paginate({}, {page: parseInt(page), limit: parseInt(limit)}, function (err, elements) {
         if (err)
             res.sendStatus(500)
         else
@@ -26,12 +26,12 @@ router.get('/', function (req, res) {
 });
 
 /**
- * RETRIEVE a ModelDefinition by id
+ * RETRIEVE a COPModel by id
  * */
 router.get('/:id', function (req, res) {
     var id = req.params.id;
 
-    ModelDefinition.findOne({'_id': id}, function (err, element) {
+    COPModel.findOne({'_id': id}, function (err, element) {
         if (!element)
             res.sendStatus(404);
         else
@@ -40,19 +40,19 @@ router.get('/:id', function (req, res) {
 });
 
 /**
- * CREATE a ModelDefinition
+ * CREATE a COPModel
  * */
 router.post('/', function (req, res, next) {
     var body = req.body;
     if(!body) res.sendStatus(400);
     delete body._id;
-    ModelDefinition.create(body).then(function (instance) {
+    COPModel.create(body).then(function (instance) {
         res.status(201).send(instance);
     }).catch(next);
 });
 
 /**
- * UPDATE a ModelDefinition by id
+ * UPDATE a COPModel by id
  * */
 router.put('/:id', function (req, res, next) {
     var body = req.body;
@@ -63,7 +63,7 @@ router.put('/:id', function (req, res, next) {
     if (!mongoose.Types.ObjectId.isValid(id))
         res.sendStatus(400);
 
-    ModelDefinition.aggregate([
+    COPModel.aggregate([
         {
             $match: {"_id": new mongoose.Types.ObjectId(id)}
         },
@@ -82,10 +82,10 @@ router.put('/:id', function (req, res, next) {
     ])
         .exec().then(function (results) {
             if (results.length == 0)
-                res.status(400).send({error: "The ModelDefinition with _id "+ id +" does not exist or its status is either RUNNING or FINISHED and cannto me modified."});
+                res.status(400).send({error: "The COPModel with _id "+ id +" does not exist or its status is either RUNNING or FINISHED and cannto me modified."});
             else{
-                // If there are results (max 1 result), it means that the ModelDefinition exist and we can also modify it. Let's do it
-                ModelDefinition.findByIdAndUpdate(id, body, {new: true}).then(function (result) {
+                // If there are results (max 1 result), it means that the COPModel exist and we can also modify it. Let's do it
+                COPModel.findByIdAndUpdate(id, body, {new: true}).then(function (result) {
                     res.send(result);
                 }).catch(next);
             }
@@ -93,7 +93,7 @@ router.put('/:id', function (req, res, next) {
 });
 
 /**
- * DELETE a ModelDefinition by id
+ * DELETE a COPModel by id
  * */
 router.delete('/:id', function (req, res, next) {
     var id = req.params.id;
@@ -102,7 +102,7 @@ router.delete('/:id', function (req, res, next) {
     if (!mongoose.Types.ObjectId.isValid(id))
         res.sendStatus(400);
 
-    ModelDefinition.aggregate([
+    COPModel.aggregate([
         {
             $match: {"_id": new mongoose.Types.ObjectId(id)}
         },
@@ -121,10 +121,10 @@ router.delete('/:id', function (req, res, next) {
     ])
         .exec().then(function (results) {
         if (results.length == 0)
-            res.status(400).send({error: "The ModelDefinition with _id "+ id +" does not exist or it is associated with an Instance and cannot be deleted."});
+            res.status(400).send({error: "The COPModel with _id "+ id +" does not exist or it is associated with an Instance and cannot be deleted."});
         else{
-            // If there are results (max 1 result), it means that the ModelDefinition exist and we can also delete it. Let's do it
-            ModelDefinition.findByIdAndRemove(id).then(function (result) {
+            // If there are results (max 1 result), it means that the COPModel exist and we can also delete it. Let's do it
+            COPModel.findByIdAndRemove(id).then(function (result) {
                 res.send(204);
             }).catch(next);
         }
