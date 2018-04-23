@@ -65,22 +65,21 @@ router.put('/:id', function (req, res, next) {
     if (!body || !id)
         res.sendStatus(400);
 
-    // The status, creationDate, lastExecutionDate, duration, driverId, errorMsg and frameworkId cannot be modified here
+    // The status, creationDate, lastExecutionDate, duration, appId and errorMsg cannot be modified here
     delete body.status;
     delete body.creationDate;
     delete body.lastExecutionDate;
     delete body.duration;
-    delete body.driverId;
+    delete body.appId;
     delete body.errorMsg;
-    delete body.frameworkId;
 
     Instance.findOneAndUpdate(
-        {'_id': id, 'status': {'$nin': ['FINISHED', 'RUNNING']}},
+        {'_id': id, 'status': {'$nin': ['FINISHED', 'RUNNING', 'WAITING']}},
         body,
         {new: true})
         .then(function (instance) {
             if (!instance)
-                res.status(400).send({error: "Cannot update this instance because it does not exists or its status is either RUNNING or FINISHED."});
+                res.status(400).send({error: "Cannot update this instance because it does not exists or its status is WAITING, RUNNING or FINISHED."});
             else
                 res.send(instance);
         })
