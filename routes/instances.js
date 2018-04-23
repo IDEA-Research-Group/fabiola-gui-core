@@ -23,9 +23,9 @@ router.get('/', function (req, res) {
     if (!limit)
         limit = 10;
 
-    Instance.paginate({}, {page: parseInt(page), limit: parseInt(limit)}, function (err, elements) {
+    Instance.paginate({}, {page: parseInt(page), limit: parseInt(limit), populate: ['copModel', 'dataset']}, function (err, elements) {
         if (err)
-            res.sendStatus(500)
+            res.sendStatus(500);
         else
             res.send(elements);
     });
@@ -36,7 +36,7 @@ router.get('/', function (req, res) {
  * */
 router.get('/:id', function (req, res) {
     var id = req.params.id;
-    Instance.findOne({'_id': id}, function (err, element) {
+    Instance.findOne({'_id': id}).populate('copModel').populate('dataset').exec(function (err, element) {
         if (!element)
             res.sendStatus(404);
         else
