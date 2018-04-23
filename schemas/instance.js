@@ -33,11 +33,42 @@ InstanceSchema.pre('save', function(next) {
     this.lastExecutionDate = undefined;
     this.duration = undefined;
     this.appId = undefined;
-    // this.dsSchema = undefined;
     this.errorMsg = undefined;
     next();
 });
 
+// driverCores, if set, must be a numeric value, between 1 and 32
+InstanceSchema.path('systemConfig.driverCores').validate(function (value) {
+    if(/^\d+$/.test(value)) if(Number(value) > 0 && Number(value) <= 32) return true; else return false;
+    else return false;
+}, 'Value must be a numeric value between 1 and 32.');
+
+// executorCores, if set, must be a numeric value, between 1 and 32
+InstanceSchema.path('systemConfig.executorCores').validate(function (value) {
+    if(/^\d+$/.test(value)) if(Number(value) > 0 && Number(value) <= 32) return true; else return false;
+    else return false;
+}, 'Value must be a numeric value between 1 and 32.');
+
+// driverMemory, if set, must be a number followed by G, g, M or m, and greater or equal than 512m or 0.5g
+InstanceSchema.path('systemConfig.driverMemory').validate(function (value) {
+    if(/^(\d*\.)?\d+(g|G|m|M)$/.test(value)) {
+        if(['g', 'G'].includes(value.slice(-1)) ) if(Number(value.slice(0, -1)) >= 0.5) return true; else return false;
+        else if(Number(value.slice(0, -1)) >= 512) return true; else return false;
+
+    } else return false;
+}, 'Value must be a number followed by G, g, M or m. The amount of memory must be greater or equal than 512m or 0.5g');
+
+// executorMemory, if set, must be a number followed by G, g, M or m, and greater or equal than 512m or 0.5g
+InstanceSchema.path('systemConfig.executorMemory').validate(function (value) {
+    if(/^(\d*\.)?\d+(g|G|m|M)$/.test(value)) {
+        if(['g', 'G'].includes(value.slice(-1)) ) if(Number(value.slice(0, -1)) >= 0.5) return true; else return false;
+        else if(Number(value.slice(0, -1)) >= 512) return true; else return false;
+
+    } else return false;
+}, 'Value must be a number followed by G, g, M or m. The amount of memory must be greater or equal than 512m or 0.5g');
+
+
 mongoose.model("Instance", InstanceSchema);
 
 module.exports = mongoose.model("Instance");
+
