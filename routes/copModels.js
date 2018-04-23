@@ -82,7 +82,7 @@ router.put('/:id', function (req, res, next) {
     ])
         .exec().then(function (results) {
             if (results.length == 0)
-                res.status(400).send({error: "The COPModel with _id "+ id +" does not exist or its status is either RUNNING or FINISHED and cannto me modified."});
+                res.status(400).send({error: "The COPModel with _id "+ id +" does not exist or its status is either RUNNING or FINISHED and cannot me modified."});
             else{
                 // If there are results (max 1 result), it means that the COPModel exist and we can also modify it. Let's do it
                 COPModel.findByIdAndUpdate(id, body, {new: true}).then(function (result) {
