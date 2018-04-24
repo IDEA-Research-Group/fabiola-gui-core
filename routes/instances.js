@@ -23,7 +23,11 @@ router.get('/', function (req, res) {
     if (!limit)
         limit = 10;
 
-    Instance.paginate({}, {page: parseInt(page), limit: parseInt(limit), populate: ['copModel', 'dataset']}, function (err, elements) {
+    Instance.paginate({}, {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        populate: ['copModel', 'dataset']
+    }, function (err, elements) {
         if (err)
             res.sendStatus(500);
         else
@@ -79,7 +83,7 @@ router.put('/:id', function (req, res, next) {
         {new: true})
         .then(function (instance) {
             if (!instance)
-                res.status(400).send({error: "Cannot update this instance because it does not exists or its status is WAITING, RUNNING or FINISHED."});
+                res.status(400).send({error: "Cannot update this Instance because it does not exists or its status is WAITING, RUNNING or FINISHED."});
             else
                 res.send(instance);
         })
@@ -97,11 +101,11 @@ router.delete('/:id', function (req, res, next) {
     Instance.findOneAndRemove({'_id': id, 'status': {'$nin': ['WAITING', 'RUNNING']}})
         .then(function (instance) {
             if (!instance)
-                res.status(400).send({error: "Cannot delete this instance because it does not exist or its status is RUNNING."});
+                res.status(400).send({error: "Cannot delete this Instance because it does not exist or its status is RUNNING."});
             else {
                 status = instance.status;
                 // Borrar los resultados asociados a esta isntancia
-                Result.remove({'instanceId': id}, function (err, removed) {
+                Result.remove({'instance': id}, function (err, removed) {
                     if (err)
                         res.sendStatus(207)
                     else
@@ -151,7 +155,7 @@ router.post('/run/:id', function (req, res, next) {
         {$lookup: {from: "datasets", localField: "dataset", foreignField: "_id", as: "matched_docs"}},
         {$match: {"matched_docs.status": {$in: ['VALIDATED']}}}])
         .exec().then(function (results) {
-        if (results.length == 0){
+        if (results.length == 0) {
             res.status(400).send({error: "Cannot run this Instance because the Dataset has not been validated."});
         } else {
             // If there are results (max 1 result), it means that the Instance exist and we can also run it. Let's do it
