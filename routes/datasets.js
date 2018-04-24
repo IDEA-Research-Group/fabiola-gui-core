@@ -105,12 +105,12 @@ router.put('/:id', function (req, res, next) {
                 'status': {'$nin': ['WAITING', 'RUNNING']}
             }, updateDoc, {new: true}).then(function (result) {
                 if (!result)
-                    res.status(400).send({error: "Cannot edit this instance because its status is either WAITING or RUNNING."});
+                    res.status(400).send({error: "Cannot edit this Dataset because its status is either WAITING or RUNNING."});
                 else
                     res.send(result);
             }).catch(next);
         }
-    });
+    }).catch(next);
 });
 
 
@@ -150,12 +150,12 @@ router.delete('/:id', function (req, res, next) {
             Dataset.findOneAndRemove({'_id': id, 'status': {'$nin': ['WAITING', 'RUNNING']}}).then(function (result) {
                 console.log(result);
                 if (!result)
-                    res.status(400).send({error: "Cannot edit this dataset because its status is either WAITING or RUNNING."});
+                    res.status(400).send({error: "Cannot edit this Dataset because its status is either WAITING or RUNNING."});
                 else
                     res.sendStatus(204);
             }).catch(next);
         }
-    });
+    }).catch(next);
 });
 
 /**
@@ -195,10 +195,10 @@ router.post('/validate/:id', function (req, res, next) {
     // validation process.
     Dataset.findOneAndUpdate({
         '_id': id,
-        'status': {'$nin': ['WAITING', 'RUNNING']} // TODO update lastValidationDate
+        'status': {'$nin': ['WAITING', 'RUNNING']}
     }, {status: 'WAITING', lastValidationDate: new Date()}, {new: true}).then(function (result) {
         if (!result)
-            res.status(400).send({error: "Cannot edit this instance because its status is either WAITING or RUNNING."});
+            res.status(400).send({error: "Cannot edit this Dataset because its status is either WAITING or RUNNING."});
         else { // Let's start the validation
             request.post({
                 url: config.fabiola.spark.submissionsUri + '/create',

@@ -72,17 +72,17 @@ router.put('/:id', function (req, res, next) {
                 {
                     from: "instances",
                     localField: "_id",
-                    foreignField: "modelDefinition",
+                    foreignField: "copModel",
                     as: "matched_docs"
                 }
         },
         {
-            $match: {"matched_docs.status": {$nin: ['FINISHED', 'RUNNING']}}
+            $match: {"matched_docs.status": {$nin: ['FINISHED', 'RUNNING', 'WAITING']}}
         }
     ])
         .exec().then(function (results) {
             if (results.length == 0)
-                res.status(400).send({error: "The COPModel with _id "+ id +" does not exist or its status is either RUNNING or FINISHED and cannot me modified."});
+                res.status(400).send({error: "The COPModel with _id "+ id +" does not exist or its status is WAITING, RUNNING or FINISHED and cannot me modified."});
             else{
                 // If there are results (max 1 result), it means that the COPModel exist and we can also modify it. Let's do it
                 COPModel.findByIdAndUpdate(id, body, {new: true}).then(function (result) {
@@ -111,7 +111,7 @@ router.delete('/:id', function (req, res, next) {
                 {
                     from: "instances",
                     localField: "_id",
-                    foreignField: "modelDefinition",
+                    foreignField: "copModel",
                     as: "matched_docs"
                 }
         },
