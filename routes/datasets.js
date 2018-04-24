@@ -1,6 +1,7 @@
 var express = require('express');
 var request = require('request')
 var config = require("./../config").config;
+var utils = require("../utils");
 var mongoose = require("mongoose");
 
 // Initialize this router
@@ -204,12 +205,13 @@ router.post('/validate/:id', function (req, res, next) {
                 json: bodyReq,
                 // headers: {'Authorization': 'token=eyJhbGciOiJIUzI1NiIsImtpZCI6InNlY3JldCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIzeUY1VE9TemRsSTQ1UTF4c3B4emVvR0JlOWZOeG05bSIsImVtYWlsIjoiYXZhbGVuY2lhcGFycmFAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImV4cCI6MTUyMzc4MDQwNSwiaWF0IjoxNTIzMzQ4NDA1LCJpc3MiOiJodHRwczovL2Rjb3MuYXV0aDAuY29tLyIsInN1YiI6ImdpdGh1YnwxMDI4MDg2MiIsInVpZCI6ImF2YWxlbmNpYXBhcnJhQGdtYWlsLmNvbSJ9.k6oFjVoWHomd4w6-etkhZ0jUC4kGeDhgQZ76WoXh9y0'}
             }, function (error, response, body) {
-                handleResquestResponse(error, body, function (result) {
+                utils.handleResquestResponse(error, body, function (result) {
                     // Check if the spark cluster invocation was successful
                     if (body.success)
                         res.sendStatus(200);
                     else {
                         setDatasetStatusToError(id);
+                        res.status(500).send({error: "Error connection to the Spark cluster."});
                     }
                 }, function (error) {
                     setDatasetStatusToError(id);
@@ -220,24 +222,6 @@ router.post('/validate/:id', function (req, res, next) {
         }
     }).catch(next);
 });
-
-function handleResquestResponse(error, body, onSuccess, onError) {
-    if (error) {
-        onError(500);
-    } else {
-        if (typeof body == 'object') onSuccess(body);
-        else if (typeof body == 'string') {
-            try {
-                var bodyJson = JSON.parse(body);
-                onSuccess(bodyJson);
-            } catch (e) {
-                if (body.indexOf('Unauthorized') > -1) onError(401); else onError(500);
-            }
-        } else {
-            onError(500);
-        }
-    }
-}
 
 function setDatasetStatusToError(id) {
     Dataset.findByIdAndUpdate(id, {
