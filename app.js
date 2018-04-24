@@ -19,6 +19,7 @@ var instances = require('./routes/instances');
 var copModels = require('./routes/copModels');
 var results = require('./routes/results');
 var datasets = require('./routes/datasets');
+var dcosTokens = require('./routes/dcosTokens');
 
 var BASE_API_PATH = "/api/v1";
 
@@ -44,6 +45,7 @@ app.use(BASE_API_PATH + '/instances', instances);
 app.use(BASE_API_PATH + '/copModels', copModels);
 app.use(BASE_API_PATH + '/results', results);
 app.use(BASE_API_PATH + '/datasets', datasets);
+app.use(BASE_API_PATH + '/dcosTokens', dcosTokens);
 //app.use('/users', users);
 
 
