@@ -1,8 +1,26 @@
 var express = require('express');
-var request = require('request')
+var request = require('request');
 var config = require("./../config").config;
 var utils = require("../utils");
 var mongoose = require("mongoose");
+var hdfs247 = require('hdfs247');
+var fs = require('fs');
+
+var multer = require('multer');
+var DIR = './temp/';
+var upload = multer(
+    {
+        dest: DIR,
+        fileFilter: function (req, file, cb) {
+            // It's safer to check the mimetype rather than the file extension
+            if (!['application/json', 'text/csv'].includes(file.mimetype)) {
+                return cb(null, false)
+            }
+            cb(null, true)
+        }
+
+    }).single('dataset');
+
 
 // Initialize this router
 var router = express.Router();
@@ -52,6 +70,70 @@ router.post('/', function (req, res, next) {
     Dataset.create(body).then(function (instance) {
         res.status(201).send(instance);
     }).catch(next);
+});
+
+/**
+ * CREATE a Dataset from local file
+ * */
+router.post('/upload', function (req, res, next) {
+    // Upload the file to the temp folder. If the format is not the expected, it will throw a 400 error.
+    upload(req, res, function (err) {
+        var file = req.file;
+        if (!file) {
+            res.status(400).send({error: "Error uploading the file. Format must be JSON or CSV."});
+        } else {
+            // This is the Dataset object name field
+            var originalName = file.originalname;
+
+            // Path of the local temp file
+            var localPath = file.path;
+
+            // Let's form remotePath from hdfsMongoId and the pseudo random name given to the temp file, and the format
+            // hdfsMongoId is a MongoDB id to form the dataset name at fabiola metastore
+            var hdfsMongoId = mongoose.Types.ObjectId();
+            var newName = file.filename;
+            var format = (file.mimetype === 'text/csv') ? 'csv' : 'json';
+            var remotePath = '/datasets/' + hdfsMongoId + '-' + newName + '.' + format;
+
+            var hdfs = new hdfs247({
+                protocol: 'http',
+                hostname: config.fabiola.metastore.hdfs.host,
+                port: config.fabiola.metastore.hdfs.webPort
+            });
+
+            // Upload the temp file to hdfs
+            hdfs.upload({
+                overwrite: true,
+                localpath: localPath,
+                path: remotePath
+            }, function (error, response, body) {
+                if (error) {
+                    fs.unlink(localPath, function (err) {
+                        if (err) console.error(err)
+                    });
+                    res.status(500).send({error: "Error uploading the file."});
+                } else {
+
+                    var datasetObj = {
+                        name: originalName,
+                        hostname: config.fabiola.metastore.hdfs.host,
+                        port: config.fabiola.metastore.hdfs.port,
+                        path: remotePath,
+                        datasource: 'hdfs',
+                        format: format
+                    };
+
+                    fs.unlink(localPath, function (err) {
+                        if (err) console.error(err)
+                    });
+
+                    Dataset.create(datasetObj).then(function (element) {
+                        res.status(201).send(element);
+                    }).catch(next);
+                }
+            });
+        }
+    });
 });
 
 /**
