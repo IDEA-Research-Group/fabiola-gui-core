@@ -18,7 +18,7 @@
         </thead>
         <tbody 	ng-show="!vm.isLoading">
         <tr ng-repeat="item in vm.displayed">
-            <td><a href="">{{item.copModel.name}}</a></td>
+            <td><a href="" ui-sref="copModels.list({copModelId: item.copModel._id})">{{item.copModel.name}}</a></td>
             <td><a href="">{{item.dataset.name}}</a></td>
             <td>{{item.creationDate | date : 'medium'}}</td>
             <td ng-switch="item.status">

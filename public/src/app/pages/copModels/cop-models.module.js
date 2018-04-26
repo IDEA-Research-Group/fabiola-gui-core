@@ -32,6 +32,14 @@
                         controllerAs: 'vm'
                     }
                 },
+                resolve: {
+                    copModelId: function ($stateParams) {
+                        return $stateParams.copModelId;
+                    }
+                },
+                params: {
+                    copModelId: null
+                },
                 sidebarMeta: {
                     order: 0,
                 },

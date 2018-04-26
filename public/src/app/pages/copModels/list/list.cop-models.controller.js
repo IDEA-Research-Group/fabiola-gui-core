@@ -14,6 +14,10 @@
 
         vm.show = function(copModelId) {
             vm.copModelId = copModelId;
+        };
+
+        if($stateParams.copModelId) {
+            vm.copModelId = $stateParams.copModelId;
         }
 
         vm.callServer = function callServer(tableState) {
