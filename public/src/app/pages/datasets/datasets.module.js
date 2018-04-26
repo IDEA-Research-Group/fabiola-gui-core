@@ -16,7 +16,7 @@
                 url: '/datasets',
                 templateUrl: 'app/pages/datasets/datasets.html',
                 abstract: true,
-                title: 'Instances',
+                title: 'Dataset Importer',
                 sidebarMeta: {
                     icon: 'ion-ios-folder',
                     order: 0,
