@@ -10,7 +10,7 @@
 
     'BlurAdmin.pages.dashboard',
     'BlurAdmin.pages.instances',
-    'BlurAdmin.pages.modelDefinitions',
+    'BlurAdmin.pages.copModels'
     //'BlurAdmin.pages.ui',
     //'BlurAdmin.pages.components',
     //'BlurAdmin.pages.form',

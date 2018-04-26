@@ -1,11 +1,11 @@
-<form name="vm.modelDefinitionForm" novalidate>
+<form name="vm.copModelForm" novalidate>
     <div class="row">
         <div class="col-md-6">
             <div class="form-group has-feedback"
-                 ng-class="{'has-error': vm.modelDefinitionForm.name.$invalid && (vm.modelDefinitionForm.name.$dirty || vm.modelDefinitionForm.$submitted)}">
+                 ng-class="{'has-error': vm.copModelForm.name.$invalid && (vm.copModelForm.name.$dirty || vm.copModelForm.$submitted)}">
                 <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" name="name"
-                       placeholder="Model Definition name" ng-model="vm.modelDefinition.name" required>
+                       placeholder="COP Model name" ng-model="vm.copModel.name" required>
                 <span class="help-block error-block basic-block">Required</span>
             </div>
         </div>
@@ -15,7 +15,7 @@
         <div class="col-md-12">
             <div class="form-group has-feedback" >
                 <label for="domainData">Domain Data</label>
-                <div id="domainData" ui-ace="vm.editorOpts" ng-model="vm.modelDefinition.domainData"></div>
+                <div id="domainData" ui-ace="vm.editorOpts" ng-model="vm.copModel.domainData"></div>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
         <div class="col-md-12">
             <div class="form-group has-feedback" >
                 <label for="variables">Variables</label>
-                <div id="variables" ui-ace="vm.editorOpts" ng-model="vm.modelDefinition.variables"></div>
+                <div id="variables" ui-ace="vm.editorOpts" ng-model="vm.copModel.variables"></div>
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
         <div class="col-md-12">
             <div class="form-group has-feedback" >
                 <label for="constraints">Constraints</label>
-                <div id="constraints" ui-ace="vm.editorOpts" ng-model="vm.modelDefinition.constraints"></div>
+                <div id="constraints" ui-ace="vm.editorOpts" ng-model="vm.copModel.constraints"></div>
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
         <div class="col-md-12">
             <div class="form-group has-feedback" >
                 <label for="objective">Objective</label>
-                <div id="objective" ui-ace="vm.editorOpts" ng-model="vm.modelDefinition.objective"></div>
+                <div id="objective" ui-ace="vm.editorOpts" ng-model="vm.copModel.objective"></div>
             </div>
         </div>
     </div>
@@ -51,14 +51,14 @@
         <div class="col-md-12">
             <div class="form-group has-feedback" >
                 <label for="solution">Solution</label>
-                <div id="solution" ui-ace="vm.editorOpts" ng-model="vm.modelDefinition.solution"></div>
+                <div id="solution" ui-ace="vm.editorOpts" ng-model="vm.copModel.solution"></div>
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6">
-            <button ng-disabled="vm.modelDefinitionForm.$invalid"
+            <button ng-disabled="vm.copModelForm.$invalid"
                     progress-button="vm.progressFunction()" class="btn btn-primary">Submit
             </button>
         </div>

@@ -7,11 +7,11 @@
     'use strict';
     angular
         .module('BlurAdmin.services')
-        .factory('ModelDefinitions', ModelDefinitions);
+        .factory('COPModels', COPModels);
 
     /** @ngInject */
-    function ModelDefinitions($resource) {
-        var resourceUrl = '/api/v1/modelDefinitions/:id';
+    function COPModels($resource) {
+        var resourceUrl = '/api/v1/copModels/:id';
 
         return $resource(resourceUrl, {}, {
             'create': {method: 'POST'},

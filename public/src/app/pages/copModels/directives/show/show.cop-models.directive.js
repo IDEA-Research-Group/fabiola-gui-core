@@ -5,25 +5,25 @@
 (function () {
     'use strict';
 
-    angular.module('BlurAdmin.pages.modelDefinitions')
-        .directive('showModelDefinition', ShowModelDefinitionDirective);
+    angular.module('BlurAdmin.pages.copModels')
+        .directive('showCopModel', ShowCopModelDirective);
 
     /** @ngInject */
-    function ShowModelDefinitionDirective(ModelDefinitions) {
+    function ShowCopModelDirective(COPModels) {
         return {
             restrict: 'E',
             scope: {
-                modelDefinitionId: '='
+                copModelId: '='
             },
-            templateUrl: 'app/pages/modelDefinitions/directives/show/show.html',
+            templateUrl: 'app/pages/copModels/directives/show/show.html',
             link: function(scope, elem, attr) {
-                scope.$watch('modelDefinitionId', function (newValue, attrs) {
+                scope.$watch('copModelId', function (newValue, attrs) {
                     if (newValue) {
-                        scope.modelDefinition = ModelDefinitions.get({'id': newValue});
+                        scope.copModel = COPModels.get({'id': newValue});
                     }
                 }, true);
-                var modelDefinitionId = scope.modelDefinitionId;
-                scope.modelDefinition = ModelDefinitions.get({id: modelDefinitionId});
+                var copModelId = scope.copModelId;
+                scope.copModel = COPModels.get({id: copModelId});
                 // Ace editor options
                 /*
                 scope.editorOpts = {

@@ -5,16 +5,16 @@
 (function () {
     'use strict';
 
-    angular.module('BlurAdmin.pages.modelDefinitions')
-        .controller('EditModelDefinitionCtrl', EditModelDefinitionCtrl);
+    angular.module('BlurAdmin.pages.copModels')
+        .controller('EditCOPModelCtrl', EditCOPModelCtrl);
 
     /** @ngInject */
-    function EditModelDefinitionCtrl($http, $q, $state, $stateParams, toastr, ModelDefinitions) {
+    function EditCOPModelCtrl($http, $q, $state, $stateParams, toastr, COPModels) {
         var vm = this;
 
         // This function contains the form logic
-        var form = function (modelDefinition, action) {
-            vm.modelDefinition = modelDefinition;
+        var form = function (copModel, action) {
+            vm.copModel = copModel;
 
             // Ace editor options
             vm.editorOpts = {
@@ -28,11 +28,11 @@
 
             // submit function
             vm.progressFunction = function () {
-                if(!vm.modelDefinition.domainData) vm.modelDefinition.domainData = " ";
-                if(!vm.modelDefinition.variables) vm.modelDefinition.variables = " ";
-                if(!vm.modelDefinition.constraints) vm.modelDefinition.constraints = " ";
-                if(!vm.modelDefinition.objective) vm.modelDefinition.objective = " ";
-                if(!vm.modelDefinition.solution) vm.modelDefinition.solution = " ";
+                if(!vm.copModel.domainData) vm.copModel.domainData = " ";
+                if(!vm.copModel.variables) vm.copModel.variables = " ";
+                if(!vm.copModel.constraints) vm.copModel.constraints = " ";
+                if(!vm.copModel.objective) vm.copModel.objective = " ";
+                if(!vm.copModel.solution) vm.copModel.solution = " ";
 
                 // Resolve function
                 return $q(function (resolve, reject) {
@@ -40,12 +40,12 @@
                         resolve();
                         var createdOrEdited = (action === 'edit') ? 'edited' : 'created';
                         // toast showing the results
-                        toastr.success('The Model Definition has been successfully ' + createdOrEdited + '.', 'Success!', {
+                        toastr.success('The COP Model has been successfully ' + createdOrEdited + '.', 'Success!', {
                             "positionClass": "toast-top-right",
                             "type": "success",
                             "timeOut": "5000"
                         });
-                        $state.go('modelDefinitions.list', {modelDefinition: success});
+                        $state.go('copModels.list', {copModel: success});
                     }
 
                     function onError(error) {
@@ -53,10 +53,10 @@
                     }
 
                     if (action === 'edit') {
-                        ModelDefinitions.update({id: vm.modelDefinition._id}, vm.modelDefinition).$promise.then(onSuccess, onError);
+                        COPModels.update({id: vm.copModel._id}, vm.copModel).$promise.then(onSuccess, onError);
                     } else {
-                        if(action === 'clone') delete vm.modelDefinition._id;
-                        ModelDefinitions.create(vm.modelDefinition).$promise.then(onSuccess, onError);
+                        if(action === 'clone') delete vm.copModel._id;
+                        COPModels.create(vm.copModel).$promise.then(onSuccess, onError);
                     }
                 });
             };
@@ -64,11 +64,11 @@
 
         // When entering to the controller, these statement are first executed
         var currentState = $state.$current.self.name;
-        var action = (currentState === 'modelDefinitions.clone') ? 'clone' : ((currentState === 'modelDefinitions.edit') ? 'edit' : 'create');
+        var action = (currentState === 'copModels.clone') ? 'clone' : ((currentState === 'copModels.edit') ? 'edit' : 'create');
 
         if (['edit', 'clone'].includes(action)) {
-            ModelDefinitions.get({id: $stateParams.modelDefinitionId}).$promise.then(function (modelDefinition) {
-                form(modelDefinition, action);
+            COPModels.get({id: $stateParams.copModelId}).$promise.then(function (copModel) {
+                form(copModel, action);
             });
         } else {
             form({}, action);

@@ -5,15 +5,15 @@
 (function () {
     'use strict';
 
-    angular.module('BlurAdmin.pages.instances')
-        .controller('ListModelDefinitionsCtrl', ListModelDefinitionsCtrl);
+    angular.module('BlurAdmin.pages.copModels')
+        .controller('ListCOPModelsCtrl', ListCOPModelsCtrl);
 
     /** @ngInject */
-    function ListModelDefinitionsCtrl($http, $stateParams) {
+    function ListCOPModelsCtrl($http, $stateParams) {
         var vm = this;
 
-        vm.show = function(modelDefinitionId) {
-            vm.modelDefinitionId = modelDefinitionId;
+        vm.show = function(copModelId) {
+            vm.copModelId = copModelId;
         }
 
         vm.callServer = function callServer(tableState) {
@@ -26,7 +26,7 @@
             var pages = (offset / limit) + 1;
 
             $http
-                .get('/api/v1/modelDefinitions?limit=' + limit + '&page=' + pages)
+                .get('/api/v1/copModels?limit=' + limit + '&page=' + pages)
                 .then(function (response) {
                     var displayed = response.data.docs;
                     var pages = response.data.pages;
