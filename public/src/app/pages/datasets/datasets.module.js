@@ -28,7 +28,7 @@
                 views: {
                     'content': {
                         templateUrl: 'app/pages/datasets/list/list.html',
-                        controller: 'ListDatasetsCtrk',
+                        controller: 'ListDatasetsCtrl',
                         controllerAs: 'vm'
                     }
                 },
