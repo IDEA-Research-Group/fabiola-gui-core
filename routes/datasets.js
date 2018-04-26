@@ -32,7 +32,6 @@ var Dataset = require('../schemas/dataset')
  * RETRIEVE all Datasets paginated
  * */
 router.get('/', function (req, res) {
-    var query = {}
     var page = req.query.page;
     var limit = req.query.limit;
     if (!page)
@@ -40,7 +39,11 @@ router.get('/', function (req, res) {
     if (!limit)
         limit = 10;
 
-    Dataset.paginate({}, {page: parseInt(page), limit: parseInt(limit)}, function (err, elements) {
+    Dataset.paginate({}, {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        select: '_id name creationDate local status errorMsg dsSchema'
+    }, function (err, elements) {
         if (err)
             res.sendStatus(500)
         else
@@ -56,8 +59,21 @@ router.get('/:id', function (req, res) {
     Dataset.findOne({'_id': id}, function (err, element) {
         if (!element)
             res.sendStatus(404);
-        else
-            res.send(element);
+        else{
+            if(element.local) {
+                res.send({
+                    _id: element._id,
+                    name: element.name,
+                    creationDate: new Date(),
+                    local: element.local,
+                    status: element.status,
+                    errorMsg: element.errorMsg,
+                    dsSchema: element.dsSchema
+                });
+            } else {
+                res.send(element);
+            }
+        }
     });
 });
 
