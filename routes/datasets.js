@@ -67,6 +67,10 @@ router.get('/:id', function (req, res) {
 router.post('/', function (req, res, next) {
     var body = req.body;
     delete body._id;
+
+    // Set local attribute to false
+    body.local = false;
+
     Dataset.create(body).then(function (instance) {
         res.status(201).send(instance);
     }).catch(next);
@@ -114,13 +118,15 @@ router.post('/upload', function (req, res, next) {
                     res.status(500).send({error: "Error uploading the file."});
                 } else {
 
+                    // local attribute must be set to true
                     var datasetObj = {
                         name: originalName,
                         hostname: config.fabiola.metastore.hdfs.host,
                         port: config.fabiola.metastore.hdfs.port,
                         path: remotePath,
                         datasource: 'hdfs',
-                        format: format
+                        format: format,
+                        local: true
                     };
 
                     fs.unlink(localPath, function (err) {

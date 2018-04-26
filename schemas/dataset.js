@@ -7,6 +7,7 @@ var DatasetSchema = new mongoose.Schema({
     port: {type: String, required: true},
     path: {type: String, required: true},
     datasource: {type: String, required: true},
+    local: {type: Boolean, required: true},
     format: {type: String, required: false},
     dsSchema: {type: String, required: false},
     credentials: {
