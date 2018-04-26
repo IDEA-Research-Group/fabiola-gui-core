@@ -28,11 +28,7 @@
 
             // submit function
             vm.progressFunction = function () {
-                if(!vm.copModel.domainData) vm.copModel.domainData = " ";
-                if(!vm.copModel.variables) vm.copModel.variables = " ";
-                if(!vm.copModel.constraints) vm.copModel.constraints = " ";
-                if(!vm.copModel.objective) vm.copModel.objective = " ";
-                if(!vm.copModel.solution) vm.copModel.solution = " ";
+                if(!vm.copModel.model) vm.copModel.model = " ";
 
                 // Resolve function
                 return $q(function (resolve, reject) {

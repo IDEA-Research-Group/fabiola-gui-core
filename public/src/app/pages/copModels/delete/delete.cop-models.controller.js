@@ -18,7 +18,6 @@
         vm.copModel = copModel;
 
         vm.delete = function () {
-            console.log(copModel)
             COPModels.delete({id: copModel._id}).$promise.then(function(success){
                 toastr.success('The COP Model has been successfully deleted', 'Success!', {
                     "positionClass": "toast-top-right",
