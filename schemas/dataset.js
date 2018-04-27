@@ -4,7 +4,9 @@ var mongoosePaginate = require('mongoose-paginate');
 var DatasetSchema = new mongoose.Schema({
     name: {type: String, required: true},
     hostname: {type: String, required: true},
-    port: {type: String, required: true},
+    port: {type: String, required: true,
+        validate: {validator: function(v){return /^[0-9]*$/.test(v)}}, message: 'Invalid port.'
+    },
     path: {type: String, required: true},
     datasource: {type: String, required: true},
     local: {type: Boolean, required: true},
@@ -33,7 +35,15 @@ DatasetSchema.pre('save', function(next) {
     next();
 });
 
+// FIXME no va a funcionar
+// DatasetSchema.pre('update', function(next) {
+//     console.log("triggered update");
+//     if(this.datasource !== 'hdfs') this.format = undefined;
+//     next();
+// });
+
 DatasetSchema.pre('validate', function(next) {
+    console.log("triggered");
     if(!['hdfs', 'mongo'].includes(this.datasource)) {
         var error = new mongoose.Error.ValidationError(this);
         error.message = 'Datasource must be either hdfs or mongo.';
