@@ -1,0 +1,248 @@
+<div class="row" ng-show="datasetId">
+    <div class="col-md-12 col-lg-12">
+        <form novalidate name="datasetForm">
+            <div ba-panel ba-panel-title="Dataset {{dataset._id}}"
+                 ba-panel-class="with-scroll light-text">
+                <div class="row">
+                    <div class="col-md-12 col-lg-4">
+                        <h4>Metadata</h4>
+
+                        <!-- Name -->
+                        <h5>Name</h5>
+                        <p ng-show="!edit">{{dataset.name}}</p>
+                        <div ng-show="edit" class="form-group has-feedback"
+                             ng-class="{'has-error': datasetForm.name.$invalid && (datasetForm.name.$dirty || datasetForm.$submitted)}">
+                            <p>
+                                <input type="text" class="form-control input-half" id="name" placeholder="Name"
+                                    name="name" ng-model="dataset.name" required>
+                            </p>
+                            <span class="help-block error-block basic-block">Name is required</span>
+                        </div>
+
+                        <!-- CreationDate -->
+                        <span ng-show="dataset.creationDate">
+                            <h5>Creation Date</h5>
+                            <p>{{dataset.creationDate | date : 'medium'}}</p>
+                        </span>
+
+                        <!-- LastValidationDate -->
+                        <span ng-show="dataset.lastValidationDate">
+                            <h5>Last Validation Date</h5>
+                            <p>{{dataset.lastValidationDate | date : 'medium'}}</p>
+                        </span>
+
+                        <!-- Status -->
+                        <span ng-show="dataset.status">
+                            <h5>Status</h5>
+                            <div ng-switch="dataset.status">
+                                <p ng-switch-when="VALIDATION_ERROR"><i class="ion-record large"
+                                                                        style="color: #FF0000"></i>
+                                    Validation error</p>
+                                <p ng-switch-when="RUNNING"><i class="ion-record"
+                                                               style="color: #FFFF00"></i> Running</p>
+                                <p ng-switch-when="VALIDATED"><i class="ion-record" style="color: #327E04"></i> Validated
+                                </p>
+                                <p ng-switch-default><i class="ion-record" style="color: #C2C2A3"></i> Not validated</p>
+                            </div>
+                        </span>
+
+                        <!-- ErrorMsg -->
+                        <span ng-show="dataset.errorMsg">
+                            <h5>Error message</h5>
+                            <p>{{dataset.errorMsg}}</p>
+                        </span>
+                    </div>
+                    <div class="col-md-12 col-lg-4">
+                        <h4>Data Source Information</h4>
+
+                        <!-- All these fields are only shown if the dataset is not local -->
+                        <div ng-show="!dataset.local">
+
+                            <!-- Datasource -->
+                            <h5>Data Source</h5>
+                            <span ng-show="!edit">
+                                <span ng-switch="dataset.datasource">
+                                    <p ng-switch-when="mongo">MongoDB</p>
+                                    <p ng-switch-when="hdfs">HDFS</p>
+                                    <p ng-switch-default>Unknown</p>
+                                </span>
+                            </span>
+                            <span ng-show="edit">
+                                <p class="input-half">
+                                    <ui-select ng-model="dataset.datasource"
+                                            class="btn-group bootstrap-select form-control"
+                                            ng-disabled="false"
+                                            append-to-body="true"
+                                            search-enabled="false"
+                                            ng-required="!dataset.local">
+                                        <ui-select-match placeholder="Select a data source...">
+                                            <span> {{$select.selected.label}}</span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item.value as item in dataSourceOptions | filter: $select.search">
+                                            <span ng-bind-html="item.label"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </p>
+                            </span>
+
+                            <!-- Format -->
+                            <span ng-show="dataset.datasource == 'hdfs'">
+                                <h5>Format</h5>
+                                <p ng-show="!edit">{{dataset.format}}</p>
+                                <p ng-show="edit" class="input-half">
+                                   <ui-select ng-model="dataset.format"
+                                              class="btn-group bootstrap-select form-control"
+                                              ng-disabled="false"
+                                              append-to-body="true"
+                                              search-enabled="false"
+                                              ng-required="['hdfs'].includes(dataset.datasource) && !dataset.local">
+                                        <ui-select-match placeholder="Select a format...">
+                                            <span> {{$select.selected.label}}</span>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item.value as item in formatOptions | filter: $select.search">
+                                            <span ng-bind-html="item.label"></span>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </p>
+                            </span>
+
+                            <!-- Hostname -->
+                            <h5>Hostname</h5>
+                            <p ng-show="!edit">{{dataset.hostname}}</p>
+                            <div ng-show="edit" class="form-group has-feedback"
+                                 ng-class="{'has-error': datasetForm.hostname.$invalid && (datasetForm.hostname.$dirty || datasetForm.$submitted)}">
+                                <p>
+                                    <input type="text" class="form-control input-half" id="hostname" placeholder="Hostname"
+                                           name="hostname" ng-model="dataset.hostname" ng-required="!dataset.local">
+                                </p>
+                                <span class="help-block error-block basic-block">Hostname is required</span>
+                            </div>
+
+
+                            <!-- Port -->
+                            <h5>Port</h5>
+                            <p ng-show="!edit">{{dataset.port}}</p>
+                            <div ng-show="edit" class="form-group has-feedback"
+                                 ng-class="{'has-error': datasetForm.port.$invalid && (datasetForm.port.$dirty || datasetForm.$submitted)}">
+                                <p>
+                                    <input type="text" class="form-control input-half" id="port" placeholder="Port"
+                                           name="port" ng-model="dataset.port" ng-required="!dataset.local" ng-pattern="/^[0-9]*$/">
+                                </p>
+                                <span class="help-block error-block basic-block">Port must be a numeric value</span>
+                            </div>
+
+
+                            <!-- Path -->
+                            <h5>Path</h5>
+                            <p ng-show="!edit">{{dataset.path}}</p>
+                            <div ng-show="edit" class="form-group has-feedback"
+                                 ng-class="{'has-error': datasetForm.path.$invalid && (datasetForm.path.$dirty || datasetForm.$submitted)}">
+                                <p>
+                                    <input type="text" class="form-control input-half" id="path" placeholder="Path"
+                                           name="path" ng-model="dataset.path" ng-required="!dataset.local">
+                                </p>
+                                <span class="help-block error-block basic-block">Path is required</span>
+                            </div>
+
+
+                        </div>
+
+                        <!-- If the dataset is local, show it -->
+                        <div ng-show="dataset.local">
+                            <h5>Data Source</h5>
+                            <p>Local file</p>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12 col-lg-4">
+                        <div ng-show="!dataset.local">
+                            <h4>Credentials</h4>
+
+                            <span ng-show="!edit">
+                                <span ng-show="dataset.credentials">
+                                    <h5>Credentials provided</h5>
+                                </span>
+                                <span ng-show="!dataset.credentials">
+                                    <h5>No credentials provided</h5>
+                                </span>
+                            </span>
+                            <span ng-show="edit">
+                                <h5>User</h5>
+                                <p>
+                                    <input type="text" class="form-control input-half" id="user" placeholder="User"
+                                           ng-model="dataset.credentials.user">
+                                </p>
+
+                                <h5>Password</h5>
+                                <p>
+                                    <input type="password" class="form-control input-half" id="password"
+                                           placeholder="Password"
+                                           ng-model="dataset.credentials.password">
+                                </p>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-lg-6">
+                        <ul class="btn-list clearfix">
+                            <!--
+                            <li ng-show="['NOT_VALIDATED', 'VALIDATION_ERROR', 'VALIDATED'].includes(dataset.status)">
+                                <button type="button" class="btn btn-primary btn-with-icon" ng-click="runInstance(instance)"><i class="ion-ios-gear"></i>Run
+                                </button>
+                            </li>-->
+                            <li ng-show="['NOT_VALIDATED', 'VALIDATION_ERROR', 'VALIDATED'].includes(dataset.status) && !edit">
+                                <button type="button" class="btn btn-warning btn-with-icon" ng-click="switchEdit()"><i
+                                        class="ion-edit"></i>Edit
+                                </button>
+                            </li>
+
+                            <li ng-show="['NOT_VALIDATED', 'VALIDATION_ERROR', 'VALIDATED'].includes(dataset.status) && edit">
+                                <button type="button" class="btn btn-primary btn-with-icon" ng-click="update(dataset)" ng-disabled="datasetForm.$invalid">
+                                    <i class="ion-archive"></i>Update
+                                </button>
+                            </li>
+
+                            <li ng-show="['NOT_VALIDATED', 'VALIDATION_ERROR', 'VALIDATED'].includes(dataset.status) && edit">
+                                <button type="button" class="btn btn-default btn-with-icon" ng-click="switchEdit()"><i
+                                        class="ion-reply"></i>Cancel
+                                </button>
+                            </li>
+
+
+                            <!--
+                                                    <li ng-show="['FINISHED'].includes(instance.status)">
+                                                        <div class="btn-group" uib-dropdown dropdown-append-to-body>
+                                                            <button type="button" class="btn btn-info"><i class="ion-stats-bars"></i> Results</button>
+                                                            <button type="button" class="btn btn-info " uib-dropdown-toggle>
+                                                                <span class="caret"></span>
+                                                                <span class="sr-only">Toggle Dropdown</span>
+                                                            </button>
+                                                            <ul uib-dropdown-menu>
+                                                                <li><a ui-sref="instances.results.table({instanceId: instance._id})">Table</a></li>
+                                                                <li><a ui-sref="instances.results.aggregate({instanceId: instance._id})">Aggregations</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                    <li ng-show="['NOT_STARTED', 'ERROR', 'KILLED'].includes(instance.status)">
+                                                        <button type="button" class="btn btn-warning btn-with-icon" ui-sref="instances.edit({instanceId: instance._id})"><i class="ion-edit"></i>Edit
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button type="button" class="btn btn-default btn-with-icon" ui-sref="instances.clone({instanceId: instance._id})"><i class="ion-ios-copy"></i>Clone
+                                                        </button>
+                                                    </li>
+                                                    <li ng-show="['NOT_STARTED', 'ERROR', 'KILLED', 'FINISHED'].includes(instance.status)">
+                                                        <button type="button" class="btn btn-danger btn-with-icon" ui-sref="instances.list.delete({instanceId: instance._id})"><i class="ion-trash-b"></i>Delete
+                                                        </button>
+                                                    </li>
+                                                    -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

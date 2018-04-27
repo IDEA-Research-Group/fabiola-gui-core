@@ -12,9 +12,9 @@
     function ListDatasetsCtrl($http) {
         var vm = this;
 
-        vm.show = function(datasetId) {
+        vm.show = function (datasetId) {
             vm.datasetId = datasetId;
-        }
+        };
 
         vm.callServer = function callServer(tableState) {
 
