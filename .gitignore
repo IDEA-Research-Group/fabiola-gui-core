@@ -76,3 +76,6 @@ public/release/*
 
 # config.yml
 config/*
+
+# temp
+temp/*
