@@ -6,52 +6,17 @@
     'use strict';
 
     angular.module('BlurAdmin.pages.datasets')
-        .directive('showEditDataset', ShowEditDatasetsDirective);
+        .directive('showDataset', ShowDatasetsDirective);
 
     /** @ngInject */
-    function ShowEditDatasetsDirective($http, Datasets, $state, toastr, $interval, $q) {
+    function ShowDatasetsDirective($http, Datasets, $state, toastr, $interval, $q) {
         return {
             restrict: 'E',
             scope: {
-                datasetId: '=?' // TODO esto ahora es opcional. la idea es que, si no esta establecido, la vista sea de creacion
+                datasetId: '='
             },
-            templateUrl: 'app/pages/datasets/directives/showEdit/showEdit.html',
+            templateUrl: 'app/pages/datasets/directives/show/show.html',
             link: function (scope, elem, attr) {
-                // var action = (scope.datasetId)? 'edit' : 'create';
-                scope.edit = (scope.datasetId)? false : true;
-
-                // Options
-                scope.dataSourceOptions = [{label: 'MongoDB', value: 'mongo'}, {label: 'HDFS', value: 'hdfs'}];
-                scope.formatOptions = [{label: 'JSON', value: 'json'}, {label: 'CSV', value: 'csv'}];
-
-                scope.switchEdit = function () {
-                    scope.edit = !scope.edit;
-                };
-
-                scope.update = function (dataset) {
-                    return $q(function (resolve, reject) {
-                        function onSuccess(success) {
-                            resolve();
-                            //var createdOrEdited = (action === 'edit') ? 'edited' : 'created';
-                            // toast showing the results
-                            // toastr.success('The Dataset has been successfully ' + createdOrEdited + '.', 'Success!', {
-                            toastr.success('The Dataset has been successfully edited.', 'Success!', {
-                                "positionClass": "toast-top-right",
-                                "type": "success",
-                                "timeOut": "5000"
-                            });
-                            // $state.go('datasets.list', {dataset: success});
-                            scope.edit = false;
-                            scope.dataset = success;
-                        }
-
-                        function onError(error) {
-                            reject();
-                        }
-
-                        Datasets.update({id: dataset._id}, dataset).$promise.then(onSuccess, onError);
-                    });
-                };
 
                 scope.$watch('datasetId', function (newValue, attrs) {
                     if (newValue) {
