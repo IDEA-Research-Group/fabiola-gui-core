@@ -14,7 +14,6 @@
 
                 element.bind('change', function(){
                     scope.$apply(function(){
-                        console.log(element[0].files[0])
                         modelSetter(scope, element[0].files[0]);
                     });
                 });
