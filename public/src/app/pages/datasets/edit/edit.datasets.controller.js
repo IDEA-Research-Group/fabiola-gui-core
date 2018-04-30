@@ -33,7 +33,7 @@
                             "type": "success",
                             "timeOut": "5000"
                         });
-                        $state.go('datasets.list', {dataset: success});
+                        $state.go('datasets.list', {datasetId: success._id});
                     }
 
                     function onError(error) {
@@ -41,14 +41,12 @@
                     }
 
                     if (action === 'edit') {
-                        Datasets.update({id: vm.copModel._id}, vm.copModel).$promise.then(onSuccess, onError);
+                        Datasets.update({id: vm.dataset._id}, vm.dataset).$promise.then(onSuccess, onError);
                     } else {
                         if(vm.dataset.local) {
                             var file = vm.file;
                             var fd = new FormData();
                             fd.append('dataset', file);
-                            console.log(file)
-                            console.log(fd)
                             $http
                                 .post('/api/v1/datasets/upload', fd, {transformRequest: angular.identity, headers: {'Content-Type': undefined}})
                                 .then(onSuccess, onError);
@@ -62,10 +60,11 @@
 
         // When entering to the controller, these statement are first executed
         var currentState = $state.$current.self.name;
-        var action = (currentState === 'datasets.clone') ? 'clone' : ((currentState === 'datasets.edit') ? 'edit' : 'create');
+        var action = (currentState === 'datasets.edit') ? 'edit' : 'create';
+        vm.action = action;
 
         if (['edit', 'clone'].includes(action)) {
-            COPModels.get({id: $stateParams.copModelId}).$promise.then(function (dataset) {
+            Datasets.get({id: $stateParams.datasetId}).$promise.then(function (dataset) {
                 form(dataset, action);
             });
         } else {

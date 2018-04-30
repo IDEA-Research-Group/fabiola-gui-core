@@ -194,20 +194,8 @@
                                 </button>
                             </li>-->
                             <li ng-show="['NOT_VALIDATED', 'VALIDATION_ERROR', 'VALIDATED'].includes(dataset.status) && !edit">
-                                <button type="button" class="btn btn-warning btn-with-icon" ng-click="switchEdit()"><i
+                                <button type="button" class="btn btn-warning btn-with-icon" ui-sref="datasets.edit({datasetId: dataset._id})"><i
                                         class="ion-edit"></i>Edit
-                                </button>
-                            </li>
-
-                            <li ng-show="['NOT_VALIDATED', 'VALIDATION_ERROR', 'VALIDATED'].includes(dataset.status) && edit">
-                                <button type="button" class="btn btn-primary btn-with-icon" ng-click="update(dataset)" ng-disabled="datasetForm.$invalid">
-                                    <i class="ion-archive"></i>Update
-                                </button>
-                            </li>
-
-                            <li ng-show="['NOT_VALIDATED', 'VALIDATION_ERROR', 'VALIDATED'].includes(dataset.status) && edit">
-                                <button type="button" class="btn btn-default btn-with-icon" ng-click="switchEdit()"><i
-                                        class="ion-reply"></i>Cancel
                                 </button>
                             </li>
 

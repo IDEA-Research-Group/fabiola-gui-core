@@ -3,7 +3,7 @@
         <div class="col-md-12 col-lg-4">
             <h4>Metadata</h4>
             <!-- Local -->
-            <div class="form-group has-feedback">
+            <div class="form-group has-feedback" ng-show="vm.action === 'create'">
                 <label>Do you want to upload the dataset from your computer?</label>
                 <div class="radio-controls">
                     <label class="radio custom-radio nowrap">
@@ -18,11 +18,11 @@
             </div>
             <!-- Name -->
             <div class="form-group has-feedback"
-                 ng-show="vm.dataset.local === false"
+                 ng-show="vm.dataset.local === false || vm.action === 'edit'"
                  ng-class="{'has-error': vm.datasetForm.name.$invalid && (vm.datasetForm.name.$dirty || vm.datasetForm.$submitted)}">
                 <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" name="name"
-                       placeholder="Dataset name" ng-model="vm.dataset.name" ng-required="!vm.dataset.local">
+                       placeholder="Dataset name" ng-model="vm.dataset.name" ng-required="!vm.dataset.local || vm.action === 'edit'">
                 <span class="help-block error-block basic-block">Name is required</span>
             </div>
         </div>
@@ -30,7 +30,7 @@
         <div class="col-md-12 col-lg-4">
             <h4>Data Source Information</h4>
 
-            <div ng-show="vm.dataset.local === true">
+            <div ng-show="vm.dataset.local === true && vm.action === 'create'">
                 <!-- File upload -->
                 <div class="form-group has-feedback"
                      ng-class="{'has-error': vm.datasetForm.file.$invalid && (vm.datasetForm.file.$dirty || vm.datasetForm.$submitted)}">
@@ -39,6 +39,10 @@
                            name="file" file-model="vm.file">
                     <span class="help-block error-block basic-block">You must specify a file</span>
                 </div>
+            </div>
+
+            <div ng-show="vm.dataset.local === true && vm.action === 'edit'">
+                <p>Uploaded to FABIOLA Metastore</p>
             </div>
 
             <div ng-show="vm.dataset.local === false">

@@ -32,6 +32,14 @@
                         controllerAs: 'vm'
                     }
                 },
+                resolve: {
+                    datasetId: function ($stateParams) {
+                        return $stateParams.datasetId;
+                    }
+                },
+                params: {
+                    datasetId: null
+                },
                 sidebarMeta: {
                     order: 0,
                 },
@@ -48,6 +56,17 @@
                 },
                 sidebarMeta: {
                     order: 10
+                }
+            })
+            .state('datasets.edit', {
+                url: '/edit/{datasetId}',
+                title: 'Edit Dataset',
+                views: {
+                    'content': {
+                        templateUrl: 'app/pages/datasets/edit/edit.html',
+                        controller: 'EditDatasetCtrl',
+                        controllerAs: 'vm'
+                    }
                 }
             });
     }

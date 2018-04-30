@@ -20,7 +20,6 @@
 
                 scope.$watch('datasetId', function (newValue, attrs) {
                     if (newValue) {
-                        scope.edit = false;
                         scope.dataset = Datasets.get({'id': newValue});
                     }
                 }, true);

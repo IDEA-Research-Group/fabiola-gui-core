@@ -9,12 +9,16 @@
         .controller('ListDatasetsCtrl', ListDatasetsCtrl);
 
     /** @ngInject */
-    function ListDatasetsCtrl($http) {
+    function ListDatasetsCtrl($http, $stateParams) {
         var vm = this;
 
         vm.show = function (datasetId) {
             vm.datasetId = datasetId;
         };
+
+        if($stateParams.datasetId) {
+            vm.datasetId = $stateParams.datasetId;
+        }
 
         vm.callServer = function callServer(tableState) {
 
