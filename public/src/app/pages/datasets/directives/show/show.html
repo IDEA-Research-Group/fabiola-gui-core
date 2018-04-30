@@ -198,34 +198,11 @@
                                 </button>
                             </li>
 
+                            <li ng-show="['NOT_VALIDATED', 'VALIDATION_ERROR', 'VALIDATED'].includes(dataset.status)">
+                                <button type="button" class="btn btn-danger btn-with-icon" ui-sref="datasets.list.delete({datasetId: dataset._id})"><i class="ion-trash-b"></i>Delete
+                                </button>
+                            </li>
 
-                            <!--
-                                                    <li ng-show="['FINISHED'].includes(instance.status)">
-                                                        <div class="btn-group" uib-dropdown dropdown-append-to-body>
-                                                            <button type="button" class="btn btn-info"><i class="ion-stats-bars"></i> Results</button>
-                                                            <button type="button" class="btn btn-info " uib-dropdown-toggle>
-                                                                <span class="caret"></span>
-                                                                <span class="sr-only">Toggle Dropdown</span>
-                                                            </button>
-                                                            <ul uib-dropdown-menu>
-                                                                <li><a ui-sref="instances.results.table({instanceId: instance._id})">Table</a></li>
-                                                                <li><a ui-sref="instances.results.aggregate({instanceId: instance._id})">Aggregations</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </li>
-                                                    <li ng-show="['NOT_STARTED', 'ERROR', 'KILLED'].includes(instance.status)">
-                                                        <button type="button" class="btn btn-warning btn-with-icon" ui-sref="instances.edit({instanceId: instance._id})"><i class="ion-edit"></i>Edit
-                                                        </button>
-                                                    </li>
-                                                    <li>
-                                                        <button type="button" class="btn btn-default btn-with-icon" ui-sref="instances.clone({instanceId: instance._id})"><i class="ion-ios-copy"></i>Clone
-                                                        </button>
-                                                    </li>
-                                                    <li ng-show="['NOT_STARTED', 'ERROR', 'KILLED', 'FINISHED'].includes(instance.status)">
-                                                        <button type="button" class="btn btn-danger btn-with-icon" ui-sref="instances.list.delete({instanceId: instance._id})"><i class="ion-trash-b"></i>Delete
-                                                        </button>
-                                                    </li>
-                                                    -->
                         </ul>
                     </div>
                 </div>

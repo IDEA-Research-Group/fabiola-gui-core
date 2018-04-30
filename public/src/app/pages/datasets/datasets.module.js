@@ -68,6 +68,24 @@
                         controllerAs: 'vm'
                     }
                 }
+            }).state('datasets.list.delete', {
+                url: '/delete/{datasetId}',
+                onEnter: ['$stateParams', '$state', '$uibModal', function ($stateParams, $state, $uibModal) {
+                    $uibModal.open({
+                        templateUrl: 'app/pages/datasets/delete/delete.html',
+                        controller: 'DeleteDatasetCtrl',
+                        controllerAs: 'vm',
+                        resolve: {
+                            datasetId: function () {
+                                return $stateParams.datasetId
+                            }
+                        }
+                    }).result.then(function () {
+                        $state.go('datasets.list', null, {reload: 'datasets.list'});
+                    }, function () {
+                        $state.go('datasets.list');
+                    });
+                }]
             });
     }
 
