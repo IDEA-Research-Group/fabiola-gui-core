@@ -64,7 +64,8 @@ router.get('/:id', function (req, res) {
                 res.send({
                     _id: element._id,
                     name: element.name,
-                    creationDate: new Date(),
+                    creationDate: element.creationDate,
+                    lastValidationDate: element.lastValidationDate,
                     local: element.local,
                     status: element.status,
                     errorMsg: element.errorMsg,
@@ -150,7 +151,18 @@ router.post('/upload', function (req, res, next) {
                     });
 
                     Dataset.create(datasetObj).then(function (element) {
-                        res.status(201).send(element);
+                        res.status(201).send(
+                            {
+                                _id: element._id,
+                                name: element.name,
+                                creationDate: element.creationDate,
+                                lastValidationDate: element.lastValidationDate,
+                                local: element.local,
+                                status: element.status,
+                                errorMsg: element.errorMsg,
+                                dsSchema: element.dsSchema
+                            }
+                        );
                     }).catch(next);
                 }
             });
