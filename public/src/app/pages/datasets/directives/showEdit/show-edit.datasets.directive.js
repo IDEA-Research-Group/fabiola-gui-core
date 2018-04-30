@@ -13,11 +13,12 @@
         return {
             restrict: 'E',
             scope: {
-                datasetId: '='
+                datasetId: '=?' // TODO esto ahora es opcional. la idea es que, si no esta establecido, la vista sea de creacion
             },
             templateUrl: 'app/pages/datasets/directives/showEdit/showEdit.html',
             link: function (scope, elem, attr) {
-                scope.edit = false;
+                // var action = (scope.datasetId)? 'edit' : 'create';
+                scope.edit = (scope.datasetId)? false : true;
 
                 // Options
                 scope.dataSourceOptions = [{label: 'MongoDB', value: 'mongo'}, {label: 'HDFS', value: 'hdfs'}];

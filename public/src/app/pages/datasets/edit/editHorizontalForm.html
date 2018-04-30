@@ -1,0 +1,159 @@
+<form name="vm.datasetForm" novalidate>
+    <div class="row">
+        <div class="col-md-12 col-lg-4">
+            <h4>Metadata</h4>
+            <!-- Local -->
+            <div class="form-group has-feedback">
+                <label>Do you want to upload the dataset from your computer?</label>
+                <div class="radio-controls">
+                    <label class="radio custom-radio nowrap">
+                        <input type="radio" name="local" id="localFalse" ng-model="vm.dataset.local" ng-value="false">
+                        <span>No</span>
+                    </label>
+                    <label class="radio custom-radio nowrap">
+                        <input type="radio" name="local" id="localTrue" ng-model="vm.dataset.local" ng-value="true">
+                        <span>Yes</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Name -->
+            <div class="form-group has-feedback"
+                 ng-show="vm.dataset.local === false"
+                 ng-class="{'has-error': vm.datasetForm.name.$invalid && (vm.datasetForm.name.$dirty || vm.datasetForm.$submitted)}">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name"
+                       placeholder="Dataset name" ng-model="vm.dataset.name" ng-required="!vm.dataset.local">
+                <span class="help-block error-block basic-block">Name is required</span>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-lg-4">
+            <h4>Data Source Information</h4>
+
+            <div ng-show="vm.dataset.local === true">
+                <!-- File upload -->
+                <div class="form-group has-feedback"
+                     ng-class="{'has-error': vm.datasetForm.file.$invalid && (vm.datasetForm.file.$dirty || vm.datasetForm.$submitted)}">
+                    <label for="file">File path</label>
+                    <input type="file" class="form-control" id="file" placeholder="file"
+                           name="file" file-model="vm.file">
+                    <span class="help-block error-block basic-block">You must specify a file</span>
+                </div>
+            </div>
+
+            <div ng-show="vm.dataset.local === false">
+                <!-- Datasource -->
+                <div class="form-group has-feedback"
+                     ng-class="{'has-error': vm.datasetForm.datasource.$invalid && (vm.datasetForm.datasource.$dirty || vm.datasetForm.$submitted)}">
+                    <label for="datasource">Data Source</label>
+                    <ui-select ng-model="vm.dataset.datasource"
+                               class="btn-group bootstrap-select form-control"
+                               ng-disabled="false"
+                               name="datasource"
+                               id="datasource"
+                               append-to-body="true"
+                               search-enabled="false"
+                               ng-required="!vm.dataset.local">
+                        <ui-select-match placeholder="Select a Data Source...">
+                            <span> {{$select.selected.label}}</span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.value as item in vm.dataSourceOptions | filter: $select.search">
+                            <span ng-bind-html="item.label"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+                <!-- Format -->
+                <div class="form-group has-feedback"
+                     ng-show="vm.dataset.datasource == 'hdfs'"
+                     ng-class="{'has-error': vm.datasetForm.format.$invalid && (vm.datasetForm.format.$dirty || vm.datasetForm.$submitted)}">
+                    <label for="format">Format</label>
+                    <!-- Format -->
+                    <ui-select ng-model="vm.dataset.format"
+                               class="btn-group bootstrap-select form-control"
+                               name="format"
+                               id="format"
+                               ng-disabled="false"
+                               append-to-body="true"
+                               search-enabled="false"
+                               ng-required="['hdfs'].includes(vm.dataset.datasource) && !vm.dataset.local">
+                        <ui-select-match placeholder="Select a format...">
+                            <span> {{$select.selected.label}}</span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.value as item in vm.formatOptions | filter: $select.search">
+                            <span ng-bind-html="item.label"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+
+                <!-- Hostname -->
+                <div class="form-group has-feedback"
+                     ng-class="{'has-error': vm.datasetForm.hostname.$invalid && (vm.datasetForm.hostname.$dirty || vm.datasetForm.$submitted)}">
+                    <label for="hostname">Hostname</label>
+                    <input type="text" class="form-control" id="hostname" name="hostname"
+                           placeholder="Hostname" ng-model="vm.dataset.hostname" ng-required="!vm.dataset.local">
+                    <span class="help-block error-block basic-block">Hostname is required</span>
+                </div>
+
+                <!-- Port -->
+                <div class="form-group has-feedback"
+                     ng-class="{'has-error': vm.datasetForm.port.$invalid && (vm.datasetForm.port.$dirty || vm.datasetForm.$submitted)}">
+                    <label for="port">Port</label>
+                    <input type="text" class="form-control" id="port" placeholder="Port"
+                           name="port" ng-model="vm.dataset.port" ng-required="!vm.dataset.local" ng-pattern="/^[0-9]*$/">
+                    <span class="help-block error-block basic-block">Port must be a numeric value</span>
+                </div>
+
+                <!-- Path -->
+                <div class="form-group has-feedback"
+                     ng-class="{'has-error': vm.datasetForm.path.$invalid && (vm.datasetForm.path.$dirty || vm.datasetForm.$submitted)}">
+                    <label for="path">Path</label>
+                    <input type="text" class="form-control" id="path" placeholder="Path"
+                           name="path" ng-model="vm.dataset.path" ng-required="!vm.dataset.local">
+                    <span class="help-block error-block basic-block">Path is required</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-lg-4" ng-show="vm.dataset.local === false">
+            <h4>Credentials</h4>
+            <!-- User -->
+            <div class="form-group has-feedback"
+                 ng-class="{'has-error': vm.datasetForm.user.$invalid && (vm.datasetForm.user.$dirty || vm.datasetForm.$submitted)}">
+                <label for="user">User</label>
+                <input type="text" class="form-control" id="user" placeholder="User"
+                       name="path" ng-model="vm.dataset.credentials.user">
+                <span class="help-block error-block basic-block">User is required</span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group has-feedback"
+                 ng-class="{'has-error': vm.datasetForm.password.$invalid && (vm.datasetForm.password.$dirty || vm.datasetForm.$submitted)}">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password"
+                       placeholder="Password"
+                       ng-model="vm.dataset.credentials.password">
+                <span class="help-block error-block basic-block">Password is required</span>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <!-- Button -->
+
+    <div class="row">
+        <div class="col-md-6">
+            <button ng-disabled="vm.datasetForm.$invalid"
+                    progress-button="vm.progressFunction()" class="btn btn-primary">Submit
+            </button>
+        </div>
+    </div>
+
+</form>

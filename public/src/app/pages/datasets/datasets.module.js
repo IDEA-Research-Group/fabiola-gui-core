@@ -35,6 +35,20 @@
                 sidebarMeta: {
                     order: 0,
                 },
+            })
+            .state('datasets.create', {
+                url: '/create',
+                title: 'Create Dataset',
+                views: {
+                    'content': {
+                        templateUrl: 'app/pages/datasets/edit/edit.html',
+                        controller: 'EditDatasetCtrl',
+                        controllerAs: 'vm'
+                    }
+                },
+                sidebarMeta: {
+                    order: 10
+                }
             });
     }
 

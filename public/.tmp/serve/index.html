@@ -150,14 +150,14 @@
 
 <!-- build:js({.tmp/serve,.tmp/partials,src}) scripts/app.js -->
 <!-- inject:js -->
-<script src="app/pages/pages.module.js"></script>
 <script src="app/services/services.module.js"></script>
+<script src="app/pages/pages.module.js"></script>
 <script src="app/theme/theme.module.js"></script>
 <script src="app/pages/charts/charts.module.js"></script>
 <script src="app/pages/components/components.module.js"></script>
 <script src="app/pages/copModels/cop-models.module.js"></script>
-<script src="app/pages/dashboard/dashboard.module.js"></script>
 <script src="app/pages/datasets/datasets.module.js"></script>
+<script src="app/pages/dashboard/dashboard.module.js"></script>
 <script src="app/pages/form/form.module.js"></script>
 <script src="app/pages/instances/instances.module.js"></script>
 <script src="app/pages/maps/maps.module.js"></script>
@@ -170,8 +170,8 @@
 <script src="app/pages/charts/chartJs/chartJs.module.js"></script>
 <script src="app/pages/charts/chartist/chartist.module.js"></script>
 <script src="app/pages/charts/morris/morris.module.js"></script>
-<script src="app/pages/components/mail/mail.module.js"></script>
 <script src="app/pages/components/timeline/timeline.module.js"></script>
+<script src="app/pages/components/mail/mail.module.js"></script>
 <script src="app/pages/components/tree/tree.module.js"></script>
 <script src="app/pages/ui/alerts/alerts.module.js"></script>
 <script src="app/pages/ui/buttons/buttons.module.js"></script>
@@ -185,12 +185,12 @@
 <script src="app/pages/ui/tabs/tabs.module.js"></script>
 <script src="app/pages/ui/typography/typography.module.js"></script>
 <script src="app/app.js"></script>
-<script src="app/pages/http.interceptor.js"></script>
 <script src="app/services/cop-models.service.js"></script>
 <script src="app/services/datasets.service.js"></script>
 <script src="app/services/errorHandler.service.js"></script>
 <script src="app/services/instances.service.js"></script>
 <script src="app/services/search-engine.service.js"></script>
+<script src="app/pages/http.interceptor.js"></script>
 <script src="app/theme/theme.config.js"></script>
 <script src="app/theme/theme.configProvider.js"></script>
 <script src="app/theme/theme.constants.js"></script>
@@ -203,6 +203,7 @@
 <script src="app/theme/directives/animatedChange.js"></script>
 <script src="app/theme/directives/autoExpand.js"></script>
 <script src="app/theme/directives/autoFocus.js"></script>
+<script src="app/theme/directives/fileModel.js"></script>
 <script src="app/theme/directives/includeWithScope.js"></script>
 <script src="app/theme/directives/ionSlider.js"></script>
 <script src="app/theme/directives/ngFileSelect.js"></script>
@@ -221,20 +222,22 @@
 <script src="app/pages/charts/chartJs/chartJsWaveCtrl.js"></script>
 <script src="app/pages/charts/chartist/chartistCtrl.js"></script>
 <script src="app/pages/charts/morris/morrisCtrl.js"></script>
+<script src="app/pages/components/timeline/TimelineCtrl.js"></script>
 <script src="app/pages/components/mail/MailTabCtrl.js"></script>
 <script src="app/pages/components/mail/mailMessages.js"></script>
-<script src="app/pages/components/timeline/TimelineCtrl.js"></script>
 <script src="app/pages/components/tree/treeCtrl.js"></script>
 <script src="app/pages/copModels/delete/delete.cop-models.controller.js"></script>
-<script src="app/pages/copModels/edit/edit.cop-models.controller.js"></script>
 <script src="app/pages/copModels/list/list.cop-models.controller.js"></script>
+<script src="app/pages/copModels/edit/edit.cop-models.controller.js"></script>
+<script src="app/pages/datasets/list/list.datasets.controller.js"></script>
+<script src="app/pages/datasets/edit/edit.datasets.controller.js"></script>
 <script src="app/pages/dashboard/blurFeed/BlurFeedCtrl.js"></script>
 <script src="app/pages/dashboard/blurFeed/blurFeed.directive.js"></script>
 <script src="app/pages/dashboard/calendar/dashboardCalendar.js"></script>
-<script src="app/pages/dashboard/dashboardLineChart/DashboardLineChartCtrl.js"></script>
-<script src="app/pages/dashboard/dashboardLineChart/dashboardLineChart.directive.js"></script>
 <script src="app/pages/dashboard/dashboardCalendar/DashboardCalendarCtrl.js"></script>
 <script src="app/pages/dashboard/dashboardCalendar/dashboardCalendar.directive.js"></script>
+<script src="app/pages/dashboard/dashboardLineChart/DashboardLineChartCtrl.js"></script>
+<script src="app/pages/dashboard/dashboardLineChart/dashboardLineChart.directive.js"></script>
 <script src="app/pages/dashboard/dashboardMap/DashboardMapCtrl.js"></script>
 <script src="app/pages/dashboard/dashboardMap/dashboardMap.directive.js"></script>
 <script src="app/pages/dashboard/dashboardPieChart/DashboardPieChartCtrl.js"></script>
@@ -247,7 +250,6 @@
 <script src="app/pages/dashboard/trafficChart/trafficChart.directive.js"></script>
 <script src="app/pages/dashboard/weather/WeatherCtrl.js"></script>
 <script src="app/pages/dashboard/weather/weather.directive.js"></script>
-<script src="app/pages/datasets/list/list.datasets.controller.js"></script>
 <script src="app/pages/form/wizard/wizrdCtrl.js"></script>
 <script src="app/pages/instances/delete/delete.instances.controller.js"></script>
 <script src="app/pages/instances/edit/edit.instances.controller.js"></script>
@@ -293,8 +295,8 @@
 <script src="app/pages/charts/amCharts/pieChart/PieChartCtrl.js"></script>
 <script src="app/pages/components/mail/composeBox/composeBoxCtrl.js"></script>
 <script src="app/pages/components/mail/composeBox/composeModal.js"></script>
-<script src="app/pages/components/mail/detail/MailDetailCtrl.js"></script>
 <script src="app/pages/components/mail/list/MailListCtrl.js"></script>
+<script src="app/pages/components/mail/detail/MailDetailCtrl.js"></script>
 <script src="app/pages/copModels/directives/show/show.cop-models.directive.js"></script>
 <script src="app/pages/datasets/directives/showEdit/show-edit.datasets.directive.js"></script>
 <script src="app/pages/instances/directives/filterResults/filter-results.instances.directive.js"></script>
