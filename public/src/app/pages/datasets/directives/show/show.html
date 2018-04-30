@@ -38,10 +38,9 @@
                                 <p ng-switch-when="VALIDATION_ERROR"><i class="ion-record large"
                                                                         style="color: #FF0000"></i>
                                     Validation error</p>
-                                <p ng-switch-when="RUNNING"><i class="ion-record"
-                                                               style="color: #FFFF00"></i> Running</p>
-                                <p ng-switch-when="VALIDATED"><i class="ion-record" style="color: #327E04"></i> Validated
-                                </p>
+                                <p ng-switch-when="RUNNING"><i class="ion-record" style="color: #FFFF00"></i> Running</p>
+                                <p ng-switch-when="WAITING"><i class="ion-record" style="color: #FFFF00"></i> Waiting</p>
+                                <p ng-switch-when="VALIDATED"><i class="ion-record" style="color: #327E04"></i> Validated</p>
                                 <p ng-switch-default><i class="ion-record" style="color: #C2C2A3"></i> Not validated</p>
                             </div>
                         </span>
@@ -188,11 +187,11 @@
                 <div class="row">
                     <div class="col-md-12 col-lg-6">
                         <ul class="btn-list clearfix">
-                            <!--
+
                             <li ng-show="['NOT_VALIDATED', 'VALIDATION_ERROR', 'VALIDATED'].includes(dataset.status)">
-                                <button type="button" class="btn btn-primary btn-with-icon" ng-click="runInstance(instance)"><i class="ion-ios-gear"></i>Run
+                                <button type="button" class="btn btn-primary btn-with-icon" ng-click="validateDataset(dataset)"><i class="ion-ios-gear"></i>Validate
                                 </button>
-                            </li>-->
+                            </li>
                             <li ng-show="['NOT_VALIDATED', 'VALIDATION_ERROR', 'VALIDATED'].includes(dataset.status) && !edit">
                                 <button type="button" class="btn btn-warning btn-with-icon" ui-sref="datasets.edit({datasetId: dataset._id})"><i
                                         class="ion-edit"></i>Edit
