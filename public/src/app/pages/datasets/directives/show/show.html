@@ -182,7 +182,6 @@
                             </span>
                         </div>
                     </div>
-
                 </div>
                 <div class="row">
                     <div class="col-md-12 col-lg-6">
@@ -203,6 +202,9 @@
                                 </button>
                             </li>
 
+                            <li ng-show="['VALIDATED'].includes(dataset.status)">
+                                <button type="button" class="btn btn-default btn-with-icon" data-toggle="modal" ng-click="open('app/pages/datasets/directives/show/schemaModal.html', 'md')"><i class="ion-ios-list"></i>Schema</button>
+                            </li>
                         </ul>
                     </div>
                 </div>

@@ -9,7 +9,7 @@
         .directive('showDataset', ShowDatasetsDirective);
 
     /** @ngInject */
-    function ShowDatasetsDirective($http, Datasets, $state, toastr, $interval, $q) {
+    function ShowDatasetsDirective($http, Datasets, $state, toastr, $interval, $uibModal) {
         return {
             restrict: 'E',
             scope: {
@@ -37,7 +37,53 @@
                             scope.dataset = Datasets.get({'id': id});
                         }, function (error) {
                         });
-                }
+                };
+
+                var showSchema = function() {
+                    var dataset = scope.dataset;
+
+                    var root = {
+                        title: 'root',
+                        nodes: []
+                    };
+
+                    var schemaObj = JSON.parse(dataset.dsSchema);
+
+                    var transformedTree = transformTree(schemaObj.fields, '');
+
+                    scope.dsSchema = [
+                        {
+                            title: 'root',
+                            nodes: transformedTree
+                        }
+                    ];
+
+                    scope.input = [{
+                        'id': 1,
+                        'title': 'IN',
+                        'nodes': []
+                    }];
+                    scope.output = [{
+                        'id': 1,
+                        'title': 'OUT',
+                        'nodes': []
+                    }];
+                    scope.other = [{
+                        'id': 1,
+                        'title': 'OT',
+                        'nodes': []
+                    }];
+                };
+
+                scope.open = function (page, size) {
+                    showSchema();
+                    $uibModal.open({
+                        animation: true,
+                        templateUrl: page,
+                        size: size,
+                        scope: scope
+                    });
+                };
 
                 var intervalPromise = $interval(function () {
                     if (scope.dataset) {
@@ -60,4 +106,24 @@
             }
         }
     }
+
+    function transformTree(nodes, path) {
+        return nodes.map(n => {
+            var thisPath = (path === '')? n.name : path+'.'+n.name;
+            return {
+                    path: thisPath,
+                    //title: n.name, // TODO title must be the name, not the path. But it would require
+                    title: thisPath,
+                    type: getNodeType(n.type),
+                    nodes: (getNodeType(n.type) === 'struct')? transformTree(n.type.fields, thisPath) :
+                        (getNodeType(n.type) === 'array')? transformTree(n.type.elementType.fields, thisPath) : []
+                }
+            }
+        );
+    }
+
+    function getNodeType(type) {
+        return typeof type === 'object' ? type.type : type;
+    }
+
 })();

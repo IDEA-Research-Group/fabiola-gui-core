@@ -57,7 +57,8 @@
     "angular-ui-select": "^0.19.6",
     "angular-ui-codemirror": "^0.3.0",
     "angular-ui-ace": "^0.2.3",
-    "angular-resource": "~1.5.8"
+    "angular-resource": "~1.5.8",
+    "angular-ui-tree": "^2.22.6"
   },
   "resolutions": {
     "angular": "~1.5.9",
