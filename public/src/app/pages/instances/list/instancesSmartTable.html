@@ -9,7 +9,7 @@
     <table class="table" st-pipe="vm.callServer" st-table="vm.displayed">
         <thead>
         <tr class="sortable">
-            <th>Model Definition</th>
+            <th>COP Model</th>
             <th>Dataset</th>
             <th>Creation Date</th>
             <th>Status</th>
@@ -19,7 +19,7 @@
         <tbody 	ng-show="!vm.isLoading">
         <tr ng-repeat="item in vm.displayed">
             <td><a href="" ui-sref="copModels.list({copModelId: item.copModel._id})">{{item.copModel.name}}</a></td>
-            <td><a href="">{{item.dataset.name}}</a></td>
+            <td><a href="" ui-sref="datasets.list({datasetId: item.dataset._id})">{{item.dataset.name}}</a></td>
             <td>{{item.creationDate | date : 'medium'}}</td>
             <td ng-switch="item.status">
                 <i ng-switch-when="ERROR" class="ion-record large" style="color: #FF0000; font-size: 1.8em"></i>
