@@ -89,21 +89,49 @@
                         </form>
                     </ba-wizard-step>
 
-                    <!-- Step 4: Final steps -->
-                    <ba-wizard-step title="Final Steps">
-                        <form class="form-horizontal" name="vm.finalStepsForm" novalidate>
+                    <!-- Step 4: System Configuration -->
+                    <ba-wizard-step title="System Configuration">
+                        <form class="form-horizontal" name="vm.systemConfigForm" novalidate>
                             <div class="row">
                                 <div class="col-md-6">
+
+                                    <!-- Driver cores -->
                                     <div class="form-group has-feedback"
-                                         ng-class="{'has-error': vm.finalStepsForm.timeout.$invalid && (vm.finalStepsForm.timeout.$dirty || vm.finalStepsForm.$submitted)}">
-                                        <label for="timeout">Timeout</label>
-                                        <input type="number" class="form-control" id="timeout"
-                                               name="timeout"
-                                               placeholder="Timeout" ng-model="vm.instance.timeout"
-                                               size="10"
-                                               required>
-                                        <span class="help-block error-block basic-block">Required</span>
+                                         ng-class="{'has-error': vm.systemConfigForm.driverCores.$invalid && (vm.datasetForm.driverCores.$dirty || vm.datasetForm.$submitted)}">
+                                        <label for="driverCores">Driver cores</label>
+                                        <input type="text" class="form-control" id="driverCores" name="driverCores"
+                                               placeholder="Driver cores" ng-model="vm.instance.systemConfig.driverCores">
+                                        <span class="help-block error-block basic-block">Driver cores is required</span>
                                     </div>
+
+                                    <!-- Driver memory -->
+                                    <div class="form-group has-feedback"
+                                         ng-class="{'has-error': vm.systemConfigForm.driverMemory.$invalid && (vm.datasetForm.driverMemory.$dirty || vm.datasetForm.$submitted)}">
+                                        <label for="driverMemory">Driver memory</label>
+                                        <input type="text" class="form-control" id="driverMemory" name="driverMemory"
+                                               placeholder="Driver memory" ng-model="vm.instance.systemConfig.driverMemory">
+                                        <span class="help-block error-block basic-block">Driver memory is required</span>
+                                    </div>
+
+                                    <!-- Executor cores -->
+                                    <div class="form-group has-feedback"
+                                         ng-class="{'has-error': vm.systemConfigForm.executorCores.$invalid && (vm.datasetForm.executorCores.$dirty || vm.datasetForm.$submitted)}">
+                                        <label for="executorCores">Executor cores</label>
+                                        <input type="text" class="form-control" id="executorCores" name="executorCores"
+                                               placeholder="Executor cores" ng-model="vm.instance.systemConfig.executorCores">
+                                        <span class="help-block error-block basic-block">Executor cores is required</span>
+                                    </div>
+
+                                    <!-- Executor memory -->
+                                    <div class="form-group has-feedback"
+                                         ng-class="{'has-error': vm.systemConfigForm.executorMemory.$invalid && (vm.datasetForm.executorMemory.$dirty || vm.datasetForm.$submitted)}">
+                                        <label for="driverMemory">Driver memory</label>
+                                        <input type="text" class="form-control" id="executorMemory" name="executorMemory"
+                                               placeholder="Executor memory" ng-model="vm.instance.systemConfig.executorMemory">
+                                        <span class="help-block error-block basic-block">Executor memory is required</span>
+                                    </div>
+
+                                    <!-- Metrics -->
                                     <div class="checkbox">
                                         <label class="custom-checkbox">
                                             <input type="checkbox" ng-model="vm.instance.metrics" ng-true-value="true" ng-false-value="false">
@@ -114,7 +142,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <button ng-disabled="vm.finalStepsForm.$invalid"
+                                    <button ng-disabled="vm.systemConfigForm.$invalid"
                                             progress-button="vm.progressFunction()" class="btn btn-primary">Submit
                                     </button>
                                 </div>
