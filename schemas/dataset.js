@@ -58,6 +58,7 @@ DatasetSchema.pre('validate', function(next) {
     next()
 });
 
+DatasetSchema.index({status: 1});
 
 mongoose.model("Dataset", DatasetSchema);
 

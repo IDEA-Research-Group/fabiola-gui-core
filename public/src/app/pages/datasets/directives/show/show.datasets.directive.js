@@ -13,10 +13,20 @@
         return {
             restrict: 'E',
             scope: {
-                datasetId: '='
+                datasetId: '=',
             },
             templateUrl: 'app/pages/datasets/directives/show/show.html',
             link: function (scope, elem, attr) {
+                // Check attributes
+                // no-buttons
+                if(attr.hasOwnProperty('noButtons')) {
+                    scope.hideButtons = true;
+                }
+
+                // no-panel
+                if(attr.hasOwnProperty('noPanel')) {
+                    scope.hidePanel = true;
+                }
 
                 scope.$watch('datasetId', function (newValue, attrs) {
                     if (newValue) {

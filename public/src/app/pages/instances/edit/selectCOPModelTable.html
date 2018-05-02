@@ -7,13 +7,13 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="item in vm.modelDefinitions">
-            <td>{{item.name}}</td>
+        <tr ng-repeat="item in vm.copModels">
+            <td><a href="" ui-sref="copModels.list({copModelId: item._id})">{{item.name}}</a></td>
             <span class="center-block">
-                <td ng-if="item._id == vm.selectedMd._id"><button type="button" class="btn btn-xs btn-success btn-with-icon"><i class="ion-android-checkmark-circle"></i>Selected</button></td>
+                <td ng-if="item._id == vm.selectedCM._id"><button type="button" class="btn btn-xs btn-success btn-with-icon"><i class="ion-android-checkmark-circle"></i>Selected</button></td>
             </span>
             <span class="center-block">
-                <td ng-if="item._id != vm.selectedMd._id"><button class="status-button btn btn-xs btn-primary" ng-click="vm.selectMd(item)">Select</button></td>
+                <td ng-if="item._id != vm.selectedCM._id"><button class="status-button btn btn-xs btn-primary" ng-click="vm.selectMd(item)">Select</button></td>
             </span>
         </tr>
         </tbody>

@@ -39,7 +39,9 @@ router.get('/', function (req, res) {
     if (!limit)
         limit = 10;
 
-    Dataset.paginate({}, {
+    var query = (req.query.status)? {status: req.query.status} : {};
+
+    Dataset.paginate(query, {
         page: parseInt(page),
         limit: parseInt(limit),
         select: '_id name creationDate local status errorMsg dsSchema'

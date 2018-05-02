@@ -4,56 +4,32 @@
         <div class="col-md-12">
             <div ba-panel ba-panel-title="New instance" ba-panel-class="with-scroll">
                 <ba-wizard>
-                    <!-- Step 1: ModelDefinition -->
-                    <ba-wizard-step title="Model Definition" form="vm.selectMdForm">
-                        <form name="vm.selectMdForm" novalidate>
+                    <!-- Step 1: COPModel -->
+                    <ba-wizard-step title="COP Model" form="vm.selectCMForm">
+                        <form name="vm.selectCMForm" novalidate>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <!-- List of model definitions -->
-                                    <div include-with-scope="app/pages/instances/edit/selectModelDefinitionTable.html"></div>
-                                    <!-- Hidden field for Model Definition and feedback message -->
+                                    <!-- List of COP models -->
+                                    <div include-with-scope="app/pages/instances/edit/selectCOPModelTable.html"></div>
+                                    <!-- Hidden field for COP Model and feedback message -->
                                     <div class="form-group has-feedback"
-                                         ng-class="{'has-error': vm.selectMdForm.modelDefinition.$invalid && (vm.selectMdForm.modelDefinition.$dirty || vm.selectMdForm.$submitted)}">
-                                        <input type="hidden" ng-model="vm.instance.modelDefinition" id="modelDefinition"
-                                               name="modelDefinition" required/>
-                                        <span class="help-block error-block basic-block">You must select a Model Definition</span>
+                                         ng-class="{'has-error': vm.selectCMForm.copModel.$invalid && (vm.selectCMForm.copModel.$dirty || vm.selectCMForm.$submitted)}">
+                                        <input type="hidden" ng-model="vm.instance.copModel" id="copModel"
+                                               name="copModel" required/>
+                                        <span class="help-block error-block basic-block">You must select a COP Model</span>
                                     </div>
                                 </div>
                             </div>
-                            <div ng-show="vm.selectedMd">
+                            <div ng-show="vm.selectedCM">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h3>Previewing Model Definition {{vm.selectedMd.name}}</h3>
+                                        <h3>Previewing COP Model {{vm.selectedCM.name}}</h3>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h4>Domain Data</h4>
-                                        <div ui-ace="vm.editorOpts" readonly ng-model="vm.selectedMd.domainData"></div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h4>Variables</h4>
-                                        <div ui-ace="vm.editorOpts" readonly ng-model="vm.selectedMd.variables"></div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h4>Constraints</h4>
-                                        <div ui-ace="vm.editorOpts" readonly ng-model="vm.selectedMd.constraints"></div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h4>Objective</h4>
-                                        <div ui-ace="vm.editorOpts" readonly ng-model="vm.selectedMd.objective"></div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <h4>Solution</h4>
-                                        <div ui-ace="vm.editorOpts" readonly ng-model="vm.selectedMd.solution"></div>
+                                        <h4>Model</h4>
+                                        <div ui-ace="vm.editorOpts" readonly ng-model="vm.selectedCM.model"></div>
                                     </div>
                                 </div>
                             </div>
@@ -64,14 +40,23 @@
                     <ba-wizard-step title="Dataset" form="vm.datasetForm">
                         <form name="vm.datasetForm" novalidate>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <!-- List of Datasets -->
+                                    <div include-with-scope="app/pages/instances/edit/selectDatasetTable.html"></div>
+                                    <!-- Hidden field for Dataset and feedback message -->
                                     <div class="form-group has-feedback"
-                                         ng-class="{'has-error': vm.datasetForm.datasetUri.$invalid && (vm.datasetForm.datasetUri.$dirty || vm.datasetForm.$submitted)}">
-                                        <label for="datasetUri">Dataset URI</label>
-                                        <input type="text" class="form-control" id="datasetUri" name="datasetUri"
-                                               placeholder="Dataset URI" ng-model="vm.instance.datasetUri"
-                                               required>
-                                        <span class="help-block error-block basic-block">Required</span>
+                                         ng-class="{'has-error': vm.datasetForm.dataset.$invalid && (vm.datasetForm.dataset.$dirty || vm.datasetForm.$submitted)}">
+                                        <input type="hidden" ng-model="vm.instance.dataset" id="dataset"
+                                               name="dataset" required/>
+                                        <span class="help-block error-block basic-block">You must select a Dataset</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-show="vm.selectedDataset">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h3>Previewing Dataset {{vm.selectedDataset.name}}</h3>
+                                        <show-dataset dataset-id="vm.selectedDataset._id" no-buttons no-panel></show-dataset>
                                     </div>
                                 </div>
                             </div>

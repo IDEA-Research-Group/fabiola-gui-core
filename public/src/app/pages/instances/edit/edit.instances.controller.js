@@ -9,7 +9,7 @@
         .controller('EditInstanceCtrl', EditInstanceCtrl);
 
     /** @ngInject */
-    function EditInstanceCtrl($http, $q, $state, $stateParams, toastr, Instances) {
+    function EditInstanceCtrl($http, $q, $state, $stateParams, toastr, Instances, Datasets) {
         var vm = this;
 
         // This function contains the form logic
@@ -19,6 +19,7 @@
 
             // Default pagination
             vm.mdPagination = {limit: 5, page: 1};
+            vm.datasetPagination = {limit: 5, page: 1};
 
             // Ace editor options
             vm.editorOpts = {
@@ -30,14 +31,14 @@
                 rendererOptions: {fontSize: 16}
             };
 
-            // Load a model definition page
+            // Load a cop model page
             vm.loadMdPage = function () {
                 $http
-                    .get('/api/v1/modelDefinitions?page=' + vm.mdPagination.page + '&limit=' + vm.mdPagination.limit)
+                    .get('/api/v1/copModels?page=' + vm.mdPagination.page + '&limit=' + vm.mdPagination.limit)
                     .then(function (response) {
                         var data = response.data;
-                        // Set list of model definitions
-                        vm.modelDefinitions = data.docs;
+                        // Set list of cop models
+                        vm.copModels = data.docs;
                         // Update pagination data
                         vm.mdPagination = {page: data.page, limit: data.limit, total: data.total};
                     }, function (error) {
@@ -45,10 +46,31 @@
                     });
             };
 
-            // Select a model definition and set it to the instance
+            // Load a dataset page
+            vm.loadDatasetPage = function() {
+                $http
+                    .get('/api/v1/datasets?page=' + vm.datasetPagination.page + '&limit=' + vm.datasetPagination.limit + '&status=VALIDATED')
+                    .then(function (response) {
+                        var data = response.data;
+                        // Set list of cop models
+                        vm.datasets = data.docs;
+                        // Update pagination data
+                        vm.datasetPagination = {page: data.page, limit: data.limit, total: data.total};
+                    }, function (error) {
+                        console.log(error);
+                    });
+            };
+
+            // Select a cop model and set it to the instance
             vm.selectMd = function (item) {
-                vm.selectedMd = item;
-                vm.instance.modelDefinition = item._id;
+                vm.selectedCM = item;
+                vm.instance.copModel = item._id;
+            };
+
+            // Select a dataset and set it to the instance
+            vm.selectDataset = function(item) {
+                vm.selectedDataset = item;
+                vm.instance.dataset = item._id;
             };
 
             // submit function
@@ -87,9 +109,7 @@
                             delete vm.instance.status;
                             delete vm.instance.creationDate;
                             delete vm.instance.lastExecutionDate;
-                            delete vm.instance.driverId;
                             delete vm.instance.errorMsg;
-                            delete vm.instance.frameworkId;
                         }
                         Instances.create(vm.instance).$promise.then(onSuccess, onError);
                     }
@@ -99,13 +119,22 @@
 
             // called when the controller is loaded
             vm.loadMdPage();
+            vm.loadDatasetPage();
 
-            // If is edit, we must look for the model definition
+            // If is edit, we must look for the cop model and dataset
             if(['edit', 'clone'].includes(action)) {
                 $http
-                    .get('/api/v1/modelDefinitions/'+vm.instance.modelDefinition)
+                    .get('/api/v1/copModels/'+vm.instance.copModel._id)
                     .then(function (response) {
-                        vm.selectedMd = response.data;
+                        vm.selectedCM = response.data;
+                    }, function (error) {
+                        console.log(error);
+                    });
+
+                $http
+                    .get('/api/v1/datasets/'+vm.instance.dataset._id)
+                    .then(function (response) {
+                        vm.selectedDataset = response.data;
                     }, function (error) {
                         console.log(error);
                     });
