@@ -17,6 +17,17 @@
             },
             templateUrl: 'app/pages/copModels/directives/show/show.html',
             link: function(scope, elem, attr) {
+                // Check attributes
+                // no-buttons
+                if(attr.hasOwnProperty('noButtons')) {
+                    scope.hideButtons = true;
+                }
+
+                // no-panel
+                if(attr.hasOwnProperty('noPanel')) {
+                    scope.hidePanel = true;
+                }
+
                 scope.$watch('copModelId', function (newValue, attrs) {
                     if (newValue) {
                         scope.copModel = COPModels.get({'id': newValue});
