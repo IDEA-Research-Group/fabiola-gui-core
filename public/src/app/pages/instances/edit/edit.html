@@ -1,3 +1,20 @@
+<!-- Nested node template -->
+<script type="text/ng-template" id="nodes_render.html">
+    <div ui-tree-handle class="tree-node tree-node-content">
+        <a class="btn btn-success btn-xs" data-nodrag ng-click="toggle(this)"><span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></a>
+        <strong>{{node.title}}</strong> <em>{{node.type}}</em>
+        <!--<a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+        <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
+        -->
+    </div>
+    <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+        <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_render.html'">
+        </li>
+    </ol>
+</script>
+
+
+
 <div class="widgets">
 
     <div class="row">
@@ -60,30 +77,37 @@
 
                     <!-- Step 3: Data Mapping -->
                     <ba-wizard-step title="Data Mapping" form="vm.dataMappingForm">
+
                         <form name="vm.dataMappingForm" novalidate>
+
+                            <!--
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group has-feedback"
-                                         ng-class="{'has-error': vm.dataMappingForm.IN.$invalid && (vm.dataMappingForm.IN.$dirty || vm.dataMappingForm.$submitted)}">
-                                        <label for="IN">IN fields</label>
-                                        <input type="text" class="form-control" id="IN" name="IN"
-                                               placeholder="Input fields" ng-model="vm.instance.in" required>
-                                        <span class="help-block error-block basic-block">Required</span>
-                                    </div>
-                                    <div class="form-group has-feedback"
-                                         ng-class="{'has-error': vm.dataMappingForm.OUT.$invalid && (vm.dataMappingForm.OUT.$dirty || vm.dataMappingForm.$submitted)}">
-                                        <label for="OUT">OUT fields</label>
-                                        <input type="text" class="form-control" id="OUT" name="OUT"
-                                               placeholder="Output fields" ng-model="vm.instance.out" required>
-                                        <span class="help-block error-block basic-block">Required</span>
-                                    </div>
-                                    <div class="form-group has-feedback"
-                                         ng-class="{'has-error': vm.dataMappingForm.OT.$invalid && (vm.dataMappingForm.OT.$dirty || vm.dataMappingForm.$submitted)}">
-                                        <label for="OT">OTHER fields</label>
-                                        <input type="text" class="form-control" id="OT" name="OT"
-                                               placeholder="Other fields" ng-model="vm.instance.ot" required>
-                                        <span class="help-block error-block basic-block">Required</span>
-                                    </div>
+                                <h5>Selected input fields</h5>
+                                <p ng-repeat="field in vm.instance.in">
+                                    <kbd>{{field}}</kbd>
+                                </p>
+                            </div>
+
+                            <div class="row">
+                                <h5>Selected other fields</h5>
+
+                            </div>
+                            -->
+
+                            <div class="row">
+                                <div class="col-mode-12">
+                                    <p><button type="button" class="btn btn-default btn-with-icon" ng-click="vm.loadSchema()"><i class="ion-loop"></i>Reset</button></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h5>Dataset schema</h5>
+                                    <div js-tree="vm.dsSchemaConfig" ng-model="vm.dsSchema" tree-events-obj="vm.treeEventsObj" tree="originalTree"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <h5>In and other fields</h5>
+                                    <p><button class="btn btn-primary" ng-click="vm.removeNode()">Remove</button></p>
+                                    <div js-tree="vm.dragConfig" ng-model="vm.inOtTree" tree-events-obj="vm.treeEventsObj" tree="basicTree"></div>
                                 </div>
                             </div>
                         </form>

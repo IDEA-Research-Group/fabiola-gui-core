@@ -9,8 +9,9 @@
         .controller('EditInstanceCtrl', EditInstanceCtrl);
 
     /** @ngInject */
-    function EditInstanceCtrl($http, $q, $state, $stateParams, toastr, Instances, Datasets) {
+    function EditInstanceCtrl($http, $q, $state, $stateParams, toastr, Instances, $scope) {
         var vm = this;
+        var treeScope;
 
         // This function contains the form logic
         var form = function (instance, action) {
@@ -30,6 +31,121 @@
                 firstLineNumber: 1,
                 rendererOptions: {fontSize: 16}
             };
+
+            // Load schema
+            var loadSchema = function() {
+                // Load the dataset schema with the right format
+                var schemaObj = JSON.parse(vm.selectedDataset.dsSchema);
+                var transformedTree = transformTree(schemaObj.fields, '#', 0);
+
+                // tree configs
+                vm.dsSchemaConfig = {
+                    'core': {
+                        'check_callback': false,
+                        'themes': {'responsive': true}
+                    },
+                    'types': {'folder': {'icon': 'ion-ios-folder'},
+                        'default': {'icon': 'ion-document-text'}
+                    },
+                    "plugins": ["dnd", 'types', 'crrm', 'unique'],
+                    "version": 1
+                };
+
+                vm.dragConfig = {
+                    'core': {
+                        'check_callback': function (operation, node, node_parent, node_position, more) {
+                            return (['in', 'ot'].includes(node.id)) ? false : (['in', 'ot'].includes(node_parent.id) && !['in', 'ot'].some(x => node.parents.includes(x))) ? true : false;
+                        },
+                        'themes': {'responsive': true}
+                    },
+                    'types': {'folder': {'icon': 'ion-ios-folder'},
+                              'default': {'icon': 'ion-document-text'}
+                    },
+                    "plugins": ["dnd", 'types', 'crrm', 'unique'],
+                    "version": 1
+                };
+
+                // set the schemas
+                vm.dsSchema = transformedTree;
+                vm.inOtTree = [
+                    {
+                        "id": "in",
+                        "parent": "#",
+                        "type": "folder",
+                        "text": "IN",
+                        "state": {
+                            "opened": true
+                        }
+                    },
+                    {
+                        "id": "ot",
+                        "parent": "#",
+                        "type": "folder",
+                        "text": "OTHER",
+                        "state": {
+                            "opened": true
+                        }
+                    }];
+            };
+            /*
+            * Inicio
+            * */
+
+            // Events (just the ready event, called on tree load)
+            vm.treeEventsObj = {'ready': readyCB};
+            // TODO se llama alc rear el arbol. Lo que hago es guardar en el scope el modelo interno del arbol, y ver cuando se modifica.
+            // cuando se modifica, actualizo la lista de nodos (dragData)
+            function readyCB() {
+                treeScope = this; // Carga el scope del arbol
+                // Load the tree internal model
+                vm.treeData = treeScope.basicTree.jstree(true)._model.data;
+                // When the internal model changes, it regenerates the vm treeData model
+                $scope.$watchCollection('vm.treeData', function (newValue, oldValue) {
+                    vm.inOtTree = treeModelToModel(newValue);
+                });
+            };
+
+            vm.removeNode = function () {
+                var selected = treeScope.basicTree.jstree(true).get_selected()[0];
+                if(!['in', 'ot'].includes(selected)){
+                    var nodes = treeScope.basicTree.jstree(true)._model.data;
+
+                    // elimina los nodos en las tripas
+                    var toDelete = nodes[selected];
+                    toDelete.children_d.forEach(x => delete treeScope.basicTree.jstree(true)._model.data[x]);
+                    delete treeScope.basicTree.jstree(true)._model.data[selected];
+
+                    // cambia el modelo, ya que parece que por dentro no lo hace
+                    vm.inOtTree = treeModelToModel(treeScope.basicTree.jstree(true)._model.data);
+
+                    // Recarga el arbol
+                    vm.dragConfig.version++;
+                }
+            };
+
+            // Para transformar un nodo en formato interno del arbol al formato del modelo
+            function treeModelToModel(treeModel) {
+                var result = [];
+                Object.keys(treeModel).forEach(function (element) {
+                    if (element !== '#') {
+                        result.push({
+                            id: treeModel[element].id,
+                            parent: treeModel[element].parent,
+                            state: {opened: treeModel[element].state.opened},
+                            text: treeModel[element].text,
+                            type: treeModel[element].type
+                        });
+                    }
+                });
+                return result;
+            }
+            /*
+            * Fin
+            * */
+
+
+
+            vm.loadSchema = loadSchema;
 
             // Load a cop model page
             vm.loadMdPage = function () {
@@ -71,6 +187,7 @@
             vm.selectDataset = function(item) {
                 vm.selectedDataset = item;
                 vm.instance.dataset = item._id;
+                loadSchema();
             };
 
             // submit function
@@ -135,6 +252,7 @@
                     .get('/api/v1/datasets/'+vm.instance.dataset._id)
                     .then(function (response) {
                         vm.selectedDataset = response.data;
+                        loadSchema();
                     }, function (error) {
                         console.log(error);
                     });
@@ -151,4 +269,37 @@
             form({}, action);
         };
     };
+
+
+    function transformTree(nodes, parent, parentId) {
+        var treeNodes = [];
+        var idCount = 0;
+        nodes.forEach(n => {
+                treeNodes.push({
+                    id: parentId === 0 ? String(idCount) : parentId + '.' + idCount,
+                    parent: parentId === 0 ? '#' : parentId,
+                    text: n.name,
+                    state: {opened: true},
+                    type: (['struct', 'array'].includes(getNodeType(n.type))? 'folder' : undefined)
+                });
+
+                var childNodes = [];
+                if(getNodeType(n.type) === 'struct')
+                    childNodes = transformTree(n.type.fields, n.name, parentId === 0 ? idCount : parentId + '.' + idCount);
+                else if(getNodeType(n.type) === 'array')
+                    childNodes = transformTree(n.type.elementType.fields, n.name, parentId === 0 ? idCount : parentId + '.' + idCount);
+
+
+                idCount ++;
+
+                treeNodes = treeNodes.concat(childNodes);
+            }
+        );
+        return treeNodes;
+    }
+
+    function getNodeType(type) {
+        return typeof type === 'object' ? type.type : type;
+    }
+
 })();

@@ -50,39 +50,56 @@
                 };
 
                 var showSchema = function() {
-                    var dataset = scope.dataset;
-
-                    var root = {
-                        title: 'root',
-                        nodes: []
+                    scope.treeConfig = {
+                        'core': {
+                            'check_callback': false,
+                            'themes': {
+                                'responsive': false
+                            },
+                        },
+                        'types': {
+                            'folder': {
+                                'icon': 'ion-ios-folder'
+                            },
+                            'default': {
+                                'icon': 'ion-document-text'
+                            }
+                        },
+                        "plugins": ["dnd", 'types', 'crrm', 'unique'],
+                        "version": 1
                     };
 
+                    var dataset = scope.dataset;
+
                     var schemaObj = JSON.parse(dataset.dsSchema);
+                    var transformedTree = transformTree(schemaObj.fields, '#', 0);
 
-                    var transformedTree = transformTree(schemaObj.fields, '');
+                    console.log(transformedTree)
 
-                    scope.dsSchema = [
-                        {
-                            title: 'root',
-                            nodes: transformedTree
-                        }
-                    ];
+                    scope.dsSchema = transformedTree
 
-                    scope.input = [{
-                        'id': 1,
-                        'title': 'IN',
-                        'nodes': []
-                    }];
-                    scope.output = [{
-                        'id': 1,
-                        'title': 'OUT',
-                        'nodes': []
-                    }];
-                    scope.other = [{
-                        'id': 1,
-                        'title': 'OT',
-                        'nodes': []
-                    }];
+                    // scope.dsSchema = [
+                    //     {
+                    //         title: 'root',
+                    //         nodes: transformedTree
+                    //     }
+                    // ];
+                    //
+                    // scope.input = [{
+                    //     'id': 1,
+                    //     'title': 'IN',
+                    //     'nodes': []
+                    // }];
+                    // scope.output = [{
+                    //     'id': 1,
+                    //     'title': 'OUT',
+                    //     'nodes': []
+                    // }];
+                    // scope.other = [{
+                    //     'id': 1,
+                    //     'title': 'OT',
+                    //     'nodes': []
+                    // }];
                 };
 
                 scope.open = function (page, size) {
@@ -117,19 +134,31 @@
         }
     }
 
-    function transformTree(nodes, path) {
-        return nodes.map(n => {
-            var thisPath = (path === '')? n.name : path+'.'+n.name;
-            return {
-                    path: thisPath,
-                    //title: n.name, // TODO title must be the name, not the path. But it would require
-                    title: thisPath,
-                    type: getNodeType(n.type),
-                    nodes: (getNodeType(n.type) === 'struct')? transformTree(n.type.fields, thisPath) :
-                        (getNodeType(n.type) === 'array')? transformTree(n.type.elementType.fields, thisPath) : []
-                }
+    function transformTree(nodes, parent, parentId) {
+        var treeNodes = [];
+        var idCount = 0;
+        nodes.forEach(n => {
+            treeNodes.push({
+                id: parentId === 0 ? String(idCount) : parentId + '.' + idCount,
+                parent: parentId === 0 ? '#' : parentId,
+                text: n.name,
+                state: {opened: true},
+                type: (['struct', 'array'].includes(getNodeType(n.type))? 'folder' : undefined)
+            });
+
+            var childNodes = [];
+            if(getNodeType(n.type) === 'struct')
+                childNodes = transformTree(n.type.fields, n.name, parentId === 0 ? idCount : parentId + '.' + idCount);
+            else if(getNodeType(n.type) === 'array')
+                childNodes = transformTree(n.type.elementType.fields, n.name, parentId === 0 ? idCount : parentId + '.' + idCount);
+
+
+            idCount ++;
+
+            treeNodes = treeNodes.concat(childNodes);
             }
         );
+        return treeNodes;
     }
 
     function getNodeType(type) {

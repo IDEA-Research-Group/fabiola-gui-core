@@ -6,7 +6,7 @@
     <h4 class="modal-title" id="myModalLabel">Dataset Schema</h4>
   </div>
   <div class="modal-body">
-    <tree nodes="dsSchema"></tree>
+    <div js-tree="treeConfig" ng-model="dsSchema"></div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="$dismiss()">Close</button>
