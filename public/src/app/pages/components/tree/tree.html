@@ -1,4 +1,5 @@
 <div class="row" ng-controller="treeCtrl">
+  <!--
   <div class="col-md-6">
     <div ba-panel ba-panel-title="Basic Action" ba-panel-class="with-scroll tree-panel">
       <div class="row">
@@ -24,10 +25,18 @@
       </div>
     </div>
   </div>
+  -->
+  {{dragData2}}
   <div class="col-md-6">
     <div ba-panel ba-panel-title="Drag & Drop" ba-panel-class="with-scroll tree-panel">
       <div js-tree="dragConfig" ng-model="dragData"></div>
     </div>
   </div>
+  <div class="col-md-6">
+    <div ba-panel ba-panel-title="Drag & Drop" ba-panel-class="with-scroll tree-panel">
+      <button class="btn btn-primary" ng-click="removeNode()">Remove</button>
+      <div js-tree="dragConfig" ng-model="dragData2" tree-events-obj="treeEventsObj" tree="basicTree"></div>
+    </div>
+  </div>
 </div>
-</div>
+

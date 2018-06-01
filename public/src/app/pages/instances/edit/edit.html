@@ -98,8 +98,16 @@
                                 <div class="col-mode-12">
                                     <p><button type="button" class="btn btn-default btn-with-icon" ng-click="vm.loadSchema()"><i class="ion-loop"></i>Reset</button></p>
                                 </div>
+                                <!-- Hidden field for IN and feedback message -->
+                                <div class="form-group has-feedback"
+                                     ng-class="{'has-error': vm.dataMappingForm.in.$invalid && (vm.dataMappingForm.in.$dirty || vm.dataMappingForm.$submitted)}">
+                                    <input type="hidden" ng-model="vm.instance.in" id="in"
+                                           name="in" required/>
+                                    <span class="help-block error-block basic-block">You must specify at least one input field.</span>
+                                </div>
                             </div>
                             <div class="row">
+                                {{vm.instance.in}}
                                 <div class="col-md-4">
                                     <h5>Dataset schema</h5>
                                     <div js-tree="vm.dsSchemaConfig" ng-model="vm.dsSchema" tree-events-obj="vm.treeEventsObj" tree="originalTree"></div>

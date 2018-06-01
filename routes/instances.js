@@ -51,6 +51,7 @@ router.get('/:id', function (req, res) {
 /**
  * CREATE an Instance
  * */
+// TODO: validar que el dataset seleccionado está validado
 router.post('/', function (req, res, next) {
     var body = req.body;
     delete body._id;

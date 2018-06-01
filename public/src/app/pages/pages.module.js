@@ -11,7 +11,7 @@
     'BlurAdmin.pages.dashboard',
     'BlurAdmin.pages.datasets',
     'BlurAdmin.pages.instances',
-    'BlurAdmin.pages.copModels'
+    'BlurAdmin.pages.copModels',
     //'BlurAdmin.pages.ui',
     //'BlurAdmin.pages.components',
     //'BlurAdmin.pages.form',
