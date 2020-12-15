@@ -75,4 +75,7 @@ public/.tmp/*
 public/release/*
 
 # config.yml
-config.yml
+config/*
+
+# temp
+temp/*

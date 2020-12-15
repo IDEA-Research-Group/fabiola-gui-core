@@ -16,7 +16,6 @@
       link: function (scope, element, attrs) {
         if(!$rootScope.version){
           $http.get('/api/v1/getVersion').then(function(response){
-            console.log(response.data)
             $rootScope.version = response.data;
           }, function(error){});
         }

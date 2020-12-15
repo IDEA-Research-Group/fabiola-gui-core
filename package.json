@@ -1,6 +1,6 @@
 {
   "name": "fabiola-ui-core",
-  "version": "0.1.0-BETA",
+  "version": "0.2.0-4.a-dev",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -12,6 +12,8 @@
     "dateformat": "^3.0.3",
     "debug": "~2.6.9",
     "express": "~4.15.5",
+    "fs": "0.0.1-security",
+    "hdfs247": "0.0.9",
     "helmet": "^3.9.0",
     "jade": "~1.11.0",
     "moment": "^2.22.0",
@@ -19,9 +21,11 @@
     "mongoose-paginate": "^5.0.3",
     "mongoose-ref-validator": "^1.0.21",
     "morgan": "~1.9.0",
+    "multer": "^1.3.0",
     "query-to-mongo": "^0.8.1",
     "request": "^2.85.0",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "webhdfs": "^1.2.0"
   },
   "devDependencies": {
     "browser-sync": "~2.18.2",

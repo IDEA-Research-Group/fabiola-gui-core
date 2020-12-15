@@ -1,0 +1,46 @@
+<div class="horizontal-scroll">
+    <div class="form-group select-page-size-wrap ">
+        <label>Rows on page
+            <select class="form-control selectpicker show-tick" title="Rows on page" selectpicker
+                    ng-model="vm.limit" ng-options="i for i in [5,10,15,20,25]">
+            </select>
+        </label>
+    </div>
+    <table class="table" st-pipe="vm.callServer" st-table="vm.displayed">
+        <thead>
+        <tr class="sortable">
+            <th>Name</th>
+            <th>Creation Date</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody 	ng-show="!vm.isLoading">
+        <tr ng-repeat="item in vm.displayed">
+            <td>{{item.name}}</td>
+            <td>{{item.creationDate | date : 'medium'}}</td>
+            <td ng-switch="item.status">
+                <i ng-switch-when="VALIDATION_ERROR" class="ion-record large" style="color: #FF0000; font-size: 1.8em"></i>
+                <i ng-switch-when="RUNNING" class="ion-record" style="color: #FFFF00; font-size: 1.8em"></i>
+                <i ng-switch-when="WAITING" class="ion-record" style="color: #FFFF00; font-size: 1.8em"></i>
+                <i ng-switch-when="VALIDATED" class="ion-record" style="color: #327E04; font-size: 1.8em"></i>
+                <i ng-switch-default class="ion-record" style="color: #C2C2A3; font-size: 1.8em"></i>
+            </td>
+            <td><button ng-click="vm.show(item._id)" class="btn btn-primary btn-xs">Show</button></td>
+        </tr>
+        </tbody>
+        <tbody ng-show="vm.isLoading">
+        <tr>
+            <td colspan="4" class="text-center">Loading ... </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="6" class="text-center">
+                <div st-pagination="" st-items-by-page="vm.limit" st-template="app/theme/misc/smartTablePagination.html"></div>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+

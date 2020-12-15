@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 // database
 var mongoose = require('mongoose');
-var config = require("config-yml");
+var config = require("./config").config;
 
 mongoose.connect(config.application.db.mongoUri);
 mongoose.plugin(require('mongoose-ref-validator'));
@@ -16,8 +16,10 @@ mongoose.plugin(require('mongoose-ref-validator'));
 var index = require('./routes/index');
 var users = require('./routes/users');
 var instances = require('./routes/instances');
-var modelDefinitions = require('./routes/modelDefinitions');
+var copModels = require('./routes/copModels');
 var results = require('./routes/results');
+var datasets = require('./routes/datasets');
+var dcosTokens = require('./routes/dcosTokens');
 
 var BASE_API_PATH = "/api/v1";
 
@@ -40,8 +42,10 @@ app.use(express.static(path.join(__dirname, 'public/release')));
 
 // app.use(BASE_API_PATH+'/', index);
 app.use(BASE_API_PATH + '/instances', instances);
-app.use(BASE_API_PATH + '/modelDefinitions', modelDefinitions);
+app.use(BASE_API_PATH + '/copModels', copModels);
 app.use(BASE_API_PATH + '/results', results);
+app.use(BASE_API_PATH + '/datasets', datasets);
+app.use(BASE_API_PATH + '/dcosTokens', dcosTokens);
 //app.use('/users', users);
 
 

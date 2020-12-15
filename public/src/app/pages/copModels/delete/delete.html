@@ -1,0 +1,10 @@
+<div class="modal-content">
+    <div class="modal-header bg-danger">
+        <i class="ion-trash-b modal-icon"></i><span> Delete COP Model</span>
+    </div>
+    <div class="modal-body text-center">Are you sure that you want to delete the COP Model with ID {{vm.copModel._id}}?</div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" ng-click="vm.delete()">Yes</button>
+        <button type="button" class="btn btn-default" ng-click="$dismiss()">No</button>
+    </div>
+</div>

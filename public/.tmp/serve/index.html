@@ -34,6 +34,7 @@
   <link rel="stylesheet" href="../bower_components/jstree/dist/themes/default/style.css" />
   <link rel="stylesheet" href="../bower_components/angular-ui-select/dist/select.css" />
   <link rel="stylesheet" href="../bower_components/codemirror/lib/codemirror.css" />
+  <link rel="stylesheet" href="../bower_components/angular-ui-tree/dist/angular-ui-tree.css" />
   <!-- endbower -->
   <!-- endbuild -->
 
@@ -142,11 +143,11 @@
 <script src="../bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
 <script src="../bower_components/angular-ui-ace/ui-ace.js"></script>
 <script src="../bower_components/angular-resource/angular-resource.js"></script>
+<script src="../bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript" src="https://rawgithub.com/ajaxorg/ace-builds/v1.1.1/src-min-noconflict/ace.js"></script>
-<script type="text/javascript" src="app/utils/utils.js"></script>
 
 
 <!-- build:js({.tmp/serve,.tmp/partials,src}) scripts/app.js -->
@@ -156,11 +157,12 @@
 <script src="app/theme/theme.module.js"></script>
 <script src="app/pages/charts/charts.module.js"></script>
 <script src="app/pages/components/components.module.js"></script>
+<script src="app/pages/copModels/cop-models.module.js"></script>
 <script src="app/pages/dashboard/dashboard.module.js"></script>
+<script src="app/pages/datasets/datasets.module.js"></script>
 <script src="app/pages/form/form.module.js"></script>
 <script src="app/pages/instances/instances.module.js"></script>
 <script src="app/pages/maps/maps.module.js"></script>
-<script src="app/pages/modelDefinitions/model-definitions.module.js"></script>
 <script src="app/pages/profile/profile.module.js"></script>
 <script src="app/pages/tables/tables.module.js"></script>
 <script src="app/pages/ui/ui.module.js"></script>
@@ -170,8 +172,8 @@
 <script src="app/pages/charts/chartJs/chartJs.module.js"></script>
 <script src="app/pages/charts/chartist/chartist.module.js"></script>
 <script src="app/pages/charts/morris/morris.module.js"></script>
-<script src="app/pages/components/mail/mail.module.js"></script>
 <script src="app/pages/components/timeline/timeline.module.js"></script>
+<script src="app/pages/components/mail/mail.module.js"></script>
 <script src="app/pages/components/tree/tree.module.js"></script>
 <script src="app/pages/ui/alerts/alerts.module.js"></script>
 <script src="app/pages/ui/buttons/buttons.module.js"></script>
@@ -186,16 +188,16 @@
 <script src="app/pages/ui/typography/typography.module.js"></script>
 <script src="app/app.js"></script>
 <script src="app/pages/http.interceptor.js"></script>
+<script src="app/services/cop-models.service.js"></script>
+<script src="app/services/datasets.service.js"></script>
 <script src="app/services/errorHandler.service.js"></script>
 <script src="app/services/instances.service.js"></script>
-<script src="app/services/model-definitions.service.js"></script>
 <script src="app/services/search-engine.service.js"></script>
 <script src="app/theme/theme.config.js"></script>
 <script src="app/theme/theme.configProvider.js"></script>
 <script src="app/theme/theme.constants.js"></script>
 <script src="app/theme/theme.run.js"></script>
 <script src="app/theme/theme.service.js"></script>
-<script src="app/utils/utils.js"></script>
 <script src="app/pages/profile/ProfileModalCtrl.js"></script>
 <script src="app/pages/profile/ProfilePageCtrl.js"></script>
 <script src="app/pages/tables/TablesPageCtrl.js"></script>
@@ -203,6 +205,7 @@
 <script src="app/theme/directives/animatedChange.js"></script>
 <script src="app/theme/directives/autoExpand.js"></script>
 <script src="app/theme/directives/autoFocus.js"></script>
+<script src="app/theme/directives/fileModel.js"></script>
 <script src="app/theme/directives/includeWithScope.js"></script>
 <script src="app/theme/directives/ionSlider.js"></script>
 <script src="app/theme/directives/ngFileSelect.js"></script>
@@ -221,10 +224,13 @@
 <script src="app/pages/charts/chartJs/chartJsWaveCtrl.js"></script>
 <script src="app/pages/charts/chartist/chartistCtrl.js"></script>
 <script src="app/pages/charts/morris/morrisCtrl.js"></script>
+<script src="app/pages/components/timeline/TimelineCtrl.js"></script>
 <script src="app/pages/components/mail/MailTabCtrl.js"></script>
 <script src="app/pages/components/mail/mailMessages.js"></script>
-<script src="app/pages/components/timeline/TimelineCtrl.js"></script>
 <script src="app/pages/components/tree/treeCtrl.js"></script>
+<script src="app/pages/copModels/delete/delete.cop-models.controller.js"></script>
+<script src="app/pages/copModels/edit/edit.cop-models.controller.js"></script>
+<script src="app/pages/copModels/list/list.cop-models.controller.js"></script>
 <script src="app/pages/dashboard/blurFeed/BlurFeedCtrl.js"></script>
 <script src="app/pages/dashboard/blurFeed/blurFeed.directive.js"></script>
 <script src="app/pages/dashboard/calendar/dashboardCalendar.js"></script>
@@ -244,6 +250,9 @@
 <script src="app/pages/dashboard/trafficChart/trafficChart.directive.js"></script>
 <script src="app/pages/dashboard/weather/WeatherCtrl.js"></script>
 <script src="app/pages/dashboard/weather/weather.directive.js"></script>
+<script src="app/pages/datasets/delete/DeleteDatasetCtrl.js"></script>
+<script src="app/pages/datasets/edit/edit.datasets.controller.js"></script>
+<script src="app/pages/datasets/list/list.datasets.controller.js"></script>
 <script src="app/pages/form/wizard/wizrdCtrl.js"></script>
 <script src="app/pages/instances/delete/delete.instances.controller.js"></script>
 <script src="app/pages/instances/edit/edit.instances.controller.js"></script>
@@ -252,9 +261,6 @@
 <script src="app/pages/maps/leaflet/LeafletPageCtrl.js"></script>
 <script src="app/pages/maps/map-bubbles/MapBubblePageCtrl.js"></script>
 <script src="app/pages/maps/map-lines/MapLinesPageCtrl.js"></script>
-<script src="app/pages/modelDefinitions/delete/delete.model-definitions.controller.js"></script>
-<script src="app/pages/modelDefinitions/edit/edit.model-definitions.controller.js"></script>
-<script src="app/pages/modelDefinitions/list/list.model-definitions.controller.js"></script>
 <script src="app/pages/ui/buttons/ButtonPageCtrl.js"></script>
 <script src="app/pages/ui/icons/IconsPageCtrl.js"></script>
 <script src="app/pages/ui/modals/ModalsPageCtrl.js"></script>
@@ -278,6 +284,7 @@
 <script src="app/theme/components/pageTop/pageTop.directive.js"></script>
 <script src="app/theme/components/progressBarRound/progressBarRound.directive.js"></script>
 <script src="app/theme/components/widgets/widgets.directive.js"></script>
+<script src="app/theme/directives/tree/tree.js"></script>
 <script src="app/theme/filters/image/appImage.js"></script>
 <script src="app/theme/filters/image/kameleonImg.js"></script>
 <script src="app/theme/filters/image/profilePicture.js"></script>
@@ -292,15 +299,16 @@
 <script src="app/pages/charts/amCharts/pieChart/PieChartCtrl.js"></script>
 <script src="app/pages/components/mail/composeBox/composeBoxCtrl.js"></script>
 <script src="app/pages/components/mail/composeBox/composeModal.js"></script>
-<script src="app/pages/components/mail/list/MailListCtrl.js"></script>
 <script src="app/pages/components/mail/detail/MailDetailCtrl.js"></script>
+<script src="app/pages/components/mail/list/MailListCtrl.js"></script>
+<script src="app/pages/copModels/directives/show/show.cop-models.directive.js"></script>
+<script src="app/pages/datasets/directives/show/show.datasets.directive.js"></script>
 <script src="app/pages/instances/directives/filterResults/filter-results.instances.directive.js"></script>
 <script src="app/pages/instances/directives/show/show.instances.directive.js"></script>
 <script src="app/pages/instances/results/aggregate/aggregate.results.instances.controller.js"></script>
 <script src="app/pages/instances/results/table/table.results.instances.controller.js"></script>
-<script src="app/pages/modelDefinitions/directives/show/show.model-definitions.directive.js"></script>
-<script src="app/pages/ui/modals/notifications/NotificationsCtrl.js"></script>
 <script src="app/pages/ui/modals/progressModal/ProgressModalCtrl.js"></script>
+<script src="app/pages/ui/modals/notifications/NotificationsCtrl.js"></script>
 <script src="app/theme/components/backTop/lib/jquery.backTop.min.js"></script>
 <script src="app/pages/form/inputs/widgets/datePickers/datepickerCtrl.js"></script>
 <script src="app/pages/form/inputs/widgets/datePickers/datepickerpopupCtrl.js"></script>
@@ -310,8 +318,8 @@
 <script src="app/pages/form/inputs/widgets/oldSwitches/switch.directive.js"></script>
 <script src="app/pages/form/inputs/widgets/select/GroupSelectpickerOptions.js"></script>
 <script src="app/pages/form/inputs/widgets/select/SelectpickerPanelCtrl.js"></script>
-<script src="app/pages/form/inputs/widgets/tagsInput/tagsInput.directive.js"></script>
 <script src="app/pages/form/inputs/widgets/switches/SwitchDemoPanelCtrl.js"></script>
+<script src="app/pages/form/inputs/widgets/tagsInput/tagsInput.directive.js"></script>
 <!-- endinject -->
 
 <!-- inject:partials -->

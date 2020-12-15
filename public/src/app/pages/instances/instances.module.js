@@ -19,7 +19,7 @@
                 title: 'Instances',
                 sidebarMeta: {
                     icon: 'ion-ios-bolt',
-                    order: 0,
+                    order: 20,
                 },
             })
             .state('instances.list', {

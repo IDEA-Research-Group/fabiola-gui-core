@@ -1,15 +1,19 @@
 <div class="row" ng-show="instanceId">
     <div class="col-md-12 col-lg-12">
         <div ba-panel ba-panel-title="Instance {{instance._id}}"
-             ba-panel-class="medium-panel with-scroll light-text">
+             ba-panel-class="panel with-scroll light-text">
             <div class="row">
                 <div class="col-md-12 col-lg-6">
-                    <h5>Model Definition</h5>
-                    <p>{{instance.modelDefinition}}</p>
+                    <h5>COP Model</h5>
+                    <p><a href="" ui-sref="copModels.list({copModelId: instance.copModel._id})">{{instance.copModel.name}}</a></p>
+                    <h5>Dataset</h5>
+                    <p><a href="" ui-sref="datasets.list({datasetId: instance.dataset._id})">{{instance.dataset.name}}</a></p>
                     <h5>Creation date</h5>
                     <p>{{instance.creationDate | date : 'medium'}}</p>
-                    <h5>Dataset</h5>
-                    <p>{{instance.datasetUri}}</p>
+                    <span ng-show="instance.lastExecutionDate">
+                        <h5>Last execution date</h5>
+                        <p>{{instance.lastExecutionDate | date : 'medium'}}</p>
+                    </span>
                     <h5>Status</h5>
                     <div ng-switch="instance.status">
                         <p ng-switch-when="ERROR"><i class="ion-record large" style="color: #FF0000"></i> Error</p>
@@ -18,12 +22,16 @@
                         <p ng-switch-when="FINISHED"><i class="ion-record" style="color: #327E04"></i> Finished</p>
                         <p ng-switch-default><i class="ion-record" style="color: #C2C2A3"></i> Not started</p>
                     </div>
+                    <span ng-show="instance.errorMsg">
+                        <h5>Error message</h5>
+                        <p>{{instance.errorMsg}}</p>
+                    </span>
                 </div>
                 <div class="col-md-12 col-lg-6">
-                    <h5>Last execution date</h5>
-                    <p>{{instance.lastExecutionDate | date : 'medium'}}</p>
-                    <h5>Duration</h5>
-                    <p>{{instance.duration}}</p>
+                    <span ng-show="instance.duration">
+                        <h5>Duration</h5>
+                        <p>{{ instance.duration | number : 0}} seconds</p>
+                    </span>
                     <h5>IN</h5>
                     <p>{{instance.in.join(', ')}}</p>
                     <h5>OUT</h5>

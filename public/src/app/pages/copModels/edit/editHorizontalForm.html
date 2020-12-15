@@ -1,0 +1,31 @@
+<form name="vm.copModelForm" novalidate>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group has-feedback"
+                 ng-class="{'has-error': vm.copModelForm.name.$invalid && (vm.copModelForm.name.$dirty || vm.copModelForm.$submitted)}">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name"
+                       placeholder="COP Model name" ng-model="vm.copModel.name" required>
+                <span class="help-block error-block basic-block">Required</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group has-feedback" >
+                <label for="model">Model</label>
+                <div id="model" ui-ace="vm.editorOpts" ng-model="vm.copModel.model"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <button ng-disabled="vm.copModelForm.$invalid"
+                    progress-button="vm.progressFunction()" class="btn btn-primary">Submit
+            </button>
+        </div>
+    </div>
+
+</form>
